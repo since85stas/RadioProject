@@ -13,5 +13,7 @@ interface RadioDao {
     @Insert
     fun insertPodcast(podcast: Podcast): Long
 
+    @Query("SELECT * FROM podcast_table ORDER BY podcastId")
     fun getPodcastsList(): Flow<List<Podcast>>
+
 }
