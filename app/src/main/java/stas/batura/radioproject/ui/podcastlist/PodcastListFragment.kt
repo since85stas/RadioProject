@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import dagger.hilt.android.AndroidEntryPoint
 import stas.batura.radioproject.R
 
+@AndroidEntryPoint
 class PodcastListFragment : Fragment() {
 
     private lateinit var podcastListViewModel: PodcastListViewModel
@@ -22,10 +24,14 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel =
                 ViewModelProviders.of(this).get(PodcastListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_podcast_list, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
+        val textView: TextView = root.findViewById(R.id.text_poscast)
+
+
         podcastListViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+
         return root
     }
 }

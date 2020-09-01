@@ -8,8 +8,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import dagger.hilt.android.AndroidEntryPoint
 import stas.batura.radioproject.R
 
+@AndroidEntryPoint
 class ChatFragment : Fragment() {
 
     private lateinit var chatViewModel: ChatViewModel
@@ -22,7 +24,7 @@ class ChatFragment : Fragment() {
         chatViewModel =
                 ViewModelProviders.of(this).get(ChatViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_chat, container, false)
-        val textView: TextView = root.findViewById(R.id.text_notifications)
+        val textView: TextView = root.findViewById(R.id.text_chat)
         chatViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })

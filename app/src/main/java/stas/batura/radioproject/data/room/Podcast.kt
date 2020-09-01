@@ -1,7 +1,9 @@
 package stas.batura.radioproject.data.room
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+@Entity(tableName = "podcast_table")
 data class Podcast(
     // url поста
     var url: String =     "url",
