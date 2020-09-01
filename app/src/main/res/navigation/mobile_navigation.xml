@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_podcastlist">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="stas.batura.radioproject.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_podcastlist"
+        android:name="stas.batura.radioproject.ui.podcastlist.PodcastListFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_podcast_list" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="stas.batura.radioproject.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_chat"
+        android:name="stas.batura.radioproject.ui.chat.ChatFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_chat" />
 </navigation>

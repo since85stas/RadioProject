@@ -1,4 +1,4 @@
-package stas.batura.radioproject.ui.dashboard
+package stas.batura.radioproject.ui.podcastlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import stas.batura.radioproject.R
 
-class DashboardFragment : Fragment() {
+class PodcastListFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var podcastListViewModel: PodcastListViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        podcastListViewModel =
+                ViewModelProviders.of(this).get(PodcastListViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_podcast_list, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        podcastListViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
