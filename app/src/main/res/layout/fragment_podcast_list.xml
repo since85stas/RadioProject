@@ -36,13 +36,18 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/podcast_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="300dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+            />
 
         <Button
             android:id="@+id/add_podcast_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:onClick="@{() -> podacstListViewModel.addPodcast()}"
+            />
 
 
     </LinearLayout>

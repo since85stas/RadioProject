@@ -19,7 +19,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val podcasts: LiveData<List<Podcast>> = repository.getPodcastsList().asLiveData()
 
-    private fun addPodcast() {
+    fun addPodcast() {
         repository.addPodcast(Podcast())
     }
 

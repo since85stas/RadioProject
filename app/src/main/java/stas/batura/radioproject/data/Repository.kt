@@ -1,11 +1,10 @@
 package stas.batura.radioproject.data
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import androidx.lifecycle.asLiveData
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.StatusResponse
@@ -38,8 +37,10 @@ class Repository @Inject constructor(): IRepository {
 //        return
 //    }
 
-    override fun addPodcast(podcast: Podcast): Long {
-        return repository.insertPodcast(podcast)
+    override fun addPodcast(podcast: Podcast){
+        repScope.launch {
+            repository.insertPodcast(podcast)
+        }
     }
 
     override fun getPodcastsList(): Flow<List<Podcast>> {

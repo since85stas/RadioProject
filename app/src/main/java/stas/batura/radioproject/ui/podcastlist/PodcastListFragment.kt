@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_podcast_list.*
 import stas.batura.radioproject.R
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
 
@@ -41,15 +42,22 @@ class PodcastListFragment : Fragment() {
 //        })
         bindings.podacstListViewModel = podcastListViewModel
 
-        val adapter = PodcastsAdapter()
-        bindings.adapter = adapter
+
         bindings.lifecycleOwner = viewLifecycleOwner
+
+
+
+        return bindings.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val adapter = PodcastsAdapter()
+        podcast_recycler.adapter = adapter
 
         podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
             adapter.submitList(podcasts)
         }
-
-        return bindings.root
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onStart() {
