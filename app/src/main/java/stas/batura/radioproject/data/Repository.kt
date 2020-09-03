@@ -32,11 +32,6 @@ class Repository @Inject constructor(): IRepository {
 
     @Inject lateinit var repository: RadioDao
 
-//    override fun getSongText(title: String): Deferred<StatusResponse> {
-//        Log.d(TAG, "test")
-//        return
-//    }
-
     override fun addPodcast(podcast: Podcast){
         repScope.launch {
             repository.insertPodcast(podcast)

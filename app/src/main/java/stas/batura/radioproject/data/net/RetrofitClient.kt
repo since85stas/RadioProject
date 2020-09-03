@@ -18,7 +18,7 @@ object RetrofitClient {
     private val BASE_URL = "https://radio-t.com/site-api"
 
     private val loggingInterceptor = HttpLoggingInterceptor()
-    .setLevel(HttpLoggingInterceptor.Level.BODY)
+        .setLevel(HttpLoggingInterceptor.Level.BODY)
 
     private val httpClient = OkHttpClient.Builder()
 
@@ -36,16 +36,7 @@ object RetrofitClient {
      */
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .client(httpClient.addInterceptor(object : Interceptor {
-            override fun intercept(chain: Interceptor.Chain): okhttp3.Response {
-                val request: Request =
-                    chain.request().newBuilder()
-                        .addHeader("x-rapidapi-host", "canarado-lyrics.p.rapidapi.com")
-                        .addHeader("x-rapidapi-key", "9016123d29mshfd7b7fa9b0d89eap17019fjsnfb4983ac17fa")
-                        .build()
-                return chain.proceed(request)
-            }
-        }).addInterceptor(loggingInterceptor).build())
+        .client(httpClient.addInterceptor(loggingInterceptor).build())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .baseUrl(BASE_URL)
         .build()
