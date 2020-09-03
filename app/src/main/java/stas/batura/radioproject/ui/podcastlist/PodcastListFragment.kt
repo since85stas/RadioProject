@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import stas.batura.radioproject.R
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
@@ -26,7 +28,7 @@ class PodcastListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         podcastListViewModel =
-                ViewModelProviders.of(this).get(PodcastListViewModel::class.java)
+                ViewModelProvider(this).get(PodcastListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_podcast_list, container, false)
         val textView: TextView = root.findViewById(R.id.text_poscast)
 
@@ -38,7 +40,14 @@ class PodcastListFragment : Fragment() {
 //            textView.text = it
 //        })
         bindings.podacstListViewModel = podcastListViewModel
+
+        val adapter = PodcastsAdapter()
+        bindings.adapter = adapter
         bindings.lifecycleOwner = viewLifecycleOwner
+
+        podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
+            adapter.submitList(podcasts)
+        }
 
         return bindings.root
     }
@@ -57,7 +66,6 @@ class PodcastListFragment : Fragment() {
      * starting observing a viewModel when fragment is active
      */
     private fun addObservers() {
-
     }
 
     /**

@@ -19,12 +19,9 @@ import javax.inject.Singleton
 //}
 
 @Module
-@InstallIn(ApplicationComponent::class)
-class RepositoryModule {
+@InstallIn(ActivityComponent::class)
+abstract class RepositoryModule {
 
-    @Provides
-    @Singleton
-    fun providesRep(): Repository {
-        return Repository()
-    }
+    @Binds
+    abstract fun bindRepos(repository: Repository): IRepository
 }

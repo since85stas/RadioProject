@@ -12,7 +12,7 @@ import stas.batura.radioproject.data.net.StatusResponse
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
-class Repository () {
+class Repository @Inject constructor(): IRepository {
 
     private val TAG = Repository::class.java.simpleName
 
@@ -38,11 +38,11 @@ class Repository () {
 //        return
 //    }
 
-    fun addPodcast(podcast: Podcast): Long {
+    override fun addPodcast(podcast: Podcast): Long {
         return repository.insertPodcast(podcast)
     }
 
-    fun getPodcastsList(): Flow<List<Podcast>> {
+    override fun getPodcastsList(): Flow<List<Podcast>> {
         return repository.getPodcastsList()
     }
 

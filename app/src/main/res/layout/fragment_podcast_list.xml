@@ -7,6 +7,10 @@
         <variable
             name="podacstListViewModel"
             type="stas.batura.radioproject.ui.podcastlist.PodcastListViewModel" />
+
+        <variable
+            name="adapter"
+            type="stas.batura.radioproject.ui.podcastlist.PodcastsAdapter" />
     </data>
 
     <LinearLayout
