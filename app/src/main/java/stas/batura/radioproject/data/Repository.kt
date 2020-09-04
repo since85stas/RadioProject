@@ -59,7 +59,8 @@ class Repository @Inject constructor(): IRepository {
 
     suspend fun updatePodacastInfo() {
         val podcastBody = retrofit.getPodcastByNum("223")
-        radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcastBody))
+        val podcast = Podcast.FromPodcastBody.build(podcastBody)
+        radioDao.insertPodcast(podcast)
     }
 
     override fun addPodcast(podcast: Podcast){

@@ -35,7 +35,9 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     }
 
     fun addPodcast() {
-        repository.addPodcast(Podcast())
+        launchDataLoad {
+            repository.tryUpdateRecentRadioCache()
+        }
     }
 
     /**
