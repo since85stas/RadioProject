@@ -6,6 +6,9 @@ import stas.batura.radioproject.data.net.PodcastBody
 
 @Entity(tableName = "podcast_table")
 data class Podcast(
+    @PrimaryKey()
+    var podcastId: Int ,
+
     // url поста
     var url: String =     "url",
 
@@ -15,13 +18,17 @@ data class Podcast(
     // дата-время поста в RFC3339
     var time: String     = "0"
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var podcastId: Long = 0L
+
 
     object FromPodcastBody  {
 
         fun build(podcastBody: PodcastBody): Podcast {
-            return Podcast(podcastBody.url, podcastBody.title, podcastBody.date.toString())
+
+            // убираем все буквы, оставляем только номер
+            val reg = "\\D".toRegex()
+            val num = reg.replace(podcastBody.title, "")
+
+            return Podcast(num.toInt() ,podcastBody.url, podcastBody.title, podcastBody.date.toString())
         }
 
     }

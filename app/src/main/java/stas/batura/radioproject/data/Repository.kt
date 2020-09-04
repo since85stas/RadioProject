@@ -58,17 +58,24 @@ class Repository @Inject constructor(): IRepository {
     }
 
     suspend fun updatePodacastInfo() {
-        val podcastBody = retrofit.getPodcastByNum("223")
-        val podcast = Podcast.FromPodcastBody.build(podcastBody)
-        radioDao.insertPodcast(podcast)
+        val podcasts = retrofit.getLastNPodcasts(10).map { Podcast.FromPodcastBody.build(it) }
+
+//        val podcast = Podcast.FromPodcastBody.build(podcastBody)
+        radioDao.insertAll(podcasts)
     }
 
+    /**
+     * добавляет подкаст в базу данных
+     */
     override fun addPodcast(podcast: Podcast){
         repScope.launch {
             radioDao.insertPodcast(podcast)
         }
     }
 
+    /**
+     * выдает список подкастов из базы данных
+     */
     override fun getPodcastsList(): Flow<List<Podcast>> {
         return radioDao.getPodcastsList()
     }
