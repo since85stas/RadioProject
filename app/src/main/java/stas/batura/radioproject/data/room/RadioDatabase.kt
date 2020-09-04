@@ -33,7 +33,7 @@ import java.util.concurrent.Executors
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities =[Podcast::class], version = 1, exportSchema = false)
+@Database(entities =[Podcast::class], version = 2, exportSchema = false)
 abstract class RadioDatabase : RoomDatabase() {
 
     /**

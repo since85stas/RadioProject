@@ -1,27 +1,65 @@
 package stas.batura.radioproject.ui.podcastlist
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.Repository
 import stas.batura.radioproject.data.room.Podcast
 
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {
 
+    private val TAG = PodcastListViewModel::class.java.simpleName
+
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
     }
+
+    private val _spinner = MutableLiveData<Boolean>(false)
+    /**
+     * Show a loading spinner if true
+     */
+    val spinner: LiveData<Boolean>
+        get() = _spinner
 
     val text: LiveData<String> = _text
 
     val podcasts: LiveData<List<Podcast>> = repository.getPodcastsList().asLiveData()
 
+    init {
+        launchDataLoad {
+            repository.tryUpdateRecentRadioCache()
+        }
+    }
+
     fun addPodcast() {
         repository.addPodcast(Podcast())
     }
 
-
+    /**
+     * Helper function to call a data load function with a loading spinner; errors will trigger a
+     * snackbar.
+     *
+     * By marking [block] as [suspend] this creates a suspend lambda which can call suspend
+     * functions.
+     *
+     * @param block lambda to actually load data. It is called in the viewModelScope. Before calling
+     *              the lambda, the loading spinner will display. After completion or error, the
+     *              loading spinner will stop.
+     */
+    private fun launchDataLoad(block: suspend () -> Unit): Job {
+        return viewModelScope.launch {
+            try {
+                _spinner.value = true
+                block()
+            } catch (error: Throwable) {
+                Log.d(TAG, "launchDataLoad: " + error)
+//                _snackbar.value = error.message
+            } finally {
+                _spinner.value = false
+            }
+        }
+    }
 }

@@ -8,6 +8,8 @@ import stas.batura.radioproject.data.room.Podcast
 
 interface IRepository {
 
+    suspend fun tryUpdateRecentRadioCache()
+
     fun addPodcast(podcast: Podcast)
 
     fun getPodcastsList(): Flow<List<Podcast>>

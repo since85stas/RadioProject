@@ -1,14 +1,10 @@
 package stas.batura.radioproject.data
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
-import stas.batura.radioproject.data.net.StatusResponse
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -31,7 +27,7 @@ class Repository @Inject constructor(): IRepository {
      */
     private val repScope = CoroutineScope(Dispatchers.IO + repositoryJob)
 
-    @Inject lateinit var repository: RadioDao
+    @Inject lateinit var radioDao: RadioDao
 
     @Inject lateinit var retrofit: IRetrofit
 
@@ -43,14 +39,37 @@ class Repository @Inject constructor(): IRepository {
         }
     }
 
+    /**
+     * Returns true if we should make a network request.
+     */
+    private fun shouldUpdateRadioCache(): Boolean {
+        // suspending function, so you can e.g. check the status of the database here
+        return true
+    }
+
+    /**
+     * Update the app cache.
+     *
+     * This function may decide to avoid making a network requests on every call based on a
+     * cache-invalidation policy.
+     */
+    override suspend fun tryUpdateRecentRadioCache() {
+        if (shouldUpdateRadioCache()) updatePodacastInfo()
+    }
+
+    suspend fun updatePodacastInfo() {
+        val podcastBody = retrofit.getPodcastByNum("223")
+        radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcastBody))
+    }
+
     override fun addPodcast(podcast: Podcast){
         repScope.launch {
-            repository.insertPodcast(podcast)
+            radioDao.insertPodcast(podcast)
         }
     }
 
     override fun getPodcastsList(): Flow<List<Podcast>> {
-        return repository.getPodcastsList()
+        return radioDao.getPodcastsList()
     }
 
 

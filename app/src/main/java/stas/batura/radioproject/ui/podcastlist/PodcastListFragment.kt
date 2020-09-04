@@ -74,6 +74,7 @@ class PodcastListFragment : Fragment() {
      * starting observing a viewModel when fragment is active
      */
     private fun addObservers() {
+
     }
 
     /**
