@@ -9,19 +9,19 @@ data class PodcastBody (
     var categories: List<String>, // список категорий, массив строк
 
     @Json(name = "image")
-    var imageUrl: String,    // url картинки
+    var imageUrl: String? = null,    // url картинки
 
     @Json(name = "file_name")
-    var fileName:   String,  // имя файла
+    var fileName:   String? = null,  // имя файла
 
     @Json(name = "body")
-    var bodyHtml: String,     // тело поста в HTML
+    var bodyHtml: String? = null,     // тело поста в HTML
 
     @Json(name = "show_notes")
-    var postText: String,  // пост в текстовом виде
+    var postText: String? = null,  // пост в текстовом виде
 
     @Json(name = "audio_url")
-    var audioUrl: String,   // url аудио файла
+    var audioUrl: String? = null,   // url аудио файла
 
     @Json(name = "time_labels")
     var timeLables: List<TimeLabel>? = null) // массив временых меток тем
