@@ -11,11 +11,12 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
+import javax.inject.Inject
 
 
-object RetrofitClient {
+object RetrofitClient   {
 
-    private val BASE_URL = "https://radio-t.com/site-api"
+    private val BASE_URL = "https://radio-t.com/site-api/"
 
     private val loggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -53,7 +54,7 @@ object RetrofitClient {
         .build()
 
     object netApi {
-        val RETROFIT_SERVISE : IRetrofit by lazy {
+        val servise : IRetrofit by lazy {
             retrofit.create(IRetrofit::class.java)
         }
     }

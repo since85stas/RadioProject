@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
+import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.net.StatusResponse
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
@@ -31,6 +32,16 @@ class Repository @Inject constructor(): IRepository {
     private val repScope = CoroutineScope(Dispatchers.IO + repositoryJob)
 
     @Inject lateinit var repository: RadioDao
+
+    @Inject lateinit var retrofit: IRetrofit
+
+    init {
+        Log.d(TAG, "repository started: ")
+        val res = repScope.async {
+            val res = retrofit.getPodcastByNum("223")
+
+        }
+    }
 
     override fun addPodcast(podcast: Podcast){
         repScope.launch {

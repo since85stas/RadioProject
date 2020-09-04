@@ -7,8 +7,8 @@ import retrofit2.http.Path
 
 
 interface IRetrofit {
-    @GET("/podcast/{num}")
-    fun getPodcastByNum(@Path("num") num: String):
-            Flow<PodcastBody>
+    @GET("podcast/{num}")
+    suspend fun getPodcastByNum(@Path("num") num: String):
+            PodcastBody
 
 }
