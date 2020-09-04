@@ -42,9 +42,10 @@ class Repository @Inject constructor(): IRepository {
     /**
      * Returns true if we should make a network request.
      */
-    private fun shouldUpdateRadioCache(): Boolean {
-        // suspending function, so you can e.g. check the status of the database here
-        return true
+    private suspend fun shouldUpdateRadioCache(): Boolean {
+        // if not in a database adding it
+            val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getLastPodcast())
+        return radioDao.getPodcastByNum(lastPodcast.podcastId) == null
     }
 
     /**
@@ -56,6 +57,10 @@ class Repository @Inject constructor(): IRepository {
     override suspend fun tryUpdateRecentRadioCache() {
         if (shouldUpdateRadioCache()) updatePodacastInfo()
     }
+
+//    suspend fun getLastPodcast(): Podcast {
+//
+//    }
 
     suspend fun updatePodacastInfo() {
         val podcasts = retrofit.getLastNPodcasts(10).map { Podcast.FromPodcastBody.build(it) }

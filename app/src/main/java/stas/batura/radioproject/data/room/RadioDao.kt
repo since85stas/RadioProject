@@ -11,13 +11,20 @@ import stas.batura.radioproject.data.room.Podcast
 @Dao
 interface RadioDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPodcast(podcast: Podcast): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(plants: List<Podcast>)
 
-    @Query("SELECT * FROM podcast_table ORDER BY podcastId")
+    @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
     fun getPodcastsList(): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
+    fun getPodcastFlowByNum(num: Int): Flow<Podcast>
+
+    @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
+    suspend fun getPodcastByNum(num: Int): Podcast?
+
 
 }
