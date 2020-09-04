@@ -62,6 +62,9 @@ class Repository @Inject constructor(): IRepository {
 //
 //    }
 
+    /**
+     * Берет информацию из последних N данных и добавляет в БД
+     */
     suspend fun updatePodacastInfo() {
         val podcasts = retrofit.getLastNPodcasts(10).map { Podcast.FromPodcastBody.build(it) }
 

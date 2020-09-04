@@ -18,6 +18,8 @@ object RetrofitClient   {
 
     private val BASE_URL = "https://radio-t.com/site-api/"
 
+    private val NEWS_URL = "https://news.radio-t.com/api/v1/"
+
     private val loggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -43,22 +45,26 @@ object RetrofitClient   {
         .build()
 
     /**
-     * Use the Retrofit builder to build a retrofit object using a Xml converter
+     * Use the Retrofit builder to build a retrofit object using a Moshi converter with our Moshi
      * object.
      */
-    private val retrofitXmlCour = Retrofit.Builder()
-        .addConverterFactory(SimpleXmlConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    private val retrofitNews = Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .client(httpClient.addInterceptor(loggingInterceptor).build())
-        .baseUrl(BASE_URL)
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .baseUrl(NEWS_URL)
         .build()
+
 
     object netApi {
         val servise : IRetrofit by lazy {
             retrofit.create(IRetrofit::class.java)
         }
-    }
 
+        val newService: INewsRetrofit by lazy {
+            retrofitNews.create(INewsRetrofit::class.java)
+        }
+    }
 
 }
 
