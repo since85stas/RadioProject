@@ -57,7 +57,11 @@ class Repository @Inject constructor(): IRepository {
 //        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
         //TODO: change last getter
         val lastPodcast = radioDao.getLastPodcast()
-        return lastPodcast!!.isWeekGone(System.currentTimeMillis())
+        if (lastPodcast != null) {
+            return lastPodcast.isWeekGone(System.currentTimeMillis())
+        } else {
+            return true
+        }
     }
 
     /**

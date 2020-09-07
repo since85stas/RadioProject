@@ -2,22 +2,23 @@ package stas.batura.radioproject.data.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
 import stas.batura.radioproject.data.net.PodcastBody
 
 @Entity(tableName = "podcast_table")
 data class Podcast(
     @PrimaryKey()
-    var podcastId: Int ,
+    val podcastId: Int ,
 
     // url поста
-    var url: String =     "url",
+    val url: String =     "url",
 
     // заголовок поста
-    var title: String  =   "title",
+    val title: String  =   "title",
 
     // дата-время поста в RFC3339
-    var time: String     = "0"
+    val time: String     = "0"
 ) {
 
 
@@ -35,22 +36,24 @@ data class Podcast(
     }
 
     /**
-     * check if week is passed after [currTime] value
+     * check if week is passed after [newTime] value
      */
-    fun isWeekGone(currTime: Long): Boolean {
-                if (getMillisTime() > TIME_WEEK) {
+    fun isWeekGone(newTime: Long): Boolean {
+                if (newTime - getMillisTime() > TIME_WEEK) {
                     return true
                 } else {
                     return false
                 }
     }
 
+
     /**
      * transform class field [time] to Milliseconds
      */
-    private fun getMillisTime(): Long {
-        return 0L;
-
+    fun getMillisTime(): Long {
+        val dateTime: DateTime = DateTime.parseRfc3339(time)
+        val millis: Long = dateTime.getValue()
+        return millis
     }
 }
 
