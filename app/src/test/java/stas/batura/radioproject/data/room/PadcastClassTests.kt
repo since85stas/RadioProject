@@ -1,4 +1,4 @@
-package stas.batura.radioproject.data
+package stas.batura.radioproject.data.room
 
 import junit.framework.Assert.assertEquals
 import org.junit.Before

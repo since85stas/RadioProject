@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
+import stas.batura.radioproject.data.room.Category
 import stas.batura.radioproject.data.room.Podcast
 
 @Dao
@@ -28,4 +29,7 @@ interface RadioDao {
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
     suspend fun getLastPodcast(): Podcast?
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCategory(categories: Category)
 }

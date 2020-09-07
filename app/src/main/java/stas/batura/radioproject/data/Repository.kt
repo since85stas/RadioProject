@@ -5,6 +5,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
+import stas.batura.radioproject.data.room.Category
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -55,7 +56,6 @@ class Repository @Inject constructor(): IRepository {
     @Throws(NullPointerException::class)
     private suspend fun shouldUpdateRadioCacheDB(): Boolean {
 //        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
-        //TODO: change last getter
         val lastPodcast = radioDao.getLastPodcast()
         if (lastPodcast != null) {
             return lastPodcast.isWeekGone(System.currentTimeMillis())
@@ -84,10 +84,17 @@ class Repository @Inject constructor(): IRepository {
      * Берет информацию из последних N данных и добавляет в БД
      */
     suspend fun updatePodacastInfo() {
-        val podcasts = retrofit.getLastNPodcasts(10).map { Podcast.FromPodcastBody.build(it) }
+        val podcastBodis = retrofit.getLastNPodcasts(10)
+//        val podcasts = podcastBodis.map { Podcast.FromPodcastBody.build(it) }
 
 //        val podcast = Podcast.FromPodcastBody.build(podcastBody)
-        radioDao.insertAll(podcasts)
+//        radioDao.insertAll(podcasts)
+        for (podcst in podcastBodis) {
+            val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
+            for (category in podcst.categories) {
+                radioDao.insertCategory(Category(podcastId, category))
+            }
+        }
     }
 
     /**

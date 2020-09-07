@@ -18,7 +18,17 @@ data class Podcast(
     val title: String  =   "title",
 
     // дата-время поста в RFC3339
-    val time: String     = "0"
+    val time: String     = "0",
+
+    var imageUrl: String? = null,
+
+    var fileName:   String? = null,
+
+    var bodyHtml: String? = null,
+
+    var postText: String? = null,
+
+    var audioUrl: String? = null
 ) {
 
 
@@ -30,7 +40,16 @@ data class Podcast(
             val reg = "\\D".toRegex()
             val num = reg.replace(podcastBody.title, "")
 
-            return Podcast(num.toInt() ,podcastBody.url, podcastBody.title, podcastBody.date.toString())
+            return Podcast(num.toInt() ,
+                podcastBody.url,
+                podcastBody.title,
+                podcastBody.date.toString(),
+                podcastBody.imageUrl,
+                podcastBody.fileName,
+                podcastBody.bodyHtml,
+                podcastBody.postText,
+                podcastBody.audioUrl
+            )
         }
 
     }
