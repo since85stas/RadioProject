@@ -26,5 +26,6 @@ interface RadioDao {
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
     suspend fun getPodcastByNum(num: Int): Podcast?
 
-
+    @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
+    suspend fun getLastPodcast(): Podcast?
 }

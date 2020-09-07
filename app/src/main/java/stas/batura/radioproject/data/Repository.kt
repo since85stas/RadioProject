@@ -43,7 +43,8 @@ class Repository @Inject constructor(): IRepository {
      * Returns true if we should make a network request.
      */
     private suspend fun shouldUpdateRadioCacheNetw(): Boolean {
-        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
+            val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getLastPodcast()[0])
+//        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
         val isNoInBb = radioDao.getPodcastByNum(lastPodcast.podcastId) == null
         return isNoInBb
     }
@@ -51,10 +52,12 @@ class Repository @Inject constructor(): IRepository {
     /**
      * Returns true if we should make a network request.
      */
+    @Throws(NullPointerException::class)
     private suspend fun shouldUpdateRadioCacheDB(): Boolean {
-        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
-
-        return lastPodcast.isWeekGone(System.currentTimeMillis())
+//        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
+        //TODO: change last getter
+        val lastPodcast = radioDao.getLastPodcast()
+        return lastPodcast!!.isWeekGone(System.currentTimeMillis())
     }
 
     /**
