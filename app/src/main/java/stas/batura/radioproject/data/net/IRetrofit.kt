@@ -15,7 +15,7 @@ interface IRetrofit {
     suspend fun getLastNPodcasts(@Path("N") number: Int): List<PodcastBody>
 
     @GET("last/1?categories=podcast")
-    suspend fun getLastPodcast(): PodcastBody
+    suspend fun getLastPodcast(): List<PodcastBody>
 
 
 }

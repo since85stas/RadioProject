@@ -2,6 +2,7 @@ package stas.batura.radioproject.data.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import stas.batura.radioproject.data.dataUtils.TIME_WEEK
 import stas.batura.radioproject.data.net.PodcastBody
 
 @Entity(tableName = "podcast_table")
@@ -30,6 +31,25 @@ data class Podcast(
 
             return Podcast(num.toInt() ,podcastBody.url, podcastBody.title, podcastBody.date.toString())
         }
+
+    }
+
+    /**
+     * check if week is passed after [currTime] value
+     */
+    fun isWeekGone(currTime: Long): Boolean {
+                if (getMillisTime() > TIME_WEEK) {
+                    return true
+                } else {
+                    return false
+                }
+    }
+
+    /**
+     * transform class field [time] to Milliseconds
+     */
+    private fun getMillisTime(): Long {
+        return 0L;
 
     }
 }
