@@ -5,7 +5,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
-import stas.batura.radioproject.data.room.Category
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -92,7 +91,7 @@ class Repository @Inject constructor(): IRepository {
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
             for (category in podcst.categories) {
-                radioDao.insertCategory(Category(podcastId, category))
+//                radioDao.insertCategory(Category(podcastId, category))
             }
         }
     }
