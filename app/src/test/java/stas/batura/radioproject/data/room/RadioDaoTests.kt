@@ -6,21 +6,22 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.batura.stat.batchat.repository.room.RadioDao
 import ru.batura.stat.batchat.repository.room.RadioDatabase
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class RadioDaoTests {
 
-    private lateinit var radioDao: RadioDao
+    private lateinit var radioDB: RadioDatabase
 
     private val testDispatcher = TestCoroutineDispatcher()
 
@@ -41,26 +42,46 @@ class RadioDaoTests {
 
         // Using an in-memory database so that the information stored here disappears when the
         // process is killed.
-        radioDao = Room.inMemoryDatabaseBuilder(
+        radioDB = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
             RadioDatabase::class.java
-        ).allowMainThreadQueries().build().radioDatabaseDao
+        ).allowMainThreadQueries().build()
 
         Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearOff() {
+        radioDB.clearAllTables()
+        radioDB.close()
     }
 
     @Test
     fun check_lastPodcstValue_ok() = runBlocking{
 
-            radioDao.insertPodcast(podcast1)
-            radioDao.insertPodcast(podcast2)
-            radioDao.insertPodcast(podcast3)
+            radioDB.radioDatabaseDao.insertPodcast(podcast1)
+            radioDB.radioDatabaseDao.insertPodcast(podcast2)
+            radioDB.radioDatabaseDao.insertPodcast(podcast3)
 
-            val last = radioDao.getLastPodcast()
+            val last = radioDB.radioDatabaseDao.getLastPodcast()
             assertEquals(podcast3, last)
     }
 
+    // TODO: разобраться как писать нормальные тесты
+    @Test
+    fun check_lastPodcastFlow_ok() = runBlocking {
+        radioDB.radioDatabaseDao.insertPodcast(podcast1)
+        radioDB.radioDatabaseDao.insertPodcast(podcast2)
+        radioDB.radioDatabaseDao.insertPodcast(podcast3)
 
+        val lastFlow = radioDB.radioDatabaseDao.getPodcastFlowByNum(1)
+
+        var last: Podcast? = null
+
+        val listlast = lastFlow.take(1).toList()
+
+        assertEquals(podcast1, listlast.get(0))
+    }
 
 
 }
