@@ -6,6 +6,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -78,10 +80,28 @@ class RadioDaoTests {
 
         var last: Podcast? = null
 
-        val listlast = lastFlow.take(1).toList()
+        val listlast = lastFlow.first()
 
-        assertEquals(podcast1, listlast.get(0))
+        assertEquals(podcast1, listlast)
     }
 
+    @Test
+    fun check_lastPodcastFlowList_ok() = runBlocking {
+        radioDB.radioDatabaseDao.insertPodcast(podcast1)
+        radioDB.radioDatabaseDao.insertPodcast(podcast2)
+        radioDB.radioDatabaseDao.insertPodcast(podcast3)
 
+        val testList = mutableListOf<Podcast>()
+        testList.add(podcast3)
+        testList.add(podcast2)
+        testList.add(podcast1)
+
+        val lastFlow = radioDB.radioDatabaseDao.getPodcastsList()
+
+        var last: Podcast? = null
+
+        val listlast = lastFlow.first()
+
+        assertEquals(testList, listlast!!)
+    }
 }
