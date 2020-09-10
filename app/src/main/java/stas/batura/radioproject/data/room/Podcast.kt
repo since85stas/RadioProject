@@ -69,7 +69,7 @@ data class Podcast(
      * check if week is passed after [newTime] value
      */
     fun isWeekGone(newTime: Long): Boolean {
-                if (newTime - getMillisTime() > TIME_WEEKK) {
+                if (newTime - getMillisTime() > TIME_WEEK) {
                     return true
                 } else {
                     return false
