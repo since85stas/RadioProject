@@ -12,7 +12,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 
-import stas.batura.musicproject.R;
+import stas.batura.audio.R;
 
 /**
  * Helper APIs for constructing MediaStyle notifications

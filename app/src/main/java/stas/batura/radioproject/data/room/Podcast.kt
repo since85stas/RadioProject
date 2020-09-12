@@ -25,7 +25,7 @@ data class Podcast(
     // дата-время поста в RFC3339
     val time: String     = "0",
 
-    val categories: List<String>,
+    val categories: List<String>? = null,
 
     var imageUrl: String? = null,
 
@@ -37,7 +37,7 @@ data class Podcast(
 
     var audioUrl: String? = null,
 
-    var timeLabels: List<TimeLabel>?
+    var timeLabels: List<TimeLabel>? = null
 ) {
 
 

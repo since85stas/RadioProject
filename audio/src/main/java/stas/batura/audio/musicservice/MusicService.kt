@@ -1,4 +1,4 @@
-package stas.batura.musicproject.musicservice
+package stas.batura.audio.musicservice
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -29,16 +29,18 @@ import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import com.google.android.exoplayer2.upstream.cache.*
-import stas.batura.musicproject.MainActivity
-import stas.batura.musicproject.R
-import stas.batura.musicproject.repository.room.REPEAT_ONE
-import stas.batura.musicproject.utils.InjectorUtils
+import stas.batura.radioproject.MainActivity
+import stas.batura.radioproject.data.room.Podcast
 import java.io.File
 
-class MusicService (): Service () {
+class MusicService (): Service() {
+
+    private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
 
     private val NOTIFICATION_ID = 404
     private val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
+
+    private val podcast: Podcast =  Podcast(1, "url1", "title1", "time1")
 
     // билдер для данных
     private val metadataBuilder  = MediaMetadataCompat.Builder()
@@ -67,7 +69,7 @@ class MusicService (): Service () {
     private var extractorsFactory: ExtractorsFactory? = null
     private var dataSourceFactory: DataSource.Factory? = null
 
-    lateinit var musicRepository: MusicRepository
+//    lateinit var musicRepository: MusicRepository
 
     var fileDataSource : DataSource? = null
 
@@ -75,7 +77,7 @@ class MusicService (): Service () {
         super.onCreate()
 
 //        musicRepository = MusicRepository(InjectorUtils.provideRep(application))
-        musicRepository = InjectorUtils.provideMusicRep(application)
+//        musicRepository = InjectorUtils.provideMusicRep(application)
 
         println("Music service created")
 
@@ -88,7 +90,7 @@ class MusicService (): Service () {
             @SuppressLint("WrongConstant") val notificationChannel =
                 NotificationChannel(
                     NOTIFICATION_DEFAULT_CHANNEL_ID,
-                    getString(R.string.notification_channel_name),
+                    NOTIF_CHANNEL_NAME,
                     NotificationManagerCompat.IMPORTANCE_DEFAULT
                 )
             val notificationManager =
@@ -238,9 +240,9 @@ class MusicService (): Service () {
                     )
                 )
                 if (!mediaSession!!.isActive) {
-                    val track: MusicRepository.Track = musicRepository.getCurrent()
-                    updateMetadataFromTrack(track)
-                    prepareToPlay(track.uri)
+//                    val track: MusicRepository.Track = musicRepository.getCurrent()
+                    updateMetadataFromTrack(podcast)
+                    prepareToPlay(Uri.parse(podcast.audioUrl))
                     if (!isAudioFocusRequested) {
                         isAudioFocusRequested = true
                         var audioFocusResult: Int
@@ -331,45 +333,46 @@ class MusicService (): Service () {
 
 
 
-        // при переходе на следующий трек
-        override fun onSkipToNext() {
-            val track = musicRepository.next
-            updateMetadataFromTrack(track)
+//        // при переходе на следующий трек
+//        override fun onSkipToNext() {
+//            val track = musicRepository.next
+//            updateMetadataFromTrack(track)
+//
+//            refreshNotificationAndForegroundStatus(currentState)
+//
+//            prepareToPlay(track.uri)
+//        }
+//
+//        // при переходе на предыдущий трек
+//        override fun onSkipToPrevious() {
+//            val track = musicRepository.previous
+//            updateMetadataFromTrack(track)
+//
+//            refreshNotificationAndForegroundStatus(currentState)
+//
+//            prepareToPlay(track.uri)
+//        }
 
-            refreshNotificationAndForegroundStatus(currentState)
-
-            prepareToPlay(track.uri)
-        }
-
-        // при переходе на предыдущий трек
-        override fun onSkipToPrevious() {
-            val track = musicRepository.previous
-            updateMetadataFromTrack(track)
-
-            refreshNotificationAndForegroundStatus(currentState)
-
-            prepareToPlay(track.uri)
-        }
-
-        fun onPlayByTrackId (id : Int) {
-            val track = musicRepository.getTrackByIndex(id)
-            updateMetadataFromTrack(track)
-
-            refreshNotificationAndForegroundStatus(currentState)
-
-            prepareToPlay(track.uri)
-        }
+//
+//        fun onPlayByTrackId (id : Int) {
+//            val track = musicRepository.getTrackByIndex(id)
+//            updateMetadataFromTrack(track)
+//
+//            refreshNotificationAndForegroundStatus(currentState)
+//
+//            prepareToPlay(track.uri)
+//        }
 
         /**
          * играем по uri
          */
         override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
-            val track = musicRepository.getTrackByUri(uri)
-            updateMetadataFromTrack(track)
+//            val track = musicRepository.getTrackByUri(uri)
+            updateMetadataFromTrack(podcast)
 
             refreshNotificationAndForegroundStatus(currentState)
 
-            prepareToPlay(track.uri)
+            prepareToPlay(Uri.parse(podcast.url))
         }
 
         // подготавливаем трэк
@@ -381,24 +384,24 @@ class MusicService (): Service () {
         }
 
         // обновляем данные о треке
-        private fun updateMetadataFromTrack(track: MusicRepository.Track) {
+        private fun updateMetadataFromTrack(podcast: Podcast) {
 //            val image = Glide.with(this@MusicService).load(track.bitmapUri) as Bitmap
-            if (track.bitmapUri == null) {
-                metadataBuilder.putBitmap(
-                    MediaMetadataCompat.METADATA_KEY_ART,
-                    BitmapFactory.decodeResource(resources, R.drawable.cat_my)
-                )
+            if (podcast.url == null) {
+//                metadataBuilder.putBitmap(
+//                    MediaMetadataCompat.METADATA_KEY_ART,
+////                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
+//                )
             } else {
                 metadataBuilder.putBitmap(
                     MediaMetadataCompat.METADATA_KEY_ART,
-                    BitmapFactory.decodeFile(track.bitmapUri.path)
+                    BitmapFactory.decodeFile(podcast.imageUrl)
                 )
             }
 
-            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
-            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.artist)
-            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
-            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.duration)
+            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, podcast.title)
+//            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, podcast.)
+//            metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist)
+//            metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.duration)
             mediaSession!!.setMetadata(metadataBuilder.build())
 
         }
@@ -547,10 +550,11 @@ class MusicService (): Service () {
                 .setMediaSession(mediaSession!!.sessionToken)
         ) // setMediaSession требуется для Android Wear
 //        builder.setSmallIcon(R.mipmap.ic_launcher)
-        builder.color = ContextCompat.getColor(
-            this,
-            R.color.colorPrimaryDark
-        ) // The whole background (in MediaStyle), not just icon background
+//        builder.color = ContextCompat.getColor(
+//            this,
+//            R.color.colorPrimaryDark
+//        )
+        // The whole background (in MediaStyle), not just icon background
         builder.setShowWhen(false)
         builder.priority = NotificationCompat.PRIORITY_HIGH
         builder.setOnlyAlertOnce(true)
