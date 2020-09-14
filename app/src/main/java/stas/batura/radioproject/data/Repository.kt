@@ -42,9 +42,25 @@ class Repository @Inject constructor(): IRepository {
     /**
      * Returns true if we should make a network request.
      */
-    private fun shouldUpdateRadioCache(): Boolean {
-        // suspending function, so you can e.g. check the status of the database here
-        return true
+    private suspend fun shouldUpdateRadioCacheNetw(): Boolean {
+            val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getLastPodcast()[0])
+//        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
+        val isNoInBb = radioDao.getPodcastByNum(lastPodcast.podcastId) == null
+        return isNoInBb
+    }
+
+    /**
+     * Returns true if we should make a network request.
+     */
+    @Throws(NullPointerException::class)
+    private suspend fun shouldUpdateRadioCacheDB(): Boolean {
+//        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
+        val lastPodcast = radioDao.getLastPodcast()
+        if (lastPodcast != null) {
+            return lastPodcast.isWeekGone(System.currentTimeMillis())
+        } else {
+            return true
+        }
     }
 
     /**
@@ -54,21 +70,44 @@ class Repository @Inject constructor(): IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCache()) updatePodacastInfo()
+        if (shouldUpdateRadioCacheDB()) {
+            updatePodacastInfo()
+        }
     }
 
+//    suspend fun getLastPodcast(): Podcast {
+//
+//    }
+
+    /**
+     * Берет информацию из последних N данных и добавляет в БД
+     */
     suspend fun updatePodacastInfo() {
-        val podcastBody = retrofit.getPodcastByNum("223")
-        val podcast = Podcast.FromPodcastBody.build(podcastBody)
-        radioDao.insertPodcast(podcast)
+        val podcastBodis = retrofit.getLastNPodcasts(10)
+//        val podcasts = podcastBodis.map { Podcast.FromPodcastBody.build(it) }
+
+//        val podcast = Podcast.FromPodcastBody.build(podcastBody)
+//        radioDao.insertAll(podcasts)
+        for (podcst in podcastBodis) {
+            val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
+            for (category in podcst.categories) {
+//                radioDao.insertCategory(Category(podcastId, category))
+            }
+        }
     }
 
+    /**
+     * добавляет подкаст в базу данных
+     */
     override fun addPodcast(podcast: Podcast){
         repScope.launch {
             radioDao.insertPodcast(podcast)
         }
     }
 
+    /**
+     * выдает список подкастов из базы данных
+     */
     override fun getPodcastsList(): Flow<List<Podcast>> {
         return radioDao.getPodcastsList()
     }

@@ -21,9 +21,11 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import stas.batura.radioproject.data.room.CategoryDataConverter
 import stas.batura.radioproject.data.room.Podcast
-import java.util.concurrent.Executors
+import stas.batura.radioproject.data.room.TimeLabelsDataConverter
 
 
 /**
@@ -33,7 +35,8 @@ import java.util.concurrent.Executors
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities =[Podcast::class], version = 2, exportSchema = false)
+@Database(entities =[Podcast::class], version = 5, exportSchema = false)
+@TypeConverters(CategoryDataConverter::class, TimeLabelsDataConverter::class)
 abstract class RadioDatabase : RoomDatabase() {
 
     /**

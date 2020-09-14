@@ -31,5 +31,6 @@ data class TimeLabel (
 
     @Json(name = "time")
     val startTime: String,    // время начала в RFC3339
-    val duration: Int    // длительность в секундах
+
+    val duration: Int? = null    // длительность в секундах
 )
