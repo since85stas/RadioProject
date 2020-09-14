@@ -39,11 +39,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
 }
 
 dependencies {
 
-    implementation project( ':audio')
+//    implementation project( ':audio')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -114,4 +115,14 @@ dependencies {
 
     // Retrofit Coroutines Support
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_retrofit_coroutines_adapter"
+
+    api "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
+    api "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
+    api "com.google.android.exoplayer:extension-mediasession:$exoplayer_version"
+
+    implementation 'com.google.android.exoplayer:extension-okhttp:2.9.4'
+
+    // Moshi
+//    implementation "com.squareup.moshi:moshi:$version_moshi"
+//    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 }

@@ -1,4 +1,4 @@
-package stas.batura.audio.musicservice
+package stas.batura.radioproject.musicservice
 
 import android.annotation.SuppressLint
 import android.app.*
@@ -28,9 +28,7 @@ import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import com.google.android.exoplayer2.upstream.cache.*
-import stas.batura.radioproject.MainActivity
 import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.musicservice.MusicService
 import java.io.File
 
 class MusicService (): Service() {
@@ -115,14 +113,14 @@ class MusicService (): Service() {
         mediaSession!!.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
         mediaSession!!.setCallback(mediaSessionCallback)
 
-        val activityIntent = Intent(applicationContext, MainActivity :: class.java)
+//        val activityIntent = Intent(applicationContext, MainActivity :: class.java)
 
         // настраиваем активити
         mediaSession!!.setSessionActivity(
             PendingIntent.getActivity(
                 applicationContext,
                 0,
-               activityIntent,
+                null,
                 0
             )
         )

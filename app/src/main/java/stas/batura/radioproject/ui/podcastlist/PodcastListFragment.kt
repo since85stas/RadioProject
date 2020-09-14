@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_podcast_list.*
+import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
 
@@ -23,6 +24,8 @@ class PodcastListFragment : Fragment() {
 
     private lateinit var podcastListViewModel: PodcastListViewModel
 
+    private lateinit var mainviewModel: MainActivityViewModel
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -30,8 +33,9 @@ class PodcastListFragment : Fragment() {
     ): View? {
         podcastListViewModel =
                 ViewModelProvider(this).get(PodcastListViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_podcast_list, container, false)
-        val textView: TextView = root.findViewById(R.id.text_poscast)
+
+        // TODO: проверить состояние модели после перезапуска активити
+        mainviewModel = ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
 
         val bindings: FragmentPodcastListBinding = DataBindingUtil.inflate(inflater,
         R.layout.fragment_podcast_list,
@@ -41,7 +45,7 @@ class PodcastListFragment : Fragment() {
 //            textView.text = it
 //        })
         bindings.podacstListViewModel = podcastListViewModel
-
+        bindings.mainViewModel = mainviewModel
 
         bindings.lifecycleOwner = viewLifecycleOwner
 

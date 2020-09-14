@@ -5,12 +5,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import stas.batura.audio.musicservice.MusicService
+import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
@@ -35,10 +36,18 @@ class MainActivity : AppCompatActivity() {
 
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
-        val bindings: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        bindings.lifecycleOwner = this
-        bindings.mainViewModel = mainActivityViewModel
+//        val bindings: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+//        bindings.lifecycleOwner = this
+//        bindings.mainViewModel = mainActivityViewModel
+
+        mainActivityViewModel.createServiceListner.observe(this) {it ->
+            if (it) {
+                mainActivityViewModel.initMusicService()
+            }
+        }
     }
+
+
 
 
 }

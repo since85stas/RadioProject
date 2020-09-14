@@ -1,5 +1,6 @@
 package stas.batura.radioproject
 
+import android.app.Application
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.IBinder
@@ -8,17 +9,20 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import stas.batura.audio.musicservice.MusicService
+import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
 
-class MainActivityViewModel @ViewModelInject constructor(val repository: IRepository): AndroidViewModel() {
+class MainActivityViewModel @ViewModelInject constructor(val repository: IRepository
+                                                         , val application: Application
+
+): ViewModel() {
 
     private val TAG = MainActivityViewModel::class.java.simpleName
 
@@ -32,11 +36,15 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
     private var callback: MediaControllerCompat.Callback? = null
 
     // checking connection
-    val serviceConnection: MutableLiveData<ServiceConnection?> = MutableLiveData()
+    val serviceConnection: MutableLiveData<ServiceConnection?> = MutableLiveData(null)
 
     val exoPlayer: MutableLiveData<ExoPlayer> = MutableLiveData()
 
     val callbackChanges : MutableLiveData<PlaybackStateCompat?> = MutableLiveData(null)
+
+    private var _createServiceListner : MutableLiveData<Boolean> = MutableLiveData(false)
+    val createServiceListner : LiveData<Boolean>
+        get() = _createServiceListner
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -48,11 +56,16 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         Log.d(TAG, "view model created: ")
     }
 
+    fun createService()  {
+        _createServiceListner.value = true
+        _createServiceListner.value = false
+    }
+
     /**
      * создает музыкальный сервис и его контроллер
      */
-    fun initMusicService(isRecreate : Boolean) {
-        if (serviceConnection.value == null || isRecreate) {
+    fun initMusicService() {
+        if (serviceConnection.value == null) {
             // привязываем колбека и лайв дэйта
             callback = object : MediaControllerCompat.Callback() {
                 override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
@@ -66,8 +79,8 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
                     playerServiceBinder = service as MusicService.PlayerServiceBinder
                     try {
                         mediaController.value = MediaControllerCompat(
-                            getApplication(),
-                            playerServiceBinder!!.getMediaSessionToke()
+                                application,
+                        playerServiceBinder!!.getMediaSessionToke()
                         )
 
                         exoPlayer.value = playerServiceBinder!!.getPlayer()
@@ -85,9 +98,6 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
                         mediaController.value!!.unregisterCallback(callback!!)
                         mediaController.value = null
                     }
-                    _createServiceListner.value = false
-
-//                    serviseIsCreated = false
                 }
             }
         }
