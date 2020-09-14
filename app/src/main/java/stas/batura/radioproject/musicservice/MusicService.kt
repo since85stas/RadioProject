@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -28,6 +29,10 @@ import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import com.google.android.exoplayer2.upstream.cache.*
+import com.google.android.exoplayer2.util.Util
+import okhttp3.OkHttpClient
+import stas.batura.radioproject.MainActivity
+import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
 import java.io.File
 
@@ -113,14 +118,14 @@ class MusicService (): Service() {
         mediaSession!!.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
         mediaSession!!.setCallback(mediaSessionCallback)
 
-//        val activityIntent = Intent(applicationContext, MainActivity :: class.java)
+        val activityIntent = Intent(applicationContext, MainActivity :: class.java)
 
         // настраиваем активити
         mediaSession!!.setSessionActivity(
             PendingIntent.getActivity(
                 applicationContext,
                 0,
-                null,
+                activityIntent,
                 0
             )
         )
@@ -151,31 +156,31 @@ class MusicService (): Service() {
         // добавляем слушатель
         exoPlayer!!.addListener(exoPlayerListener)
 
-//        val httpDataSourceFactory: DataSource.Factory =
-//            OkHttpDataSourceFactory(
-//                OkHttpClient(),
-//                Util.getUserAgent(
-//                    this,
-//                    getString(R.string.app_name)
-//                )
-//            )
+        val httpDataSourceFactory: DataSource.Factory =
+            OkHttpDataSourceFactory(
+                OkHttpClient(),
+                Util.getUserAgent(
+                    this,
+                    getString(R.string.app_name)
+                )
+            )
 
-        val testUri =
-            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
-                    "/Music/Moonspell/Studio and Compilation/1995-Wolfheart (Original 1CD Release)/02 Love Crimes.mp3"))
-
-        val dataSpec = DataSpec(testUri)
-        fileDataSource =
-            FileDataSource()
-        try {
-            fileDataSource!!.open(dataSpec)
-        } catch (e: FileDataSourceException) {
-            e.printStackTrace()
-        }
-
-
-        val factory =
-            DataSource.Factory { fileDataSource }
+//        val testUri =
+//            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
+//                    "/Music/Moonspell/Studio and Compilation/1995-Wolfheart (Original 1CD Release)/02 Love Crimes.mp3"))
+//
+//        val dataSpec = DataSpec(testUri)
+//        fileDataSource =
+//            FileDataSource()
+//        try {
+//            fileDataSource!!.open(dataSpec)
+//        } catch (e: FileDataSourceException) {
+//            e.printStackTrace()
+//        }
+//
+//
+//        val factory =
+//            DataSource.Factory { fileDataSource }
 
          cache =
             SimpleCache(
@@ -185,7 +190,7 @@ class MusicService (): Service() {
 
         dataSourceFactory = CacheDataSourceFactory(
             cache,
-            factory,
+            httpDataSourceFactory,
             CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
         )
 

@@ -33,10 +33,10 @@ class Repository @Inject constructor(): IRepository {
 
     init {
         Log.d(TAG, "repository started: ")
-        val res = repScope.async {
-            val res = retrofit.getPodcastByNum("223")
-
-        }
+//        val res = repScope.async {
+//            val res = retrofit.getPodcastByNum("223")
+//
+//        }
     }
 
     /**

@@ -103,4 +103,10 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         }
     }
 
+    fun playClicked () {
+        if (mediaController.value != null) {
+            mediaController.value!!.transportControls.play()
+        }
+    }
+
 }

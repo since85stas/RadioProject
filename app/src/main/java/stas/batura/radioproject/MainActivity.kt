@@ -1,6 +1,10 @@
 package stas.batura.radioproject
 
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,6 +20,8 @@ import stas.batura.radioproject.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val TAG = MainActivity::class.java.simpleName
 
     lateinit var mainActivityViewModel: MainActivityViewModel
 
@@ -45,9 +51,24 @@ class MainActivity : AppCompatActivity() {
                 mainActivityViewModel.initMusicService()
             }
         }
+
+        mainActivityViewModel.serviceConnection.observe(this) {it ->
+            if (it != null) {
+                Log.d(TAG, "onCreate: " + it.toString())
+                bindCurrentService(it)
+
+//                mainActivityViewModel.playClicked()
+            }
+        }
     }
 
-
+    private fun bindCurrentService(serviceConnection: ServiceConnection) {
+        // привязываем сервис к активити
+        bindService(
+            Intent(applicationContext!!, MusicService::class.java),
+            serviceConnection,
+            Context.BIND_AUTO_CREATE)
+    }
 
 
 }
