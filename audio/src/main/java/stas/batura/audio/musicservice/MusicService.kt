@@ -54,8 +54,6 @@ class MusicService (): Service() {
                     or PlaybackStateCompat.ACTION_STOP
                     or PlaybackStateCompat.ACTION_PAUSE
                     or PlaybackStateCompat.ACTION_PLAY_PAUSE
-                    or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
-                    or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
         )
 
     private var mediaSession: MediaSessionCompat? = null
@@ -331,37 +329,6 @@ class MusicService (): Service() {
             stopSelf()
         }
 
-
-
-//        // при переходе на следующий трек
-//        override fun onSkipToNext() {
-//            val track = musicRepository.next
-//            updateMetadataFromTrack(track)
-//
-//            refreshNotificationAndForegroundStatus(currentState)
-//
-//            prepareToPlay(track.uri)
-//        }
-//
-//        // при переходе на предыдущий трек
-//        override fun onSkipToPrevious() {
-//            val track = musicRepository.previous
-//            updateMetadataFromTrack(track)
-//
-//            refreshNotificationAndForegroundStatus(currentState)
-//
-//            prepareToPlay(track.uri)
-//        }
-
-//
-//        fun onPlayByTrackId (id : Int) {
-//            val track = musicRepository.getTrackByIndex(id)
-//            updateMetadataFromTrack(track)
-//
-//            refreshNotificationAndForegroundStatus(currentState)
-//
-//            prepareToPlay(track.uri)
-//        }
 
         /**
          * играем по uri
