@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
+import stas.batura.radioproject.data.room.Podcast
 
 class MainActivityViewModel @ViewModelInject constructor(val repository: IRepository
                                                          , val application: Application
@@ -109,4 +110,15 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         }
     }
 
+    fun pauseClicked () {
+        if (mediaController.value != null) {
+            mediaController.value!!.transportControls.pause()
+        }
+    }
+
+    fun preparingPlaying(podcast: Podcast) {
+        playerServiceBinder!!.setPodcast(podcast)
+
+        playClicked()
+    }
 }

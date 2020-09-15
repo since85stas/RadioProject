@@ -23,21 +23,21 @@
         android:orientation="vertical"
         tools:context=".ui.podcastlist.PodcastListFragment">
 
-        <Button
-            android:id="@+id/add_podcast_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:onClick="@{() -> mainViewModel.createService()}"
-            />
+<!--        <Button-->
+<!--            android:id="@+id/add_podcast_item"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:onClick="@{() -> mainViewModel.createService()}"-->
+<!--            />-->
 
-        <Button
-            android:text="play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:onClick="@{() -> mainViewModel.playClicked()}"
-            />
+<!--        <Button-->
+<!--            android:text="play"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:onClick="@{() -> mainViewModel.playClicked()}"-->
+<!--            />-->
 
         <ProgressBar
             android:id="@+id/spinner"

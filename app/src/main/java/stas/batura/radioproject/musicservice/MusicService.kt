@@ -26,9 +26,6 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.FileDataSource
-import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import okhttp3.OkHttpClient
@@ -46,12 +43,8 @@ class MusicService (): Service() {
     private val NOTIFICATION_ID = 404
     private val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
 
-    private val podcast: Podcast =  Podcast(1,
-        "url1",
-        "title1",
-        "time1",
-    audioUrl = "http://cdn.radio-t.com/rt_podcast719.mp3"
-        )
+    private var podcast: Podcast? =  null
+
 
     // билдер для данных
     private val metadataBuilder  = MediaMetadataCompat.Builder()
@@ -254,8 +247,8 @@ class MusicService (): Service() {
                 )
                 if (!mediaSession!!.isActive) {
 //                    val track: MusicRepository.Track = musicRepository.getCurrent()
-                    updateMetadataFromTrack(podcast)
-                    prepareToPlay(Uri.parse(podcast.audioUrl))
+                    updateMetadataFromTrack(podcast!!)
+                    prepareToPlay(Uri.parse(podcast!!.audioUrl))
                     if (!isAudioFocusRequested) {
                         isAudioFocusRequested = true
                         var audioFocusResult: Int
@@ -348,17 +341,17 @@ class MusicService (): Service() {
         /**
          * играем по uri
          */
-        override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
-//            val track = musicRepository.getTrackByUri(uri)
-            updateMetadataFromTrack(podcast)
-
-            refreshNotificationAndForegroundStatus(currentState)
-
-            prepareToPlay(Uri.parse(podcast.url))
-        }
+//        override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
+////            val track = musicRepository.getTrackByUri(uri)
+//            updateMetadataFromTrack(podcast)
+//
+//            refreshNotificationAndForegroundStatus(currentState)
+//
+//            prepareToPlay(Uri.parse(podcast.url))
+//        }
 
         // подготавливаем трэк
-        private fun prepareToPlay(uri: Uri) {
+        fun prepareToPlay(uri: Uri) {
                 currentUri = uri
                 val mediaSource =
                     ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null)
@@ -458,6 +451,9 @@ class MusicService (): Service() {
             return exoPlayer
         }
 
+        fun setPodcast(podcast: Podcast) {
+            this@MusicService.podcast = podcast
+        }
 
     }
 

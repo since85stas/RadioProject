@@ -48,14 +48,11 @@ class PodcastListFragment : Fragment() {
         bindings.mainViewModel = mainviewModel
 
         bindings.lifecycleOwner = viewLifecycleOwner
-
-
-
         return bindings.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = PodcastsAdapter()
+        val adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel)
         podcast_recycler.adapter = adapter
 
         podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->

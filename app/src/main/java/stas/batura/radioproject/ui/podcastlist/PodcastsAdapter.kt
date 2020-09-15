@@ -5,24 +5,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.PodcastItemViewBinding
 
-class PodcastsAdapter ():
+class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(parent, mainActivityViewModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder (val binding: PodcastItemViewBinding ) : RecyclerView.ViewHolder (binding.root) {
+    class ViewHolder (val binding: PodcastItemViewBinding, val mainActivityViewModel: MainActivityViewModel ) :
+        RecyclerView.ViewHolder (binding.root) {
 
         fun bind (podcast: Podcast) {
             binding.podcast = podcast
+            binding.mainModel = mainActivityViewModel
             binding.executePendingBindings()
         }
 
@@ -31,12 +34,12 @@ class PodcastsAdapter ():
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = PodcastItemViewBinding.inflate(layoutInflater,
                     parent,
                     false)
-                return ViewHolder(binding)
+                return ViewHolder(binding, mainActivityViewModel)
             }
         }
     }
