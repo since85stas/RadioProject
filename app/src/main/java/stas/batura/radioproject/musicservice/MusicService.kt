@@ -13,6 +13,7 @@ import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
@@ -38,12 +39,19 @@ import java.io.File
 
 class MusicService (): Service() {
 
+    private val TAG = MusicService::class.java.simpleName
+
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
 
     private val NOTIFICATION_ID = 404
     private val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
 
-    private val podcast: Podcast =  Podcast(1, "url1", "title1", "time1")
+    private val podcast: Podcast =  Podcast(1,
+        "url1",
+        "title1",
+        "time1",
+    audioUrl = "http://cdn.radio-t.com/rt_podcast719.mp3"
+        )
 
     // билдер для данных
     private val metadataBuilder  = MediaMetadataCompat.Builder()
@@ -73,6 +81,10 @@ class MusicService (): Service() {
 //    lateinit var musicRepository: MusicRepository
 
     var fileDataSource : DataSource? = null
+
+    init {
+        Log.d(TAG, "init service: ")
+    }
 
     override fun onCreate() {
         super.onCreate()

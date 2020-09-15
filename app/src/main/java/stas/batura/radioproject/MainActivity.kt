@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
             Intent(applicationContext!!, MusicService::class.java),
             serviceConnection,
             Context.BIND_AUTO_CREATE)
+
+        mainActivityViewModel.playClicked()
+
     }
 
 
