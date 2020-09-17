@@ -60,6 +60,9 @@ class MainActivity : AppCompatActivity() {
 //                mainActivityViewModel.playClicked()
             }
         }
+
+        // нициализируем сервис
+        mainActivityViewModel.initMusicService()
     }
 
     private fun bindCurrentService(serviceConnection: ServiceConnection) {
@@ -68,9 +71,6 @@ class MainActivity : AppCompatActivity() {
             Intent(applicationContext!!, MusicService::class.java),
             serviceConnection,
             Context.BIND_AUTO_CREATE)
-
-        mainActivityViewModel.playClicked()
-
     }
 
 

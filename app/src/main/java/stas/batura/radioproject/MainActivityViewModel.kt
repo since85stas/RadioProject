@@ -116,9 +116,15 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         }
     }
 
-    fun preparingPlaying(podcast: Podcast) {
-        playerServiceBinder!!.setPodcast(podcast)
+    fun preparingPlay(podcast: Podcast) {
 
-        playClicked()
+        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(PlaybackStateCompat.STATE_PLAYING)) {
+            mediaController.value!!.transportControls.stop()
+            playerServiceBinder!!.setPodcast(podcast)
+            playClicked()
+        } else {
+            playerServiceBinder!!.setPodcast(podcast)
+            playClicked()
+        }
     }
 }
