@@ -3,6 +3,7 @@ package stas.batura.radioproject.musicservice
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -17,6 +18,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
+import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -360,13 +362,14 @@ class MusicService (): Service() {
 
         // обновляем данные о треке
         private fun updateMetadataFromTrack(podcast: Podcast) {
-//            val image = Glide.with(this@MusicService).load(track.bitmapUri) as Bitmap
-            if (podcast.url == null) {
+
+            if (podcast.imageUrl == null) {
 //                metadataBuilder.putBitmap(
 //                    MediaMetadataCompat.METADATA_KEY_ART,
-////                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
+//                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
 //                )
             } else {
+//                val image = Glide.with(this@MusicService).load(podcast.imageUrl) as Bitmap
                 metadataBuilder.putBitmap(
                     MediaMetadataCompat.METADATA_KEY_ART,
                     BitmapFactory.decodeFile(podcast.imageUrl)
