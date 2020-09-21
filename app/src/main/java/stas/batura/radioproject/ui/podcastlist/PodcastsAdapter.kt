@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.podcast_item_view.view.*
 import stas.batura.radioproject.MainActivityViewModel
+import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.PodcastItemViewBinding
 
@@ -41,7 +42,11 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             Glide.with(binding.root.context)
                 .load(podcast.imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.root.logo_image);
+                .into(binding.root.logo_image)
+
+            if (podcast.isActive) {
+                binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+            }
         }
 
         fun onItemClicked () {
