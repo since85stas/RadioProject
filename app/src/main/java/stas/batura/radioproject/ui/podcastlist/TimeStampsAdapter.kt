@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import stas.batura.radioproject.MainActivityViewModel
-import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.databinding.PodcastItemViewBinding
+import stas.batura.radioproject.data.net.TimeLabel
+import stas.batura.radioproject.databinding.TimelableItemViewBinding
 
-class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
-    ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
+class TimeStampsAdapter (val mainActivityViewModel: MainActivityViewModel):
+    ListAdapter<TimeLabel, TimeStampsAdapter.ViewHolder>(TrackDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent, mainActivityViewModel)
@@ -20,12 +20,12 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         holder.bind(getItem(position))
     }
 
-    class ViewHolder (val binding: PodcastItemViewBinding, val mainActivityViewModel: MainActivityViewModel ) :
+    class ViewHolder (val binding: TimelableItemViewBinding, val mainActivityViewModel: MainActivityViewModel) :
         RecyclerView.ViewHolder (binding.root) {
 
-        fun bind (podcast: Podcast) {
-            binding.podcast = podcast
-            binding.mainModel = mainActivityViewModel
+        fun bind (timeLabel: TimeLabel) {
+            binding.timeLable = timeLabel
+//            binding.mainModel = mainActivityViewModel
             binding.executePendingBindings()
         }
 
@@ -36,7 +36,7 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         companion object {
             fun from(parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = PodcastItemViewBinding.inflate(layoutInflater,
+                val binding = TimelableItemViewBinding.inflate(layoutInflater,
                     parent,
                     false)
                 return ViewHolder(binding, mainActivityViewModel)
@@ -44,18 +44,18 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         }
     }
 
-    class TrackDiffCalback : DiffUtil.ItemCallback<Podcast> (){
+    class TrackDiffCallback : DiffUtil.ItemCallback<TimeLabel> (){
 
         override fun areItemsTheSame(
-            oldItem: Podcast,
-            newItem: Podcast
+            oldItem: TimeLabel,
+            newItem: TimeLabel
         ): Boolean {
             return oldItem.equals(newItem)
         }
 
         override fun areContentsTheSame(
-            oldItem: Podcast,
-            newItem: Podcast
+            oldItem: TimeLabel,
+            newItem: TimeLabel
         ): Boolean {
             return  oldItem == newItem
         }

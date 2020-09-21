@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".RadioApp"
+        android:usesCleartextTraffic="true"
         >
         <activity
             android:name=".MainActivity"
@@ -25,7 +26,7 @@
         </activity>
 
         <service
-            android:name=".audio.MusicService"
+            android:name=".musicservice.MusicService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />

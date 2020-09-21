@@ -1,8 +1,9 @@
-package stas.batura.audio.musicservice
+package stas.batura.radioproject.musicservice
 
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
@@ -13,10 +14,13 @@ import android.os.*
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
+import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -24,23 +28,25 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DataSpec
-import com.google.android.exoplayer2.upstream.FileDataSource
-import com.google.android.exoplayer2.upstream.FileDataSource.FileDataSourceException
 import com.google.android.exoplayer2.upstream.cache.*
+import com.google.android.exoplayer2.util.Util
+import okhttp3.OkHttpClient
 import stas.batura.radioproject.MainActivity
+import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.musicservice.MusicService
 import java.io.File
 
 class MusicService (): Service() {
+
+    private val TAG = MusicService::class.java.simpleName
 
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
 
     private val NOTIFICATION_ID = 404
     private val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
 
-    private val podcast: Podcast =  Podcast(1, "url1", "title1", "time1")
+    private var podcast: Podcast? =  null
+
 
     // билдер для данных
     private val metadataBuilder  = MediaMetadataCompat.Builder()
@@ -70,6 +76,10 @@ class MusicService (): Service() {
 //    lateinit var musicRepository: MusicRepository
 
     var fileDataSource : DataSource? = null
+
+    init {
+        Log.d(TAG, "init service: ")
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -122,7 +132,7 @@ class MusicService (): Service() {
             PendingIntent.getActivity(
                 applicationContext,
                 0,
-               activityIntent,
+                activityIntent,
                 0
             )
         )
@@ -153,31 +163,31 @@ class MusicService (): Service() {
         // добавляем слушатель
         exoPlayer!!.addListener(exoPlayerListener)
 
-//        val httpDataSourceFactory: DataSource.Factory =
-//            OkHttpDataSourceFactory(
-//                OkHttpClient(),
-//                Util.getUserAgent(
-//                    this,
-//                    getString(R.string.app_name)
-//                )
-//            )
+        val httpDataSourceFactory: DataSource.Factory =
+            OkHttpDataSourceFactory(
+                OkHttpClient(),
+                Util.getUserAgent(
+                    this,
+                    getString(R.string.app_name)
+                )
+            )
 
-        val testUri =
-            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
-                    "/Music/Moonspell/Studio and Compilation/1995-Wolfheart (Original 1CD Release)/02 Love Crimes.mp3"))
-
-        val dataSpec = DataSpec(testUri)
-        fileDataSource =
-            FileDataSource()
-        try {
-            fileDataSource!!.open(dataSpec)
-        } catch (e: FileDataSourceException) {
-            e.printStackTrace()
-        }
-
-
-        val factory =
-            DataSource.Factory { fileDataSource }
+//        val testUri =
+//            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
+//                    "/Music/Moonspell/Studio and Compilation/1995-Wolfheart (Original 1CD Release)/02 Love Crimes.mp3"))
+//
+//        val dataSpec = DataSpec(testUri)
+//        fileDataSource =
+//            FileDataSource()
+//        try {
+//            fileDataSource!!.open(dataSpec)
+//        } catch (e: FileDataSourceException) {
+//            e.printStackTrace()
+//        }
+//
+//
+//        val factory =
+//            DataSource.Factory { fileDataSource }
 
          cache =
             SimpleCache(
@@ -187,7 +197,7 @@ class MusicService (): Service() {
 
         dataSourceFactory = CacheDataSourceFactory(
             cache,
-            factory,
+            httpDataSourceFactory,
             CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
         )
 
@@ -239,8 +249,8 @@ class MusicService (): Service() {
                 )
                 if (!mediaSession!!.isActive) {
 //                    val track: MusicRepository.Track = musicRepository.getCurrent()
-                    updateMetadataFromTrack(podcast)
-                    prepareToPlay(Uri.parse(podcast.audioUrl))
+                    updateMetadataFromTrack(podcast!!)
+                    prepareToPlay(Uri.parse(podcast!!.audioUrl))
                     if (!isAudioFocusRequested) {
                         isAudioFocusRequested = true
                         var audioFocusResult: Int
@@ -333,17 +343,17 @@ class MusicService (): Service() {
         /**
          * играем по uri
          */
-        override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
-//            val track = musicRepository.getTrackByUri(uri)
-            updateMetadataFromTrack(podcast)
-
-            refreshNotificationAndForegroundStatus(currentState)
-
-            prepareToPlay(Uri.parse(podcast.url))
-        }
+//        override fun onPlayFromUri(uri: Uri?, extras: Bundle?) {
+////            val track = musicRepository.getTrackByUri(uri)
+//            updateMetadataFromTrack(podcast)
+//
+//            refreshNotificationAndForegroundStatus(currentState)
+//
+//            prepareToPlay(Uri.parse(podcast.url))
+//        }
 
         // подготавливаем трэк
-        private fun prepareToPlay(uri: Uri) {
+        fun prepareToPlay(uri: Uri) {
                 currentUri = uri
                 val mediaSource =
                     ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null)
@@ -352,13 +362,14 @@ class MusicService (): Service() {
 
         // обновляем данные о треке
         private fun updateMetadataFromTrack(podcast: Podcast) {
-//            val image = Glide.with(this@MusicService).load(track.bitmapUri) as Bitmap
-            if (podcast.url == null) {
+
+            if (podcast.imageUrl == null) {
 //                metadataBuilder.putBitmap(
 //                    MediaMetadataCompat.METADATA_KEY_ART,
-////                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
+//                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
 //                )
             } else {
+                val image = Glide.with(this@MusicService).load(podcast.imageUrl) as Bitmap
                 metadataBuilder.putBitmap(
                     MediaMetadataCompat.METADATA_KEY_ART,
                     BitmapFactory.decodeFile(podcast.imageUrl)
@@ -443,6 +454,9 @@ class MusicService (): Service() {
             return exoPlayer
         }
 
+        fun setPodcast(podcast: Podcast) {
+            this@MusicService.podcast = podcast
+        }
 
     }
 
