@@ -35,7 +35,7 @@ import stas.batura.radioproject.data.room.TimeLabelsDataConverter
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities =[Podcast::class], version = 6, exportSchema = false)
+@Database(entities =[Podcast::class], version = 7, exportSchema = false)
 @TypeConverters(CategoryDataConverter::class, TimeLabelsDataConverter::class)
 abstract class RadioDatabase : RoomDatabase() {
 

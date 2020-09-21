@@ -1,10 +1,16 @@
 package stas.batura.radioproject.data
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
+import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -93,6 +99,18 @@ class Repository @Inject constructor(): IRepository {
             for (category in podcst.categories) {
 //                radioDao.insertCategory(Category(podcastId, category))
             }
+        }
+    }
+
+    suspend fun loadImages(podcasts: List<PodcastBody>) {
+        for (podcast in podcasts) {
+
+//            val savedImageURL: String = MediaStore.Images.Media.insertImage(
+//                contex.contentResolver,
+//                Bitmap.createBitmap(),
+//                "Test",
+//                "Promo Image"
+//            )
         }
     }
 

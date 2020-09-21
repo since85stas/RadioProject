@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import stas.batura.radioproject.data.room.Podcast
+import java.net.URL
 
 @Dao
 interface RadioDao {
@@ -28,6 +29,9 @@ interface RadioDao {
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
     suspend fun getLastPodcast(): Podcast?
+
+//    @Query("UPDATE podcast_table ")
+//    fun updateLocalImageUrl(url: String)
 
 //    @Insert(onConflict = OnConflictStrategy.IGNORE)
 //    suspend fun insertCategory(categories: Category)

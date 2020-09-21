@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import stas.batura.radioproject.data.net.TimeLabel
 import stas.batura.radioproject.data.room.Podcast
 import java.text.SimpleDateFormat
 
@@ -24,4 +25,14 @@ fun ProgressBar.bindVisibility(visible: Boolean) {
     } else {
         visibility = View.GONE
     }
+}
+
+@BindingAdapter("timelableTimeBind")
+fun TextView.timelableTimeBind(timeLabel: TimeLabel) {
+    text = timeLabel.duration.toString()
+}
+
+@BindingAdapter("timelableTitleBind")
+fun TextView.timelableTitleBind(timeLabel: TimeLabel) {
+    text = timeLabel.topic
 }

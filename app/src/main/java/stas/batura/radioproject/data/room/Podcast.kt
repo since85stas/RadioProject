@@ -38,6 +38,8 @@ data class Podcast(
     var audioUrl: String? = null,
 
     var timeLabels: List<TimeLabel>? = null
+
+//    var localImageUrl: String? = null
 ) {
 
 
