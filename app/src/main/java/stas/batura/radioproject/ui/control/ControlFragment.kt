@@ -36,7 +36,6 @@ class ControlFragment () : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
 
-//        val musicAppl = requireActivity().application as MusicApplication
         mainViewModel = ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
 
         val view = inflater.inflate(R.layout.control_fragment_new, container, false)
@@ -52,12 +51,9 @@ class ControlFragment () : Fragment() {
         play_pause_button.setOnClickListener( object : View.OnClickListener {
             override fun onClick(view: View) {
                 isPlayButtonClicked = true
-//                mainViewModel.checkServiseCreation()
-//                mainViewModel.changePlayState()
+                mainViewModel.changePlayState()
             }
         })
-
-//        addTour()
 
         super.onActivityCreated(savedInstanceState)
     }

@@ -90,27 +90,12 @@ class Repository @Inject constructor(): IRepository {
      */
     suspend fun updatePodacastInfo() {
         val podcastBodis = retrofit.getLastNPodcasts(10)
-//        val podcasts = podcastBodis.map { Podcast.FromPodcastBody.build(it) }
 
-//        val podcast = Podcast.FromPodcastBody.build(podcastBody)
-//        radioDao.insertAll(podcasts)
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
             for (category in podcst.categories) {
 //                radioDao.insertCategory(Category(podcastId, category))
             }
-        }
-    }
-
-    suspend fun loadImages(podcasts: List<PodcastBody>) {
-        for (podcast in podcasts) {
-
-//            val savedImageURL: String = MediaStore.Images.Media.insertImage(
-//                contex.contentResolver,
-//                Bitmap.createBitmap(),
-//                "Test",
-//                "Promo Image"
-//            )
         }
     }
 
@@ -130,5 +115,12 @@ class Repository @Inject constructor(): IRepository {
         return radioDao.getPodcastsList()
     }
 
-
+    /**
+     * отмечаем что трек играет, значит он считается активным и берется по умолчанию
+     */
+    override fun setActivePodcast(podcstId: Int) {
+        repScope.launch {
+            radioDao.setPodcastActive(podcstId)
+        }
+    }
 }

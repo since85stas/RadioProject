@@ -3,75 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:background="@color/contrBackColor"
     >
-    <!-- Timer Display -->
-<!--    <LinearLayout-->
-<!--        android:id="@+id/timerDisplay"-->
-<!--        android:layout_above="@id/songProgressBar"-->
-<!--        android:layout_width="fill_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginRight="20dp"-->
-<!--        android:layout_marginLeft="20dp"-->
-<!--        android:layout_marginBottom="10dp">-->
-<!--        &lt;!&ndash; Current Duration Label &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/songCurrentDurationLabel"-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="left"-->
-<!--            android:textColor="#eeeeee"-->
-<!--            android:textStyle="bold"/>-->
-<!--        &lt;!&ndash; Total Duration Label &ndash;&gt;-->
-<!--        <TextView-->
-<!--            android:id="@+id/songTotalDurationLabel"-->
-<!--            android:layout_width="fill_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="right"-->
-<!--            android:textColor="#04cbde"-->
-<!--            android:textStyle="bold"/>-->
-<!--    </LinearLayout>-->
+
+    <!-- Player Footer -->
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/play_pause_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_margin="12dp"
+            android:clickable="false"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            />
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoplayer_control"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:show_timeout="0"
+        android:layout_margin="12dp"
         app:controller_layout_id="@layout/new_exo"
         />
 
-   <!-- Player Footer -->
-    <LinearLayout
-        android:id="@+id/player_footer_bg"
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:gravity="center">
 
-        <!-- Player Buttons -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
-            <!-- Play Button -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/play_pause_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/colorAccent"
-                android:layout_margin="12dp"
-                android:clickable="false"
-                android:src="@drawable/ic_play_arrow_black_24dp"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 
 
