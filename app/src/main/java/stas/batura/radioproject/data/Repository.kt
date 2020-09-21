@@ -8,6 +8,9 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.net.PodcastBody
@@ -120,7 +123,13 @@ class Repository @Inject constructor(): IRepository {
      */
     override fun setActivePodcast(podcstId: Int) {
         repScope.launch {
+            radioDao.setAllPodIsNOTActive()
             radioDao.setPodcastActive(podcstId)
         }
+    }
+
+    override fun getActivePodcast(): Flow<Podcast> {
+        return radioDao.getActivePodcast().filterNotNull()
+
     }
 }

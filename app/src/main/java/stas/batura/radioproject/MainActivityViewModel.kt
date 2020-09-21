@@ -12,6 +12,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,8 @@ class MainActivityViewModel @ViewModelInject constructor(
     private var _createServiceListner: MutableLiveData<Boolean> = MutableLiveData(false)
     val createServiceListner: LiveData<Boolean>
         get() = _createServiceListner
+
+    val activePodcast = repository.getActivePodcast().asLiveData()
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -135,6 +138,9 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
+    /**
+     * перед проигрывание заводим новую ссылку
+     */
     fun preparingPlay(podcast: Podcast) {
 
         if (callbackChanges.value != null && callbackChanges.value!!.state.equals(

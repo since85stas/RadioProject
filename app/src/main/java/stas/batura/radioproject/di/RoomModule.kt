@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import ru.batura.stat.batchat.repository.room.RadioDao
-import ru.batura.stat.batchat.repository.room.RadioDatabase
+import stas.batura.radioproject.data.room.RadioDatabase
 import javax.inject.Singleton
 
 @Module

@@ -10,12 +10,15 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.core.view.MotionEventCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.control_fragment_new.*
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
+import stas.batura.radioproject.databinding.ControlFragmentNewBinding
+import stas.batura.radioproject.databinding.FragmentPodcastListBinding
 
 
 class ControlFragment () : Fragment() {
@@ -38,9 +41,15 @@ class ControlFragment () : Fragment() {
 
         mainViewModel = ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
 
-        val view = inflater.inflate(R.layout.control_fragment_new, container, false)
+//        val view = inflater.inflate(R.layout.control_fragment_new, container, false)
+        val bindings: ControlFragmentNewBinding = DataBindingUtil.inflate(inflater,
+            R.layout.control_fragment_new,
+            container,
+            false)
+        bindings.mainActViewModel = mainViewModel
+        bindings.lifecycleOwner = viewLifecycleOwner
 
-        return view
+        return bindings.root
     }
 
     /**

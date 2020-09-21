@@ -39,13 +39,19 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
 
             binding.executePendingBindings()
 
-            Glide.with(binding.root.context)
-                .load(podcast.imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(binding.root.logo_image)
+//            Glide.with(binding.root.context)
+//                .load(podcast.imageUrl)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(binding.root.logo_image)
 
             if (podcast.isActive) {
                 binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+//                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
+            } else {
+                Glide.with(binding.root.context)
+                    .load(podcast.imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.root.logo_image)
             }
         }
 
