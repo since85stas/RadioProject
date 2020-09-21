@@ -369,7 +369,7 @@ class MusicService (): Service() {
 //                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
 //                )
             } else {
-//                val image = Glide.with(this@MusicService).load(podcast.imageUrl) as Bitmap
+                val image = Glide.with(this@MusicService).load(podcast.imageUrl) as Bitmap
                 metadataBuilder.putBitmap(
                     MediaMetadataCompat.METADATA_KEY_ART,
                     BitmapFactory.decodeFile(podcast.imageUrl)
