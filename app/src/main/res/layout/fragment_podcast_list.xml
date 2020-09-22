@@ -46,12 +46,14 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             progressBarVisibility="@{podacstListViewModel.spinner}"
+
             />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/podcast_recycler"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
             />

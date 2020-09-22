@@ -1,10 +1,19 @@
 package stas.batura.radioproject.data
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
+import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -84,10 +93,7 @@ class Repository @Inject constructor(): IRepository {
      */
     suspend fun updatePodacastInfo() {
         val podcastBodis = retrofit.getLastNPodcasts(10)
-//        val podcasts = podcastBodis.map { Podcast.FromPodcastBody.build(it) }
 
-//        val podcast = Podcast.FromPodcastBody.build(podcastBody)
-//        radioDao.insertAll(podcasts)
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
             for (category in podcst.categories) {
@@ -112,5 +118,27 @@ class Repository @Inject constructor(): IRepository {
         return radioDao.getPodcastsList()
     }
 
+    /**
+     * отмечаем что трек играет, значит он считается активным и берется по умолчанию
+     */
+    override fun setActivePodcast(podcstId: Int) {
+        repScope.launch {
+            radioDao.setAllPodIsNOTActive()
+            radioDao.setPodcastActive(podcstId)
+        }
+    }
 
+    override fun getActivePodcast(): Flow<Podcast> {
+        return radioDao.getActivePodcast().filterNotNull()
+
+    }
+
+    /**
+     * отмечаем что трек прослушан
+     */
+    override fun setFinishPodcast(podcstId: Int) {
+        repScope.launch {
+            radioDao.setPodcastFinish(podcstId)
+        }
+    }
 }

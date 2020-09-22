@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package ru.batura.stat.batchat.repository.room
+package stas.batura.radioproject.data.room
 
 import android.content.Context
 import android.util.Log
@@ -23,10 +22,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import stas.batura.radioproject.data.room.CategoryDataConverter
-import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.data.room.TimeLabelsDataConverter
-
+import ru.batura.stat.batchat.repository.room.RadioDao
 
 /**
  * A database that stores SleepNight information.
@@ -35,7 +31,7 @@ import stas.batura.radioproject.data.room.TimeLabelsDataConverter
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities =[Podcast::class], version = 6, exportSchema = false)
+@Database(entities =[Podcast::class], version = 9, exportSchema = false)
 @TypeConverters(CategoryDataConverter::class, TimeLabelsDataConverter::class)
 abstract class RadioDatabase : RoomDatabase() {
 

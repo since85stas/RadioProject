@@ -12,6 +12,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +21,10 @@ import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.room.Podcast
 
-class MainActivityViewModel @ViewModelInject constructor(val repository: IRepository
-                                                         , val application: Application
-
-): ViewModel() {
+class MainActivityViewModel @ViewModelInject constructor(
+    val repository: IRepository
+    , val application: Application
+) : ViewModel() {
 
     private val TAG = MainActivityViewModel::class.java.simpleName
 
@@ -41,11 +42,13 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
 
     val exoPlayer: MutableLiveData<ExoPlayer> = MutableLiveData()
 
-    val callbackChanges : MutableLiveData<PlaybackStateCompat?> = MutableLiveData(null)
+    val callbackChanges: MutableLiveData<PlaybackStateCompat?> = MutableLiveData(null)
 
-    private var _createServiceListner : MutableLiveData<Boolean> = MutableLiveData(false)
-    val createServiceListner : LiveData<Boolean>
+    private var _createServiceListner: MutableLiveData<Boolean> = MutableLiveData(false)
+    val createServiceListner: LiveData<Boolean>
         get() = _createServiceListner
+
+    val activePodcast = repository.getActivePodcast().asLiveData()
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -57,7 +60,7 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         Log.d(TAG, "view model created: ")
     }
 
-    fun createService()  {
+    fun createService() {
         _createServiceListner.value = true
         _createServiceListner.value = false
     }
@@ -80,8 +83,8 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
                     playerServiceBinder = service as MusicService.PlayerServiceBinder
                     try {
                         mediaController.value = MediaControllerCompat(
-                                application,
-                        playerServiceBinder!!.getMediaSessionToke()
+                            application,
+                            playerServiceBinder!!.getMediaSessionToke()
                         )
 
                         exoPlayer.value = playerServiceBinder!!.getPlayer()
@@ -104,23 +107,51 @@ class MainActivityViewModel @ViewModelInject constructor(val repository: IReposi
         }
     }
 
-    fun playClicked () {
+    /**
+     * нажали плей
+     */
+    fun playClicked() {
         if (mediaController.value != null) {
             mediaController.value!!.transportControls.play()
         }
     }
 
-    fun pauseClicked () {
+    /**
+     * нажали паузу
+     */
+    fun pauseClicked() {
         if (mediaController.value != null) {
             mediaController.value!!.transportControls.pause()
         }
     }
 
+    /**
+     * изменяем состояние кнопки
+     */
+    fun changePlayState() {
+        if (mediaController.value != null) {
+            if (callbackChanges.value!!.state == PlaybackStateCompat.STATE_PLAYING) {
+                mediaController.value!!.transportControls.pause()
+            } else {
+                mediaController.value!!.transportControls.play()
+            }
+        }
+    }
+
+    /**
+     * перед проигрывание заводим новую ссылку
+     */
     fun preparingPlay(podcast: Podcast) {
 
-        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(PlaybackStateCompat.STATE_PLAYING)) {
+        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
+                PlaybackStateCompat.STATE_PLAYING
+            )
+        ) {
             mediaController.value!!.transportControls.stop()
             playerServiceBinder!!.setPodcast(podcast)
+
+            repository.setActivePodcast(podcastId = podcast.podcastId)
+
             playClicked()
         } else {
             playerServiceBinder!!.setPodcast(podcast)

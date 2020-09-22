@@ -5,7 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import kotlinx.android.synthetic.main.podcast_item_view.view.*
 import stas.batura.radioproject.MainActivityViewModel
+import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.PodcastItemViewBinding
 
@@ -17,6 +21,7 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.bind(getItem(position))
     }
 
@@ -26,7 +31,28 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         fun bind (podcast: Podcast) {
             binding.podcast = podcast
             binding.mainModel = mainActivityViewModel
+
+            val adapter = TimeStampsAdapter(mainActivityViewModel)
+            binding.root.timelabeles_recycler.adapter = adapter
+
+            adapter.submitList(podcast.timeLabels)
+
             binding.executePendingBindings()
+
+//            Glide.with(binding.root.context)
+//                .load(podcast.imageUrl)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(binding.root.logo_image)
+
+            if (podcast.isActive) {
+                binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+//                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
+            } else {
+                Glide.with(binding.root.context)
+                    .load(podcast.imageUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(binding.root.logo_image)
+            }
         }
 
         fun onItemClicked () {

@@ -3,14 +3,14 @@ package stas.batura.radioproject.musicservice
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
 import android.net.Uri
-import android.os.*
+import android.os.Binder
+import android.os.Build
+import android.os.IBinder
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -18,7 +18,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.media.session.MediaButtonReceiver
-import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -30,6 +29,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import okhttp3.OkHttpClient
 import stas.batura.radioproject.MainActivity
 import stas.batura.radioproject.R
@@ -76,6 +78,12 @@ class MusicService (): Service() {
 //    lateinit var musicRepository: MusicRepository
 
     var fileDataSource : DataSource? = null
+
+    // Create a Coroutine scope using a job to be able to cancel when needed
+    private var serviceJob = Job()
+
+    // the Coroutine runs using the Main (UI) dispatcher
+    private val coroutineScope = CoroutineScope(serviceJob + Dispatchers.IO)
 
     init {
         Log.d(TAG, "init service: ")
@@ -249,7 +257,9 @@ class MusicService (): Service() {
                 )
                 if (!mediaSession!!.isActive) {
 //                    val track: MusicRepository.Track = musicRepository.getCurrent()
-                    updateMetadataFromTrack(podcast!!)
+
+                        updateMetadataFromTrack(podcast!!)
+
                     prepareToPlay(Uri.parse(podcast!!.audioUrl))
                     if (!isAudioFocusRequested) {
                         isAudioFocusRequested = true
@@ -369,11 +379,17 @@ class MusicService (): Service() {
 //                    BitmapFactory.decodeResource(BitmapFactory.decodeFile(podcast.imageUrl))
 //                )
             } else {
-                val image = Glide.with(this@MusicService).load(podcast.imageUrl) as Bitmap
-                metadataBuilder.putBitmap(
-                    MediaMetadataCompat.METADATA_KEY_ART,
-                    BitmapFactory.decodeFile(podcast.imageUrl)
-                )
+//                val image = Glide.with(this@MusicService).load(podcast.imageUrl).
+//                    into(Bitmap())
+//                val image = WebImage(
+//                    Uri.Builder()
+//                        .encodedPath(track.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI))
+//                        .build()
+//                )
+//                metadataBuilder.putBitmap(
+//                    MediaMetadataCompat.METADATA_KEY_ART,
+//                    bitmap
+//                )
             }
 
             metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_TITLE, podcast.title)
