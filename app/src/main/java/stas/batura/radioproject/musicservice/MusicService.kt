@@ -249,6 +249,9 @@ class MusicService (): Service() {
 
         // при начале проигрыша
         override fun onPlay() {
+
+            Log.d(TAG, "onPlay: ")
+
             if (!exoPlayer!!.playWhenReady) {
                 startService(
                     Intent(
@@ -259,7 +262,7 @@ class MusicService (): Service() {
                 if (!mediaSession!!.isActive) {
 //                    val track: MusicRepository.Track = musicRepository.getCurrent()
 
-                        updateMetadataFromTrack(podcast!!)
+                    updateMetadataFromTrack(podcast!!)
 
                     prepareToPlay(Uri.parse(podcast!!.audioUrl))
                     if (!isAudioFocusRequested) {
@@ -306,6 +309,8 @@ class MusicService (): Service() {
 
         // при остановки проигрыша
         override fun onPause() {
+            Log.d(TAG, "onPause: ")
+            playbackPosition = exoPlayer!!.currentPosition
             if (exoPlayer!!.playWhenReady) {
                 exoPlayer!!.playWhenReady = false
                 unregisterReceiver(becomingNoisyReceiver)
@@ -323,10 +328,9 @@ class MusicService (): Service() {
             refreshNotificationAndForegroundStatus(currentState)
         }
 
-
-
         // при остановки проигрыша
         override fun onStop() {
+            Log.d(TAG, "onStop: ")
             if (exoPlayer!!.playWhenReady) {
                 exoPlayer!!.playWhenReady = false
                 unregisterReceiver(becomingNoisyReceiver)
@@ -373,7 +377,7 @@ class MusicService (): Service() {
         // подготавливаем трэк
         fun prepareToPlay(uri: Uri) {
 
-
+            Log.d(TAG, "prepareToPlay: ")
 
                 currentUri = uri
                 val mediaSource =
@@ -437,6 +441,7 @@ class MusicService (): Service() {
             playWhenReady: Boolean,
             playbackState: Int
         ) {
+            Log.d(TAG, "onPlayerStateChanged: $playbackState")
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
 //                mediaSessionCallback.onSkipToNext()
                 //TODO: сделать обработку конца проигрывания
@@ -482,13 +487,15 @@ class MusicService (): Service() {
             return exoPlayer
         }
 
-        fun setPodcast(podcast: Podcast) {
-            playbackPosition = 0
-
-            this@MusicService.podcast = podcast
-        }
+//        fun setPodcast(podcast: Podcast) {
+//            Log.d(TAG, "setPodcast: ")
+//            playbackPosition = 0
+//
+//            this@MusicService.podcast = podcast
+//        }
 
         fun setPodcastWithPosition(podcast: Podcast, position: Long) {
+            Log.d(TAG, "setPodcastWithPosition: ")
             playbackPosition = position
 
             this@MusicService.podcast = podcast

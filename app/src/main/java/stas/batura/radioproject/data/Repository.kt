@@ -130,7 +130,6 @@ class Repository @Inject constructor(): IRepository {
 
     override fun getActivePodcast(): Flow<Podcast> {
         return radioDao.getActivePodcast().filterNotNull()
-
     }
 
     /**
