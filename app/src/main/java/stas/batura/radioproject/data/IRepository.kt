@@ -17,4 +17,6 @@ interface IRepository {
     fun setActivePodcast(podcastId: Int)
 
     fun getActivePodcast(): Flow<Podcast>
+
+    fun setFinishPodcast(podcstId: Int)
 }

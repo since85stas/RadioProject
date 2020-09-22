@@ -39,7 +39,11 @@ data class Podcast(
 
     var timeLabels: List<TimeLabel>? = null,
 
-    var isActive: Boolean = false
+    var isActive: Boolean = false,
+
+    var isFinish: Boolean = false,
+
+    var lastPosition: Long = 0
 
 //    var localImageUrl: String? = null
 ) {

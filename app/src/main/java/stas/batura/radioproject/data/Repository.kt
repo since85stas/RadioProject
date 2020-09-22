@@ -132,4 +132,13 @@ class Repository @Inject constructor(): IRepository {
         return radioDao.getActivePodcast().filterNotNull()
 
     }
+
+    /**
+     * отмечаем что трек прослушан
+     */
+    override fun setFinishPodcast(podcstId: Int) {
+        repScope.launch {
+            radioDao.setPodcastFinish(podcstId)
+        }
+    }
 }

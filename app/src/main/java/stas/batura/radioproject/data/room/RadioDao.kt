@@ -39,6 +39,9 @@ interface RadioDao {
     @Query ("SELECT * FROM podcast_table WHERE isActive = 1")
     fun getActivePodcast(): Flow<Podcast?>
 
+    @Query("UPDATE podcast_table SET isFinish = 1 WHERE podcastId = :podcastId")
+    suspend fun setPodcastFinish(podcastId: Int)
+
 //    @Query("UPDATE podcast_table ")
 //    fun updateLocalImageUrl(url: String)
 
