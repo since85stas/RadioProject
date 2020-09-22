@@ -41,9 +41,9 @@ data class TimeLabel (
      * transform class field [time] to Milliseconds
      */
     public fun getMillisTime(): Long {
-//        val dateTime: DateTime = DateTime.parseRfc3339(startTime)
-//        val millis: Long = dateTime.getValue()
-        val millis = 10*1000*60L;
+        val dateTime: DateTime = DateTime.parseRfc3339(startTime)
+        val millis: Long = dateTime.getValue()
+//        val millis = 10*1000*60L;
         return millis
     }
 }
