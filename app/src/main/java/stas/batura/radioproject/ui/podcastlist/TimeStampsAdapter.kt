@@ -33,6 +33,7 @@ class TimeStampsAdapter (
             binding.timeLable = timeLabel
             binding.mainviewModel = mainActivityViewModel
             binding.podcast = podcast
+            binding.startTime = timeLabel.newStartTime
 //            binding.mainModel = mainActivityViewModel
             binding.executePendingBindings()
         }

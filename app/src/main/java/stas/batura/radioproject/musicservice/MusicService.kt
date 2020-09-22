@@ -285,7 +285,12 @@ class MusicService (): Service() {
                 exoPlayer!!.playWhenReady = true
             }
 
-            exoPlayer!!.seekTo(playbackPosition)
+            // переводим в нужную точку
+            try {
+                exoPlayer!!.seekTo(playbackPosition)
+            } catch (e: IllegalSeekPositionException) {
+                Log.d(TAG, e.toString())
+            }
 
             mediaSession!!.setPlaybackState(
                 stateBuilder.setState(
@@ -433,7 +438,8 @@ class MusicService (): Service() {
             playbackState: Int
         ) {
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
-                mediaSessionCallback.onSkipToNext()
+//                mediaSessionCallback.onSkipToNext()
+                //TODO: сделать обработку конца проигрывания
             }
         }
 

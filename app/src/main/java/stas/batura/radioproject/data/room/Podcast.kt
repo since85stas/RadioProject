@@ -3,6 +3,7 @@ package stas.batura.radioproject.data.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.google.android.exoplayer2.Timeline
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.dataUtils.DateTime
@@ -37,7 +38,7 @@ data class Podcast(
 
     var audioUrl: String? = null,
 
-    var timeLabels: List<TimeLabel>? = null,
+    var timeLabels: List<TimeLabel>? = null ,
 
     var isActive: Boolean = false,
 
@@ -67,7 +68,7 @@ data class Podcast(
                 podcastBody.bodyHtml,
                 podcastBody.postText,
                 podcastBody.audioUrl,
-                podcastBody.timeLables
+                fillTimelable(podcastBody.timeLables)
             )
         }
 

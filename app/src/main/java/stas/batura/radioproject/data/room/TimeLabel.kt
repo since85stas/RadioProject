@@ -9,6 +9,27 @@ import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.net.TimeLabel
 
 
+fun fillTimelable(timelables: List<TimeLabel>?): List<TimeLabel>? {
+
+    var newTimeLables: MutableList<TimeLabel>? = mutableListOf()
+
+    if (timelables != null) {
+        var start = 0L
+        for (lable in timelables) {
+            var newLable = lable
+            newLable.newStartTime = start
+            if (lable.duration != null) {
+                start = start + lable.duration * 1000L
+            }
+            newTimeLables!!.add(newLable)
+        }
+        return newTimeLables
+    } else {
+        return null
+    }
+
+}
+
 class TimeLabelsDataConverter {
 
     @TypeConverter()
