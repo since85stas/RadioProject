@@ -1,14 +1,19 @@
 package stas.batura.radioproject.ui.podcastlist
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.timelable_item_view.view.*
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.data.net.TimeLabel
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.TimelableItemViewBinding
+
 
 class TimeStampsAdapter (
     private val mainActivityViewModel: MainActivityViewModel,
@@ -36,10 +41,15 @@ class TimeStampsAdapter (
             binding.startTime = timeLabel.newStartTime
 //            binding.mainModel = mainActivityViewModel
             binding.executePendingBindings()
-        }
 
-        fun onItemClicked () {
-//           mainActivityViewModel.movingPlayToPosition(0, podcast)
+            // открываем страницу с новостью
+            binding.root.topic_title.setOnClickListener {
+                val intent =                     Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(timeLabel.topic)
+                )
+                binding.root.context.startActivity(intent)
+            }
         }
 
         companion object {
