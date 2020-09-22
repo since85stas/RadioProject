@@ -150,11 +150,30 @@ class MainActivityViewModel @ViewModelInject constructor(
             mediaController.value!!.transportControls.stop()
             playerServiceBinder!!.setPodcast(podcast)
 
+            // TODO: check working
             repository.setActivePodcast(podcastId = podcast.podcastId)
 
             playClicked()
         } else {
             playerServiceBinder!!.setPodcast(podcast)
+            playClicked()
+        }
+    }
+
+    fun movingPlayToPosition(position: Long, podcast: Podcast) {
+        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
+                PlaybackStateCompat.STATE_PLAYING
+            )
+        ) {
+            mediaController.value!!.transportControls.stop()
+
+            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
+            // TODO: check working
+//            repository.setActivePodcast(podcastId = podcast.podcastId)
+
+            playClicked()
+        } else {
+            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
             playClicked()
         }
     }

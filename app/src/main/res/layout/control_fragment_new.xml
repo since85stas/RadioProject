@@ -6,6 +6,8 @@
         <variable
             name="mainActViewModel"
             type="stas.batura.radioproject.MainActivityViewModel" />
+
+
     </data>
 
     <LinearLayout

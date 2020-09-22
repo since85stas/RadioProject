@@ -49,6 +49,7 @@ class MusicService (): Service() {
 
     private var podcast: Podcast? =  null
 
+    var playbackPosition: Long = 0
 
     // билдер для данных
     private val metadataBuilder  = MediaMetadataCompat.Builder()
@@ -284,6 +285,8 @@ class MusicService (): Service() {
                 exoPlayer!!.playWhenReady = true
             }
 
+            exoPlayer!!.seekTo(playbackPosition)
+
             mediaSession!!.setPlaybackState(
                 stateBuilder.setState(
                     PlaybackStateCompat.STATE_PLAYING,
@@ -364,6 +367,9 @@ class MusicService (): Service() {
 
         // подготавливаем трэк
         fun prepareToPlay(uri: Uri) {
+
+
+
                 currentUri = uri
                 val mediaSource =
                     ExtractorMediaSource(uri, dataSourceFactory, extractorsFactory, null, null)
@@ -471,6 +477,14 @@ class MusicService (): Service() {
         }
 
         fun setPodcast(podcast: Podcast) {
+            playbackPosition = 0
+
+            this@MusicService.podcast = podcast
+        }
+
+        fun setPodcastWithPosition(podcast: Podcast, position: Long) {
+            playbackPosition = position
+
             this@MusicService.podcast = podcast
         }
 
