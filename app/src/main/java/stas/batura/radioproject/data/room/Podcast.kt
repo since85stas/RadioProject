@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
+import stas.batura.radioproject.data.dataUtils.getLinksFromHtml
 import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.net.TimeLabel
 
@@ -65,7 +66,7 @@ data class Podcast(
                 podcastBody.categories,
                 podcastBody.imageUrl,
                 podcastBody.fileName,
-                podcastBody.bodyHtml,
+                getLinksFromHtml(podcastBody.bodyHtml),
                 podcastBody.postText,
                 podcastBody.audioUrl,
                 fillTimelable(podcastBody.timeLables)
