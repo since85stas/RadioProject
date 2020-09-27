@@ -8,7 +8,8 @@ fun getLinksFromHtml(body: String?): String {
     if (body != null) {
 
         // убираем все буквы, оставляем только номер
-        val reg = "https^".toRegex()
+        val reg = "http[^\"]*".toRegex()
+//        val reg = ".*a$".toRegex()
         val num = reg.findAll(body)
         for (result in num) {
             Log.d("StringUtils", "getLinksFromHtml: " + result.value)

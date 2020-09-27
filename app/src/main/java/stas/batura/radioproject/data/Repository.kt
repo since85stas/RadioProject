@@ -79,7 +79,7 @@ class Repository @Inject constructor(): IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCacheDB()) {
+        if (true /*shouldUpdateRadioCacheDB()*/) {
             updatePodacastInfo()
         }
     }
