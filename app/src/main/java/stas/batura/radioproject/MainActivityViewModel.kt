@@ -138,42 +138,18 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
-    /**
-     * перед проигрывание заводим новую ссылку
-     */
-    fun preparingPlay(podcast: Podcast) {
-
-        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
-                PlaybackStateCompat.STATE_PLAYING
-            )
-        ) {
-            mediaController.value!!.transportControls.stop()
-            playerServiceBinder!!.setPodcastWithPosition(podcast, 0L)
-
-            // TODO: check working
-            repository.setActivePodcast(podcastId = podcast.podcastId)
-
-            playClicked()
-        } else {
-            playerServiceBinder!!.setPodcastWithPosition(podcast, 0L)
-            playClicked()
-        }
-    }
 
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
+        repository.setActivePodcast(podcastId = podcast.podcastId)
+        playerServiceBinder!!.setPodcastWithPosition(podcast, position)
+
         if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
                 PlaybackStateCompat.STATE_PLAYING
             )
         ) {
             mediaController.value!!.transportControls.stop()
-
-            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
-            // TODO: check working
-            repository.setActivePodcast(podcastId = podcast.podcastId)
-
             playClicked()
         } else {
-            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
             playClicked()
         }
     }

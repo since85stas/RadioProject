@@ -121,14 +121,17 @@ class Repository @Inject constructor(): IRepository {
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
-    override fun setActivePodcast(podcstId: Int) {
+    override fun setActivePodcast(podcastId: Int) {
+        Log.d(TAG, "setActivePodcast out: $podcastId")
         repScope.launch {
+            Log.d(TAG, "setActivePodcast: $podcastId")
             radioDao.setAllPodIsNOTActive()
-            radioDao.setPodcastActive(podcstId)
+            radioDao.setPodcastActive(podcastId)
         }
     }
 
     override fun getActivePodcast(): Flow<Podcast> {
+        Log.d(TAG, "getActivePodcast: ")
         return radioDao.getActivePodcast().filterNotNull()
     }
 

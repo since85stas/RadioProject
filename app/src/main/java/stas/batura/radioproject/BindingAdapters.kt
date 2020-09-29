@@ -1,5 +1,6 @@
 package stas.batura.radioproject
 
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -49,5 +50,6 @@ fun PlayerControlView.bindPlayer(exoPlayer: ExoPlayer?) {
 
 @BindingAdapter("controlTitleBind")
 fun TextView.controlTitleBind(podcast: Podcast?) {
+    Log.d("controlTitle", "controlTitleBind: $podcast")
     text = podcast?.title
 }

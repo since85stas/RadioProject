@@ -95,6 +95,10 @@ data class Podcast(
         val millis: Long = dateTime.getValue()
         return millis
     }
+
+    override fun toString(): String {
+        return "Podcast $podcastId $url $title"
+    }
 }
 
 class CategoryDataConverter {
