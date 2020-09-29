@@ -1,7 +1,9 @@
 package stas.batura.radioproject.ui.podcastlist
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
@@ -46,9 +48,14 @@ class TimeStampsAdapter (
             binding.root.topic_title.setOnClickListener {
                 val intent =                     Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(timeLabel.topic)
+                    Uri.parse(podcast.bodyHtml!![adapterPosition])
                 )
-                binding.root.context.startActivity(intent)
+                try {
+                    binding.root.context.startActivity(intent)
+                } catch (e : ActivityNotFoundException) {
+                    Log.d("Timestamp", "bind: $e")
+                }
+
             }
         }
 

@@ -33,7 +33,7 @@ data class Podcast(
 
     var fileName:   String? = null,
 
-    var bodyHtml: String? = null,
+    var bodyHtml: List<String>? = null,
 
     var postText: String? = null,
 
@@ -66,7 +66,7 @@ data class Podcast(
                 podcastBody.categories,
                 podcastBody.imageUrl,
                 podcastBody.fileName,
-                getLinksFromHtml(podcastBody.bodyHtml),
+                getLinksFromHtml(podcastBody.bodyHtml, podcastBody.timeLables?.size),
                 podcastBody.postText,
                 podcastBody.audioUrl,
                 fillTimelable(podcastBody.timeLables)
@@ -114,6 +114,32 @@ class CategoryDataConverter {
         }
 
 }
+
+//class BodyDataConverter {
+//
+//    @TypeConverter()
+//    fun fromBodyLangList(value: List<String>?): String? {
+//        if (value != null) {
+//            val gson = Gson()
+//            val type = object : TypeToken<List<String>>() {}.type
+//            return gson.toJson(value, type)
+//        } else {
+//            return null
+//        }
+//    }
+//
+//    @TypeConverter
+//    fun toBodyLangList(value: String?): List<String>? {
+//        if (value != null) {
+//            val gson = Gson()
+//            val type = object : TypeToken<List<String>>() {}.type
+//            return gson.fromJson(value, type)
+//        } else {
+//            return null
+//        }
+//    }
+//
+//}
 
 
 
