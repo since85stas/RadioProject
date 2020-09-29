@@ -1,6 +1,7 @@
 package stas.batura.radioproject.data.net
 
 import com.squareup.moshi.Json
+import stas.batura.radioproject.data.dataUtils.DateTime
 
 data class PodcastBody (
     var url: String  ,  // url поста
@@ -32,5 +33,18 @@ data class TimeLabel (
     @Json(name = "time")
     val startTime: String,    // время начала в RFC3339
 
-    val duration: Int? = null    // длительность в секундах
-)
+    val duration: Int? = null,    // длительность в секундах
+
+    var newStartTime: Long = 0L
+) {
+    /**
+     * transform class field [time] to Milliseconds
+     */
+    public fun getMillisTime(): Long {
+        val dateTime: DateTime = DateTime.parseRfc3339(startTime)
+        val millis: Long = dateTime.getValue()
+//        val millis = 10*1000*60L;
+        return millis
+    }
+}
+

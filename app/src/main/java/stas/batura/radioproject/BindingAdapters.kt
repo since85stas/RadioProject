@@ -32,7 +32,7 @@ fun ProgressBar.bindVisibility(visible: Boolean) {
 
 @BindingAdapter("timelableTimeBind")
 fun TextView.timelableTimeBind(timeLabel: TimeLabel) {
-    text = timeLabel.duration.toString()
+    text = timeLabel.newStartTime.toString()
 }
 
 @BindingAdapter("timelableTitleBind")

@@ -79,7 +79,7 @@ class Repository @Inject constructor(): IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCacheDB()) {
+        if (true /*shouldUpdateRadioCacheDB()*/) {
             updatePodacastInfo()
         }
     }
@@ -130,7 +130,6 @@ class Repository @Inject constructor(): IRepository {
 
     override fun getActivePodcast(): Flow<Podcast> {
         return radioDao.getActivePodcast().filterNotNull()
-
     }
 
     /**

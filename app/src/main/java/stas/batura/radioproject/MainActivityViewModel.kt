@@ -129,7 +129,7 @@ class MainActivityViewModel @ViewModelInject constructor(
      * изменяем состояние кнопки
      */
     fun changePlayState() {
-        if (mediaController.value != null) {
+        if (mediaController.value != null && callbackChanges.value != null) {
             if (callbackChanges.value!!.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.value!!.transportControls.pause()
             } else {
@@ -148,13 +148,32 @@ class MainActivityViewModel @ViewModelInject constructor(
             )
         ) {
             mediaController.value!!.transportControls.stop()
-            playerServiceBinder!!.setPodcast(podcast)
+            playerServiceBinder!!.setPodcastWithPosition(podcast, 0L)
 
+            // TODO: check working
             repository.setActivePodcast(podcastId = podcast.podcastId)
 
             playClicked()
         } else {
-            playerServiceBinder!!.setPodcast(podcast)
+            playerServiceBinder!!.setPodcastWithPosition(podcast, 0L)
+            playClicked()
+        }
+    }
+
+    fun movingPlayToPosition(position: Long, podcast: Podcast) {
+        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
+                PlaybackStateCompat.STATE_PLAYING
+            )
+        ) {
+            mediaController.value!!.transportControls.stop()
+
+            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
+            // TODO: check working
+            repository.setActivePodcast(podcastId = podcast.podcastId)
+
+            playClicked()
+        } else {
+            playerServiceBinder!!.setPodcastWithPosition(podcast, position)
             playClicked()
         }
     }

@@ -3,10 +3,12 @@ package stas.batura.radioproject.data.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.google.android.exoplayer2.Timeline
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
+import stas.batura.radioproject.data.dataUtils.getLinksFromHtml
 import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.net.TimeLabel
 
@@ -31,13 +33,13 @@ data class Podcast(
 
     var fileName:   String? = null,
 
-    var bodyHtml: String? = null,
+    var bodyHtml: List<String>? = null,
 
     var postText: String? = null,
 
     var audioUrl: String? = null,
 
-    var timeLabels: List<TimeLabel>? = null,
+    var timeLabels: List<TimeLabel>? = null ,
 
     var isActive: Boolean = false,
 
@@ -64,10 +66,10 @@ data class Podcast(
                 podcastBody.categories,
                 podcastBody.imageUrl,
                 podcastBody.fileName,
-                podcastBody.bodyHtml,
+                getLinksFromHtml(podcastBody.bodyHtml, podcastBody.timeLables?.size),
                 podcastBody.postText,
                 podcastBody.audioUrl,
-                podcastBody.timeLables
+                fillTimelable(podcastBody.timeLables)
             )
         }
 
@@ -112,6 +114,32 @@ class CategoryDataConverter {
         }
 
 }
+
+//class BodyDataConverter {
+//
+//    @TypeConverter()
+//    fun fromBodyLangList(value: List<String>?): String? {
+//        if (value != null) {
+//            val gson = Gson()
+//            val type = object : TypeToken<List<String>>() {}.type
+//            return gson.toJson(value, type)
+//        } else {
+//            return null
+//        }
+//    }
+//
+//    @TypeConverter
+//    fun toBodyLangList(value: String?): List<String>? {
+//        if (value != null) {
+//            val gson = Gson()
+//            val type = object : TypeToken<List<String>>() {}.type
+//            return gson.fromJson(value, type)
+//        } else {
+//            return null
+//        }
+//    }
+//
+//}
 
 
 

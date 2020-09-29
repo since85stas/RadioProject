@@ -32,7 +32,7 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             binding.podcast = podcast
             binding.mainModel = mainActivityViewModel
 
-            val adapter = TimeStampsAdapter(mainActivityViewModel)
+            val adapter = TimeStampsAdapter(mainActivityViewModel, podcast)
             binding.root.timelabeles_recycler.adapter = adapter
 
             adapter.submitList(podcast.timeLabels)
