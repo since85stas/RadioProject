@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
-import stas.batura.radioproject.data.Repository
 import stas.batura.radioproject.data.room.Podcast
 
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {

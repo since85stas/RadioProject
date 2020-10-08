@@ -13,11 +13,11 @@ fun getLinksFromHtml(body: String?, size: Int?): List<String>? {
         val num = reg.findAll(body)
         val citesList = mutableListOf<String>()
         for (result in num) {
-            Log.d("StringUtils", "getLinksFromHtml: " + result.value)
+//            Log.d("StringUtils", "getLinksFromHtml: " + result.value)
             citesList.add(result.value)
         }
         val croped = citesList.drop(1).take(size)
-        Log.d("StringUtils", "getLinksFromHtml:")
+//        Log.d("StringUtils", "getLinksFromHtml:")
         return croped
     }
 

@@ -79,7 +79,7 @@ class Repository @Inject constructor(): IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (true /*shouldUpdateRadioCacheDB()*/) {
+        if (shouldUpdateRadioCacheDB()) {
             updatePodacastInfo()
         }
     }
@@ -121,14 +121,20 @@ class Repository @Inject constructor(): IRepository {
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
-    override fun setActivePodcast(podcstId: Int) {
+    override fun setActivePodcast(podcastId: Int, lastPosit: Int?) {
+        Log.d(TAG, "setActivePodcast out: $podcastId")
         repScope.launch {
-            radioDao.setAllPodIsNOTActive()
-            radioDao.setPodcastActive(podcstId)
+            Log.d(TAG, "setActivePodcast: $podcastId")
+//            radioDao.setAllPodIsNOTActive()
+            if (lastPosit != null) {
+                radioDao.setPodIsNOTActive(lastPosit)
+            }
+            radioDao.setPodcastActive(podcastId)
         }
     }
 
     override fun getActivePodcast(): Flow<Podcast> {
+        Log.d(TAG, "getActivePodcast: ")
         return radioDao.getActivePodcast().filterNotNull()
     }
 

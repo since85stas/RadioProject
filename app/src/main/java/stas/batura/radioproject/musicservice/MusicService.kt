@@ -261,9 +261,9 @@ class MusicService (): Service() {
                 )
                 if (!mediaSession!!.isActive) {
 //                    val track: MusicRepository.Track = musicRepository.getCurrent()
-
+                    Log.d(TAG, "onPlay: not active")
                     updateMetadataFromTrack(podcast!!)
-
+                    Log.d(TAG, "onPlay: $podcast")
                     prepareToPlay(Uri.parse(podcast!!.audioUrl))
                     if (!isAudioFocusRequested) {
                         isAudioFocusRequested = true
@@ -287,6 +287,8 @@ class MusicService (): Service() {
                 )
                 exoPlayer!!.playWhenReady = true
             }
+
+            Log.d(TAG, "onPlay: prepeared $podcast")
 
             // переводим в нужную точку
             try {
@@ -377,7 +379,7 @@ class MusicService (): Service() {
         // подготавливаем трэк
         fun prepareToPlay(uri: Uri) {
 
-            Log.d(TAG, "prepareToPlay: ")
+            Log.d(TAG, "prepareToPlay: $uri" )
 
                 currentUri = uri
                 val mediaSource =
@@ -495,7 +497,7 @@ class MusicService (): Service() {
 //        }
 
         fun setPodcastWithPosition(podcast: Podcast, position: Long) {
-            Log.d(TAG, "setPodcastWithPosition: ")
+            Log.d(TAG, "setPodcastWithPosition: $podcast posit $position")
             playbackPosition = position
 
             this@MusicService.podcast = podcast
