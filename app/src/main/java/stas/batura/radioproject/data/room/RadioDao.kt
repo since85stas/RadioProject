@@ -22,16 +22,19 @@ interface RadioDao {
     fun getPodcastsList(): Flow<List<Podcast>>
 
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
-    fun getPodcastFlowByNum(num: Int): Flow<Podcast>
+    fun getPodcastFlowByNum (num: Int): Flow<Podcast>
 
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
-    suspend fun getPodcastByNum(num: Int): Podcast?
+    suspend fun getPodcastByNum (num: Int): Podcast?
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
     suspend fun getLastPodcast(): Podcast?
 
     @Query("UPDATE podcast_table SET isActive = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastActive(podcastId: Int)
+
+    @Query ("UPDATE podcast_table SET isActive = 0 WHERE podcastId = :podcastId")
+    suspend fun setPodIsNOTActive (podcastId: Int)
 
     @Query ("UPDATE podcast_table SET isActive = 0")
     suspend fun setAllPodIsNOTActive()
@@ -42,9 +45,4 @@ interface RadioDao {
     @Query("UPDATE podcast_table SET isFinish = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastFinish(podcastId: Int)
 
-//    @Query("UPDATE podcast_table ")
-//    fun updateLocalImageUrl(url: String)
-
-//    @Insert(onConflict = OnConflictStrategy.IGNORE)
-//    suspend fun insertCategory(categories: Category)
 }

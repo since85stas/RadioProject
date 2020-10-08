@@ -129,6 +129,8 @@ class MainActivityViewModel @ViewModelInject constructor(
      * изменяем состояние кнопки
      */
     fun changePlayState() {
+
+        playerServiceBinder!!.setPodcastWithPosition(activePodcast.value!!, 0L)
         if (mediaController.value != null && callbackChanges.value != null) {
             if (callbackChanges.value!!.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.value!!.transportControls.pause()
@@ -140,7 +142,7 @@ class MainActivityViewModel @ViewModelInject constructor(
 
 
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
-        repository.setActivePodcast(podcastId = podcast.podcastId)
+        repository.setActivePodcast(podcastId = podcast.podcastId, lastPosit=  activePodcast.value?.podcastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
 
         if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
