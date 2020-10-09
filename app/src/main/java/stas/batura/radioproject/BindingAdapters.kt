@@ -31,6 +31,37 @@ fun ProgressBar.bindVisibility(visible: Boolean) {
     }
 }
 
+//@BindingAdapter("playProgressBarVisibility")
+//fun ProgressBar.playProgressBarVisibility(visible: Boolean) {
+//    if (visible) {
+//        visibility = View.VISIBLE
+//    } else {
+//        visibility = View.GONE
+//    }
+//}
+
+//@BindingAdapter("podcastIsVisible")
+//fun ProgressBar.bindpodcastIsVisibley(podcast: Podcast) {
+//    if (visible) {
+//        visibility = View.VISIBLE
+//    } else {
+//        visibility = View.GONE
+//    }
+//}
+
+@BindingAdapter(value = ["playProgressBarVisibility","podcastIsVisible"])
+fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast) {
+    if (podcast.isActive) {
+        if (visible) {
+            visibility = View.GONE
+        } else {
+            visibility = View.VISIBLE
+        }
+    } else {
+
+    }
+}
+
 @BindingAdapter("timelableTimeBind")
 fun TextView.timelableTimeBind(timeLabel: TimeLabel) {
     text = timeLabel.newStartTime.toString()
