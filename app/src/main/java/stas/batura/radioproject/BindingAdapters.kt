@@ -31,26 +31,22 @@ fun ProgressBar.bindVisibility(visible: Boolean) {
     }
 }
 
-@BindingAdapter(value = ["playProgressBarVisibility","podcastIsVisible"])
-fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast) {
-//        if (visible) {
-//            visibility = View.VISIBLE
-//        } else {
-//            visibility = View.GONE
-//        }
-    val active = podcast.isActive
-    if (active) {
-        Log.d("bindplayPVisibility", "$active.isActive is active: ")
-        if (visible) {
-            Log.d("bindplayPVisibility", "$visible is visible: ")
-            visibility = View.VISIBLE
-        } else {
-            Log.d("bindplayPVisibility", "$visible not visible: ")
-            visibility = View.GONE
+@BindingAdapter(value = ["playProgressBarVisibility","currentPodcast", "activePodcast"])
+fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast, podcastActive: Podcast?) {
+    if (visible) {
+        Log.d("bindplayPVisibility", "$visible is visible: ")
+        if (podcastActive != null) {
+            if (podcast == podcastActive) {
+                Log.d("bindplayPVisibility", "is active: ")
+                visibility = View.VISIBLE
+            } else {
+                Log.d("bindplayPVisibility", "not active: ")
+                visibility = View.GONE
+            }
         }
     } else {
         visibility = View.GONE
-        Log.d("bindplayPVisibility", "$active not active: ")
+        Log.d("bindplayPVisibility", "$visible not visible: ")
     }
 }
 
