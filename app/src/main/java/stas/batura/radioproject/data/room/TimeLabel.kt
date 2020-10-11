@@ -1,9 +1,11 @@
 package stas.batura.radioproject.data.room
 
+import android.widget.TextView
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.net.TimeLabel
+import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
 /** Regular expression for parsing RFC3339 date/times.  */
@@ -29,11 +31,13 @@ fun fillTimelable(timelables: List<TimeLabel>?): List<TimeLabel>? {
         }
 
         for (lable in timelables) {
-            var newLable = lable
+            val newLable = lable
             newLable.newStartTime = start
+            newLable.startTimeString = setTrackDurat(start)
             if (lable.duration != null) {
                 start = start + lable.duration * 1000L
             }
+
             newTimeLables!!.add(newLable)
         }
         return newTimeLables
@@ -59,4 +63,10 @@ class TimeLabelsDataConverter {
         return gson.fromJson(value, type)
     }
 
+}
+
+fun setTrackDurat (dur: Long): String {
+    val formatter = SimpleDateFormat("HH:mm:ss");
+    val dateString = formatter.format( dur );
+   return dateString
 }
