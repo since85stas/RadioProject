@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
+import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.findNavController
@@ -15,8 +17,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.control_fragment_new.*
 import stas.batura.radioproject.musicservice.MusicService
-import stas.batura.radioproject.databinding.ActivityMainBinding
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -60,6 +62,24 @@ class MainActivity : AppCompatActivity() {
 //                mainActivityViewModel.playClicked()
             }
         }
+
+        mainActivityViewModel.callbackChanges.observe(this, Observer {
+            if (it != null) {
+                if (it.state == PlaybackStateCompat.STATE_PLAYING) {
+                    Log.d(TAG, "onCreate: play spinner visible")
+                    mainActivityViewModel._spinnerPlay.value = true
+                } else if (it.state == PlaybackStateCompat.STATE_PAUSED ) {
+                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel._spinnerPlay.value = false
+                } else if (it.state == PlaybackStateCompat.STATE_NONE) {
+                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel._spinnerPlay.value = false
+                } else {
+                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel._spinnerPlay.value = false
+                }
+            }
+        })
 
         // нициализируем сервис
         mainActivityViewModel.initMusicService()

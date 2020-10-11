@@ -35,7 +35,9 @@ data class TimeLabel (
 
     val duration: Int? = null,    // длительность в секундах
 
-    var newStartTime: Long = 0L
+    var newStartTime: Long = 0L,
+
+    var startTimeString: String = ""
 ) {
     /**
      * transform class field [time] to Milliseconds

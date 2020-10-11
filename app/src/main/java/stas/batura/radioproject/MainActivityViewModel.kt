@@ -56,6 +56,10 @@ class MainActivityViewModel @ViewModelInject constructor(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    var _spinnerPlay: MutableLiveData<Boolean> = MutableLiveData(false)
+    val spinnerPlay: LiveData<Boolean>
+        get() = _spinnerPlay
+
     init {
         Log.d(TAG, "view model created: ")
     }
