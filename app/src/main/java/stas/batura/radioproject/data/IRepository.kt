@@ -14,7 +14,7 @@ interface IRepository {
 
     fun getPodcastsList(): Flow<List<Podcast>>
 
-    fun setActivePodcast(podcastId: Int, lastPosit: Int?)
+    fun setActivePodcast(podcastId: Int, active: Int?)
 
     fun getActivePodcast(): Flow<Podcast>
 

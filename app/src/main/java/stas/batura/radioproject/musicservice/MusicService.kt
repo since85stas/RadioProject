@@ -445,8 +445,8 @@ class MusicService : LifecycleService() {
 //        return PlayerServiceBinder()
 //    }
     override fun onBind(intent: Intent): IBinder? {
-        return super.onBind(intent)
-                println("Service bind")
+        super.onBind(intent)
+        println("Service bind")
         return PlayerServiceBinder()
     }
 
@@ -619,7 +619,7 @@ class MusicService : LifecycleService() {
     }
 
     fun updateCurrePodcastPosit(position: Long) {
-//        repositoryS.updatePodcastLastPos(position)
+        repositoryS.updatePodcastLastPos(position)
     }
 
 }
