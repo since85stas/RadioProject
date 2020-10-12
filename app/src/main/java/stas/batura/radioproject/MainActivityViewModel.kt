@@ -134,7 +134,7 @@ class MainActivityViewModel @ViewModelInject constructor(
      */
     fun changePlayState() {
 
-        playerServiceBinder!!.setPodcastWithPosition(activePodcast.value!!, 0L)
+        playerServiceBinder!!.setPodcastWithPosition(activePodcast.value!!, activePodcast.value!!.lastPosition)
         if (mediaController.value != null && callbackChanges.value != null) {
             if (callbackChanges.value!!.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.value!!.transportControls.pause()
@@ -159,4 +159,6 @@ class MainActivityViewModel @ViewModelInject constructor(
             playClicked()
         }
     }
+
+
 }

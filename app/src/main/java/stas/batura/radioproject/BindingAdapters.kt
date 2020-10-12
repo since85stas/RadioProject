@@ -52,7 +52,9 @@ fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast, podcastA
 
 @BindingAdapter("timelableTimeBind")
 fun TextView.timelableTimeBind(timeLabel: TimeLabel) {
-    text = timeLabel.startTimeString.toString()
+    if (timeLabel.startTimeString!= null) {
+        text = timeLabel.startTimeString
+    }
 }
 
 @BindingAdapter("timelableTitleBind")

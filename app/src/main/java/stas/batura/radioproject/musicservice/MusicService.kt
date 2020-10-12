@@ -17,6 +17,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.LifecycleService
 import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
@@ -29,22 +30,30 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import okhttp3.OkHttpClient
 import stas.batura.radioproject.MainActivity
 import stas.batura.radioproject.R
+import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.room.Podcast
 import java.io.File
+import javax.inject.Inject
 
-class MusicService (): Service() {
+@AndroidEntryPoint
+class MusicService : LifecycleService() {
+
+    @Inject
+    lateinit var repositoryS: IRepository
 
     private val TAG = MusicService::class.java.simpleName
 
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
 
     private val NOTIFICATION_ID = 404
+
     private val NOTIFICATION_DEFAULT_CHANNEL_ID = "default_channel"
 
     private var podcast: Podcast? =  null
@@ -313,6 +322,9 @@ class MusicService (): Service() {
         override fun onPause() {
             Log.d(TAG, "onPause: ")
             playbackPosition = exoPlayer!!.currentPosition
+
+            updateCurrePodcastPosit(playbackPosition)
+
             if (exoPlayer!!.playWhenReady) {
                 exoPlayer!!.playWhenReady = false
                 unregisterReceiver(becomingNoisyReceiver)
@@ -332,6 +344,10 @@ class MusicService (): Service() {
 
         // при остановки проигрыша
         override fun onStop() {
+            playbackPosition = exoPlayer!!.currentPosition
+
+            updateCurrePodcastPosit(playbackPosition)
+
             Log.d(TAG, "onStop: ")
             if (exoPlayer!!.playWhenReady) {
                 exoPlayer!!.playWhenReady = false
@@ -423,8 +439,14 @@ class MusicService (): Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        println("Service bind")
+    //    override fun onBind(intent: Intent?): IBinder? {
+//        super.onBind(intent)
+//        println("Service bind")
+//        return PlayerServiceBinder()
+//    }
+    override fun onBind(intent: Intent): IBinder? {
+        return super.onBind(intent)
+                println("Service bind")
         return PlayerServiceBinder()
     }
 
@@ -595,4 +617,9 @@ class MusicService (): Service() {
         cache.release()
 //        cache = null
     }
+
+    fun updateCurrePodcastPosit(position: Long) {
+//        repositoryS.updatePodcastLastPos(position)
+    }
+
 }

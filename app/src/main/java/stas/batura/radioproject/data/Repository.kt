@@ -146,4 +146,10 @@ class Repository @Inject constructor(): IRepository {
             radioDao.setPodcastFinish(podcstId)
         }
     }
+
+    override fun updatePodcastLastPos(podcastId: Long) {
+        repScope.launch {
+            radioDao.updatePodcastLastPos(podcastId)
+        }
+    }
 }
