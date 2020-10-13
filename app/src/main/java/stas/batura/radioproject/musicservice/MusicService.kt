@@ -344,7 +344,7 @@ class MusicService : LifecycleService() {
 
         // при остановки проигрыша
         override fun onStop() {
-            playbackPosition = exoPlayer!!.currentPosition
+//            playbackPosition = exoPlayer!!.currentPosition
 
             updateCurrePodcastPosit(playbackPosition)
 
@@ -524,6 +524,8 @@ class MusicService : LifecycleService() {
 
             this@MusicService.podcast = podcast
         }
+
+//        fun updateCurrentLastPosit()
 
     }
 

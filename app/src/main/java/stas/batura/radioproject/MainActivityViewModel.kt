@@ -146,6 +146,16 @@ class MainActivityViewModel @ViewModelInject constructor(
 
 
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
+        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
+                PlaybackStateCompat.STATE_PLAYING
+            )
+        ) {
+            mediaController.value!!.transportControls.stop()
+//            playClicked()
+        } else {
+//            playClicked()
+        }
+
         var lastId: Int? = null
         if (activePodcast.value != null) {
             lastId = activePodcast.value!!.podcastId
@@ -153,15 +163,17 @@ class MainActivityViewModel @ViewModelInject constructor(
         repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
 
-        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
-                PlaybackStateCompat.STATE_PLAYING
-            )
-        ) {
-            mediaController.value!!.transportControls.stop()
-            playClicked()
-        } else {
-            playClicked()
-        }
+        playClicked()
+
+//        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
+//                PlaybackStateCompat.STATE_PLAYING
+//            )
+//        ) {
+//            mediaController.value!!.transportControls.stop()
+//            playClicked()
+//        } else {
+//            playClicked()
+//        }
     }
 
 
