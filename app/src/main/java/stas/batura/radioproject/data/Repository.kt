@@ -1,19 +1,11 @@
 package stas.batura.radioproject.data
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.provider.MediaStore
 import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
-import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 
@@ -121,13 +113,15 @@ class Repository @Inject constructor(): IRepository {
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
-    override fun setActivePodcast(podcastId: Int, lastPosit: Int?) {
+    override fun setActivePodcast(podcastId: Int, active: Int?) {
         Log.d(TAG, "setActivePodcast out: $podcastId")
         repScope.launch {
             Log.d(TAG, "setActivePodcast: $podcastId")
 //            radioDao.setAllPodIsNOTActive()
-            if (lastPosit != null) {
-                radioDao.setPodIsNOTActive(lastPosit)
+            if (active != null ) {
+                radioDao.setPodIsNOTActive(active)
+            } else {
+                radioDao.setAllPodIsNOTActive()
             }
             radioDao.setPodcastActive(podcastId)
         }
@@ -144,6 +138,13 @@ class Repository @Inject constructor(): IRepository {
     override fun setFinishPodcast(podcstId: Int) {
         repScope.launch {
             radioDao.setPodcastFinish(podcstId)
+        }
+    }
+
+    override fun updatePodcastLastPos(podcastId: Long) {
+        repScope.launch {
+            radioDao.updatePodcastLastPos(podcastId)
+//            radioDao.getActivePodcast()
         }
     }
 }

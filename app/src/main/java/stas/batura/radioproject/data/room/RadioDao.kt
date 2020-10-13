@@ -45,4 +45,7 @@ interface RadioDao {
     @Query("UPDATE podcast_table SET isFinish = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastFinish(podcastId: Int)
 
+    @Query("UPDATE podcast_table SET lastPosition = podcastId WHERE podcastId = :podcastId")
+    suspend fun updatePodcastLastPos(podcastId: Long)
+
 }

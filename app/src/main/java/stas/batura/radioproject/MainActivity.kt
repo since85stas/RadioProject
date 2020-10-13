@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        mainActivityViewModel.activePodcast.observe(this, {
+            Log.d(TAG, "onCreate:active podcast $it")
+        })
+
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
     }
