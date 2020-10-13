@@ -157,7 +157,6 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
         repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
-
         playClicked()
     }
 
