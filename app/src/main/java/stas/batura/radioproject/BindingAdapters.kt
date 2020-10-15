@@ -74,3 +74,12 @@ fun TextView.controlTitleBind(podcast: Podcast?) {
     Log.d("controlTitle", "controlTitleBind: $podcast")
     text = podcast?.title
 }
+
+@BindingAdapter("combineTitleBind")
+fun TextView.combineTitleBind(string: String?) {
+    Log.d("controlTitle", "combineTitleBind: $string")
+    if (string != null) {
+        text = string
+    }
+}
+

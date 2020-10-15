@@ -28,6 +28,8 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     private val TAG = MainActivityViewModel::class.java.simpleName
 
+//    var numberLive = repository.em
+
     // binder instance
     var playerServiceBinder: MusicService.PlayerServiceBinder? = null
 
@@ -158,6 +160,10 @@ class MainActivityViewModel @ViewModelInject constructor(
         repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
         playClicked()
+    }
+
+    fun emitNumberPodcasts(number: Int) {
+        repository.emitNumber(number)
     }
 
 
