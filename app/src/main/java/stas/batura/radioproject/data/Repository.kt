@@ -7,8 +7,10 @@ import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.random.Random
 
+@Singleton
 class Repository @Inject constructor(): IRepository {
 
     private val TAG = Repository::class.java.simpleName
@@ -161,16 +163,11 @@ class Repository @Inject constructor(): IRepository {
     @ExperimentalCoroutinesApi
     override fun emitNumber(num: Int) {
         _numberFlow.value = (0..10).random()
-        emitFlowNumber()
     }
 
     @ExperimentalCoroutinesApi
     override fun obsNumber(): StateFlow<Int> {
         return numberFlow
-    }
-
-    override fun emitFlowNumber(): Flow<Int> = flow<Int> {
-        emit(_numberFlow.value)
     }
 
 }

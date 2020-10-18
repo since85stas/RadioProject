@@ -85,10 +85,6 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "onCreate:active podcast $it")
         })
 
-//        mainActivityViewModel.flowNumberLive.observe(this) {
-//            Log.d(TAG, "onCreate: $it")
-//        }
-
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
     }

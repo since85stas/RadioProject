@@ -33,5 +33,4 @@ interface IRepository {
     @ExperimentalCoroutinesApi
     fun obsNumber(): StateFlow<Int>
 
-    fun emitFlowNumber(): Flow<Int>
 }

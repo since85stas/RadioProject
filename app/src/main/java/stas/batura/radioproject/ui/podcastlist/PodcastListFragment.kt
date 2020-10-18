@@ -71,6 +71,7 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.flowNumberLive.observe(requireActivity()) {
             Log.d(TAG, "addObservers: $it")
         }
+
         super.onViewCreated(view, savedInstanceState)
     }
 
