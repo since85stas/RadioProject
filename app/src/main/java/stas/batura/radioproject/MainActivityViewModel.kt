@@ -52,6 +52,8 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     val activePodcast = repository.getActivePodcast().asLiveData()
 
+    val flowNumberLive = repository.obsNumber().asLiveData()
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 

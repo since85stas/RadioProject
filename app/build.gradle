@@ -64,6 +64,11 @@ dependencies {
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
+    
+    // Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.6"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.6"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.6'
 
 
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle_extensions"

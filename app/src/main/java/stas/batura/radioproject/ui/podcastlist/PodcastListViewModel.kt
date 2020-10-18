@@ -44,7 +44,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         number: Int, podc: List<Podcast> -> return@combine " combine: $number, $podc "
     }.asLiveData()
 
-    val flowNumberLive = repository.emitFlowNumber().asLiveData()
+    val flowNumberLive = repository.obsNumber().asLiveData()
 
     init {
         launchDataLoad {
