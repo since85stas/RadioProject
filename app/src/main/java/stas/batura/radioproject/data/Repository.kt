@@ -1,9 +1,11 @@
 package stas.batura.radioproject.data
 
 import android.util.Log
+import androidx.datastore.DataStore
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import ru.batura.stat.batchat.repository.room.RadioDao
+import stas.batura.radioproject.UserPreferences
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
@@ -35,6 +37,9 @@ class Repository @Inject constructor(): IRepository {
 
     @Inject
     lateinit var retrofit: IRetrofit
+
+    @Inject
+    lateinit var protoData: DataStore<UserPreferences>
 
     @ExperimentalCoroutinesApi
     val _numberFlow: MutableStateFlow<Int> = MutableStateFlow(1)
