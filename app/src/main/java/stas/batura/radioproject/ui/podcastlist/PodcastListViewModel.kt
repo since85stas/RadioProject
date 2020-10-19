@@ -37,6 +37,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val podcastsFlow: Flow<List<Podcast>> = repository.getlastNPodcastsList(5)
 
+    val currPodcasts = repository.currentPodcList().asLiveData()
+
     val combineFlow = combine(
         numberLive,
         podcastsFlow
@@ -52,6 +54,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
         }
+//        repository.
     }
 
     fun addPodcast() {
@@ -81,11 +84,17 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //                _snackbar.value = error.message
             } finally {
                 _spinner.value = false
+
+                repository.getAllPodcastListFlow()
             }
         }
     }
 
     fun setNumberPodcasts(number: Int) {
-       repository.setNumPodcsts ((0..10).random())
+       val num = (0..10).random()
+
+        viewModelScope.launch {
+            repository.getLastNPodcastListFlow(num)
+        }
     }
 }

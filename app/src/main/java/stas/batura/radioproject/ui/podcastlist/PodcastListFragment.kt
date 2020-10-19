@@ -61,8 +61,14 @@ class PodcastListFragment : Fragment() {
         val adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel)
         podcast_recycler.adapter = adapter
 
-        podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
-            adapter.submitList(podcasts)
+//        podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
+//            adapter.submitList(podcasts)
+//        }
+
+        podcastListViewModel.currPodcasts.observe(viewLifecycleOwner) {podcasts ->
+            if (podcasts != null) {
+                adapter.submitList(podcasts)
+            }
         }
 
         super.onViewCreated(view, savedInstanceState)

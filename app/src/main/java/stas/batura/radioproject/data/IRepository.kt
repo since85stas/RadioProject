@@ -38,4 +38,10 @@ interface IRepository {
 
     fun setNumPodcsts(num: Int)
 
+    @ExperimentalCoroutinesApi
+    fun currentPodcList(): StateFlow<List<Podcast>?>
+
+    suspend fun getAllPodcastListFlow()
+
+    suspend fun getLastNPodcastListFlow(num: Int)
 }

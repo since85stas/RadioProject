@@ -45,12 +45,16 @@ class Repository @Inject constructor(): IRepository {
     val _numberFlow: MutableStateFlow<Int> = MutableStateFlow(1)
     val numberFlow: StateFlow<Int> = _numberFlow
 
+    val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
+    val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
+
     init {
         Log.d(TAG, "repository started: ")
 //        val res = repScope.async {
 //            val res = retrofit.getPodcastByNum("223")
 //
 //        }
+//        getAllPodcastListFlow()
     }
 
     /**
@@ -127,6 +131,24 @@ class Repository @Inject constructor(): IRepository {
         return radioDao.getLastNPodcastsList(num)
     }
 
+    override suspend fun getAllPodcastListFlow() {
+//        repScope.launch {
+            val flow = radioDao.getLastNPodcastsList(10)
+            flow.collect() {
+                _currentPodcList.value = it
+            }
+//        }
+    }
+
+    override suspend fun getLastNPodcastListFlow(num: Int) {
+//        repScope.launch {
+        val flow = radioDao.getLastNPodcastsList(num)
+        flow.collect() {
+            _currentPodcList.value = it
+        }
+//        }
+    }
+
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
@@ -185,5 +207,10 @@ class Repository @Inject constructor(): IRepository {
                 t.toBuilder().setNumShownPodcasts(num).build()
             }
         }
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun currentPodcList(): StateFlow<List<Podcast>?> {
+        return currentPodcList
     }
 }
