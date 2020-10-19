@@ -46,6 +46,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val flowNumberLive = repository.obsNumber().asLiveData()
 
+    val userPref = repository.getUserPref().asLiveData()
+
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
@@ -81,5 +83,9 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
                 _spinner.value = false
             }
         }
+    }
+
+    fun setNumberPodcasts(number: Int) {
+       repository.setNumPodcsts ((0..10).random())
     }
 }

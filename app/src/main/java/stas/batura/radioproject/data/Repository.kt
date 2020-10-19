@@ -175,4 +175,15 @@ class Repository @Inject constructor(): IRepository {
         return numberFlow
     }
 
+    override fun getUserPref(): Flow<UserPreferences> {
+        return protoData.data
+    }
+
+    override fun setNumPodcsts(num: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setNumShownPodcasts(num).build()
+            }
+        }
+    }
 }

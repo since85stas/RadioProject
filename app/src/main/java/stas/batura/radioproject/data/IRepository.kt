@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.batura.stat.batchat.repository.room.RadioDao
+import stas.batura.radioproject.UserPreferences
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 
@@ -32,5 +33,9 @@ interface IRepository {
 
     @ExperimentalCoroutinesApi
     fun obsNumber(): StateFlow<Int>
+
+    fun getUserPref(): Flow<UserPreferences>
+
+    fun setNumPodcsts(num: Int)
 
 }

@@ -29,6 +29,8 @@ class PodcastListFragment : Fragment() {
 
     private lateinit var mainviewModel: MainActivityViewModel
 
+//    private lateinit var adapter: PodcastsAdapter
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -63,15 +65,6 @@ class PodcastListFragment : Fragment() {
             adapter.submitList(podcasts)
         }
 
-        podcastListViewModel.combineFlow.observe(viewLifecycleOwner) {
-            Log.d(TAG, "addObservers: $it")
-
-        }
-
-        podcastListViewModel.flowNumberLive.observe(requireActivity()) {
-            Log.d(TAG, "addObservers: $it")
-        }
-
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -91,17 +84,11 @@ class PodcastListFragment : Fragment() {
      */
     @ExperimentalCoroutinesApi
     private fun addObservers() {
-//        podcastListViewModel.numberLive.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "addObservers: $it")
-//        }
-//        podcastListViewModel.combineFlow.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "addObservers: $it")
-//
-//        }
-//
-//        podcastListViewModel.flowNumberLive.observe(viewLifecycleOwner) {
-//            Log.d(TAG, "addObservers: $it")
-//        }
+
+        podcastListViewModel.userPref.observe(viewLifecycleOwner) {
+            Log.d(TAG, "addObservers: ${it.numShownPodcasts}")
+        }
+
     }
 
     /**

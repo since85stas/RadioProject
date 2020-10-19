@@ -51,7 +51,7 @@
 
         <Button
             android:text="push"
-            android:onClick="@{() -> mainViewModel.emitNumberPodcasts(5)}"
+            android:onClick="@{() -> podacstListViewModel.setNumberPodcasts(1)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
