@@ -28,6 +28,8 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     private val TAG = MainActivityViewModel::class.java.simpleName
 
+//    var numberLive = repository.em
+
     // binder instance
     var playerServiceBinder: MusicService.PlayerServiceBinder? = null
 
@@ -133,12 +135,10 @@ class MainActivityViewModel @ViewModelInject constructor(
      * изменяем состояние кнопки
      */
     fun changePlayState() {
-
         if (mediaController.value != null && callbackChanges.value != null) {
             if (callbackChanges.value!!.state == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.value!!.transportControls.pause()
             } else {
-//                playerServiceBinder!!.setPodcastWithPosition(activePodcast.value!!, activePodcast.value!!.lastPosition)
                 mediaController.value!!.transportControls.play()
             }
         }
@@ -151,9 +151,6 @@ class MainActivityViewModel @ViewModelInject constructor(
             )
         ) {
             mediaController.value!!.transportControls.stop()
-//            playClicked()
-        } else {
-//            playClicked()
         }
 
         var lastId: Int? = null
@@ -162,18 +159,11 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
         repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
-
         playClicked()
+    }
 
-//        if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
-//                PlaybackStateCompat.STATE_PLAYING
-//            )
-//        ) {
-//            mediaController.value!!.transportControls.stop()
-//            playClicked()
-//        } else {
-//            playClicked()
-//        }
+    fun emitNumberPodcasts(number: Int) {
+        repository.emitNumber(number)
     }
 
 

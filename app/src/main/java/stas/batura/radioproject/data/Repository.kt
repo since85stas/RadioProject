@@ -1,14 +1,18 @@
 package stas.batura.radioproject.data
 
 import android.util.Log
+import androidx.datastore.DataStore
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.*
 import ru.batura.stat.batchat.repository.room.RadioDao
+import stas.batura.radioproject.UserPreferences
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.random.Random
 
+@Singleton
 class Repository @Inject constructor(): IRepository {
 
     private val TAG = Repository::class.java.simpleName
@@ -28,9 +32,18 @@ class Repository @Inject constructor(): IRepository {
      */
     private val repScope = CoroutineScope(Dispatchers.IO + repositoryJob)
 
-    @Inject lateinit var radioDao: RadioDao
+    @Inject
+    lateinit var radioDao: RadioDao
 
-    @Inject lateinit var retrofit: IRetrofit
+    @Inject
+    lateinit var retrofit: IRetrofit
+
+    @Inject
+    lateinit var protoData: DataStore<UserPreferences>
+
+    @ExperimentalCoroutinesApi
+    val _numberFlow: MutableStateFlow<Int> = MutableStateFlow(1)
+    val numberFlow: StateFlow<Int> = _numberFlow
 
     init {
         Log.d(TAG, "repository started: ")
@@ -44,7 +57,7 @@ class Repository @Inject constructor(): IRepository {
      * Returns true if we should make a network request.
      */
     private suspend fun shouldUpdateRadioCacheNetw(): Boolean {
-            val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getLastPodcast()[0])
+        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getLastPodcast()[0])
 //        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
         val isNoInBb = radioDao.getPodcastByNum(lastPodcast.podcastId) == null
         return isNoInBb
@@ -97,7 +110,7 @@ class Repository @Inject constructor(): IRepository {
     /**
      * добавляет подкаст в базу данных
      */
-    override fun addPodcast(podcast: Podcast){
+    override fun addPodcast(podcast: Podcast) {
         repScope.launch {
             radioDao.insertPodcast(podcast)
         }
@@ -106,8 +119,12 @@ class Repository @Inject constructor(): IRepository {
     /**
      * выдает список подкастов из базы данных
      */
-    override fun getPodcastsList(): Flow<List<Podcast>> {
-        return radioDao.getPodcastsList()
+    override fun getAllPodcastsList(): Flow<List<Podcast>> {
+        return radioDao.getAllPodcastsList()
+    }
+
+    override fun getlastNPodcastsList(num: Int): Flow<List<Podcast>> {
+        return radioDao.getLastNPodcastsList(num)
     }
 
     /**
@@ -118,7 +135,7 @@ class Repository @Inject constructor(): IRepository {
         repScope.launch {
             Log.d(TAG, "setActivePodcast: $podcastId")
 //            radioDao.setAllPodIsNOTActive()
-            if (active != null ) {
+            if (active != null) {
                 radioDao.setPodIsNOTActive(active)
             } else {
                 radioDao.setAllPodIsNOTActive()
@@ -147,4 +164,15 @@ class Repository @Inject constructor(): IRepository {
 //            radioDao.getActivePodcast()
         }
     }
+
+    @ExperimentalCoroutinesApi
+    override fun emitNumber(num: Int) {
+        _numberFlow.value = (0..10).random()
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun obsNumber(): StateFlow<Int> {
+        return numberFlow
+    }
+
 }

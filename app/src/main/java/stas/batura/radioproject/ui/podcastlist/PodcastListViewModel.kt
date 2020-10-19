@@ -3,7 +3,11 @@ package stas.batura.radioproject.ui.podcastlist
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.room.Podcast
@@ -11,6 +15,9 @@ import stas.batura.radioproject.data.room.Podcast
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {
 
     private val TAG = PodcastListViewModel::class.java.simpleName
+
+    @ExperimentalCoroutinesApi
+    val numberLive = repository.obsNumber()
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
@@ -25,7 +32,19 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val text: LiveData<String> = _text
 
-    val podcasts: LiveData<List<Podcast>> = repository.getPodcastsList().asLiveData()
+//    val podcasts: LiveData<List<Podcast>> = repository.getAllPodcastsList().asLiveData()
+    val podcasts: LiveData<List<Podcast>> = repository.getlastNPodcastsList(5).asLiveData()
+
+    val podcastsFlow: Flow<List<Podcast>> = repository.getlastNPodcastsList(5)
+
+    val combineFlow = combine(
+        numberLive,
+        podcastsFlow
+    ) {
+        number: Int, podc: List<Podcast> -> return@combine " combine: $number, $podc "
+    }.asLiveData()
+
+    val flowNumberLive = repository.obsNumber().asLiveData()
 
     init {
         launchDataLoad {

@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
 import stas.batura.radioproject.data.dataUtils.getLinksFromHtml
+import stas.batura.radioproject.data.dataUtils.getMillisTime
 import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.net.TimeLabel
 
@@ -26,6 +27,8 @@ data class Podcast(
 
     // дата-время поста в RFC3339
     val time: String     = "0",
+
+    var timeMillis: Long = 0L,
 
     val categories: List<String>? = null,
 
@@ -63,6 +66,7 @@ data class Podcast(
                 podcastBody.url,
                 podcastBody.title,
                 podcastBody.date.toString(),
+                getMillisTime(podcastBody.date),
                 podcastBody.categories,
                 podcastBody.imageUrl,
                 podcastBody.fileName,
@@ -79,7 +83,7 @@ data class Podcast(
      * check if week is passed after [newTime] value
      */
     fun isWeekGone(newTime: Long): Boolean {
-                if (newTime - getMillisTime() > TIME_WEEK) {
+                if (newTime - getMillisTime(time) > TIME_WEEK) {
                     return true
                 } else {
                     return false
@@ -87,14 +91,7 @@ data class Podcast(
     }
 
 
-    /**
-     * transform class field [time] to Milliseconds
-     */
-    fun getMillisTime(): Long {
-        val dateTime: DateTime = DateTime.parseRfc3339(time)
-        val millis: Long = dateTime.getValue()
-        return millis
-    }
+
 
     override fun toString(): String {
         return "Podcast $podcastId $url $title"

@@ -1,6 +1,7 @@
 package stas.batura.radioproject.ui.podcastlist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_podcast_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import stas.batura.radioproject.MainActivity
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
@@ -32,7 +35,7 @@ class PodcastListFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         podcastListViewModel =
-                ViewModelProvider(this).get(PodcastListViewModel::class.java)
+                ViewModelProvider(requireActivity()).get(PodcastListViewModel::class.java)
 
         // TODO: проверить состояние модели после перезапуска активити
         mainviewModel = ViewModelProvider(requireActivity()).get(MainActivityViewModel::class.java)
@@ -47,7 +50,7 @@ class PodcastListFragment : Fragment() {
         bindings.podacstListViewModel = podcastListViewModel
         bindings.mainViewModel = mainviewModel
 
-        bindings.lifecycleOwner = activity
+        bindings.lifecycleOwner = requireActivity()
 
         return bindings.root
     }
@@ -59,9 +62,20 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
             adapter.submitList(podcasts)
         }
+
+        podcastListViewModel.combineFlow.observe(viewLifecycleOwner) {
+            Log.d(TAG, "addObservers: $it")
+
+        }
+
+        podcastListViewModel.flowNumberLive.observe(requireActivity()) {
+            Log.d(TAG, "addObservers: $it")
+        }
+
         super.onViewCreated(view, savedInstanceState)
     }
 
+    @ExperimentalCoroutinesApi
     override fun onStart() {
         addObservers()
         super.onStart()
@@ -75,8 +89,19 @@ class PodcastListFragment : Fragment() {
     /**
      * starting observing a viewModel when fragment is active
      */
+    @ExperimentalCoroutinesApi
     private fun addObservers() {
-
+//        podcastListViewModel.numberLive.observe(viewLifecycleOwner) {
+//            Log.d(TAG, "addObservers: $it")
+//        }
+//        podcastListViewModel.combineFlow.observe(viewLifecycleOwner) {
+//            Log.d(TAG, "addObservers: $it")
+//
+//        }
+//
+//        podcastListViewModel.flowNumberLive.observe(viewLifecycleOwner) {
+//            Log.d(TAG, "addObservers: $it")
+//        }
     }
 
     /**

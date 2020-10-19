@@ -49,6 +49,18 @@
 
             />
 
+        <Button
+            android:text="push"
+            android:onClick="@{() -> mainViewModel.emitNumberPodcasts(5)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            combineTitleBind="@{podacstListViewModel.combineFlow}"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/podcast_recycler"
             android:layout_width="match_parent"
