@@ -41,16 +41,12 @@ class Repository @Inject constructor(): IRepository {
     @Inject
     lateinit var protoData: DataStore<UserPreferences>
 
-    @ExperimentalCoroutinesApi
-    val _numberFlow: MutableStateFlow<Int> = MutableStateFlow(1)
-    val numberFlow: StateFlow<Int> = _numberFlow
+    // контейнер для передачи массива в UI
+    val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
+    val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
 
     init {
         Log.d(TAG, "repository started: ")
-//        val res = repScope.async {
-//            val res = retrofit.getPodcastByNum("223")
-//
-//        }
     }
 
     /**
@@ -119,12 +115,36 @@ class Repository @Inject constructor(): IRepository {
     /**
      * выдает список подкастов из базы данных
      */
-    override fun getAllPodcastsList(): Flow<List<Podcast>> {
-        return radioDao.getAllPodcastsList()
+//    override fun getAllPodcastsList(): Flow<List<Podcast>> {
+//        return radioDao.getAllPodcastsList()
+//    }
+
+//    override fun getlastNPodcastsList(num: Int): Flow<List<Podcast>> {
+//        return radioDao.getLastNPodcastsList(num)
+//    }
+
+    /**
+     * запускается при первом запуске, возможно моно будет убрать
+     */
+    override suspend fun getAllPodcastListFlow() {
+//        repScope.launch {
+            val flow = radioDao.getLastNPodcastsList(10)
+            flow.collect() {
+                _currentPodcList.value = it
+            }
+//        }
     }
 
-    override fun getlastNPodcastsList(num: Int): Flow<List<Podcast>> {
-        return radioDao.getLastNPodcastsList(num)
+    /**
+     * получаем последние N подкастов
+     */
+    override suspend fun getLastNPodcastListFlow(num: Int) {
+//        repScope.launch {
+        val flow = radioDao.getLastNPodcastsList(num)
+        flow.collect() {
+            _currentPodcList.value = it
+        }
+//        }
     }
 
     /**
@@ -144,6 +164,9 @@ class Repository @Inject constructor(): IRepository {
         }
     }
 
+    /**
+     * получаем активный подкаст
+     */
     override fun getActivePodcast(): Flow<Podcast> {
         Log.d(TAG, "getActivePodcast: ")
         return radioDao.getActivePodcast().filterNotNull()
@@ -158,21 +181,38 @@ class Repository @Inject constructor(): IRepository {
         }
     }
 
+    /**
+     * обновляем информацию на каком месте закончили проигрывать трек
+     */
     override fun updatePodcastLastPos(podcastId: Long) {
         repScope.launch {
             radioDao.updatePodcastLastPos(podcastId)
-//            radioDao.getActivePodcast()
         }
     }
 
-    @ExperimentalCoroutinesApi
-    override fun emitNumber(num: Int) {
-        _numberFlow.value = (0..10).random()
+    /***
+     * получаем файл с настройками возможно надо будет разбить на отдельные запросы
+     */
+    override fun getUserPref(): Flow<UserPreferences> {
+        return protoData.data
     }
 
-    @ExperimentalCoroutinesApi
-    override fun obsNumber(): StateFlow<Int> {
-        return numberFlow
+    /**
+     * записываем число показоваемых треков в настройки
+     */
+    override fun setNumPodcsts(num: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setNumShownPodcasts(num).build()
+            }
+        }
     }
 
+    /**
+     * передаем текущие подкасты в UI
+     */
+    @ExperimentalCoroutinesApi
+    override fun currentPodcList(): StateFlow<List<Podcast>?> {
+        return currentPodcList
+    }
 }

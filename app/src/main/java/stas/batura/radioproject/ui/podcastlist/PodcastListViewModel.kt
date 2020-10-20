@@ -16,9 +16,6 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     private val TAG = PodcastListViewModel::class.java.simpleName
 
-    @ExperimentalCoroutinesApi
-    val numberLive = repository.obsNumber()
-
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
     }
@@ -33,23 +30,20 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     val text: LiveData<String> = _text
 
 //    val podcasts: LiveData<List<Podcast>> = repository.getAllPodcastsList().asLiveData()
-    val podcasts: LiveData<List<Podcast>> = repository.getlastNPodcastsList(5).asLiveData()
+//    val podcasts: LiveData<List<Podcast>> = repository.getlastNPodcastsList(5).asLiveData()
+//
+//    val podcastsFlow: Flow<List<Podcast>> = repository.getlastNPodcastsList(5)
 
-    val podcastsFlow: Flow<List<Podcast>> = repository.getlastNPodcastsList(5)
+    @ExperimentalCoroutinesApi
+    val currPodcasts = repository.currentPodcList().asLiveData()
 
-    val combineFlow = combine(
-        numberLive,
-        podcastsFlow
-    ) {
-        number: Int, podc: List<Podcast> -> return@combine " combine: $number, $podc "
-    }.asLiveData()
-
-    val flowNumberLive = repository.obsNumber().asLiveData()
+    val userPref = repository.getUserPref().asLiveData()
 
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
         }
+//        repository.
     }
 
     fun addPodcast() {
@@ -79,7 +73,17 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //                _snackbar.value = error.message
             } finally {
                 _spinner.value = false
+
+                repository.getAllPodcastListFlow()
             }
+        }
+    }
+
+    fun setNumberPodcasts(number: Int) {
+//       val num = (0..10).random()
+
+        viewModelScope.launch {
+            repository.getLastNPodcastListFlow(number)
         }
     }
 }

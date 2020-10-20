@@ -144,7 +144,6 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
-
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
         if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
                 PlaybackStateCompat.STATE_PLAYING
@@ -162,8 +161,8 @@ class MainActivityViewModel @ViewModelInject constructor(
         playClicked()
     }
 
-    fun emitNumberPodcasts(number: Int) {
-        repository.emitNumber(number)
+    fun updatePrefPodcastNum(num: Int) {
+        repository.setNumPodcsts(num)
     }
 
 
