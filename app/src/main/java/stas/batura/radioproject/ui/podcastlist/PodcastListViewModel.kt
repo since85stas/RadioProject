@@ -16,9 +16,6 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     private val TAG = PodcastListViewModel::class.java.simpleName
 
-    @ExperimentalCoroutinesApi
-    val numberLive = repository.obsNumber()
-
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"
     }
@@ -39,14 +36,12 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val currPodcasts = repository.currentPodcList().asLiveData()
 
-    val combineFlow = combine(
-        numberLive,
-        podcastsFlow
-    ) {
-        number: Int, podc: List<Podcast> -> return@combine " combine: $number, $podc "
-    }.asLiveData()
-
-    val flowNumberLive = repository.obsNumber().asLiveData()
+//    val combineFlow = combine(
+//        numberLive,
+//        podcastsFlow
+//    ) {
+//        number: Int, podc: List<Podcast> -> return@combine " combine: $number, $podc "
+//    }.asLiveData()
 
     val userPref = repository.getUserPref().asLiveData()
 
@@ -91,10 +86,10 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     }
 
     fun setNumberPodcasts(number: Int) {
-       val num = (0..10).random()
+//       val num = (0..10).random()
 
         viewModelScope.launch {
-            repository.getLastNPodcastListFlow(num)
+            repository.getLastNPodcastListFlow(number)
         }
     }
 }

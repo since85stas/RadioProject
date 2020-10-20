@@ -28,12 +28,6 @@ interface IRepository {
 
     fun updatePodcastLastPos(podcastId: Long)
 
-    fun emitNumber(num: Int)
-
-
-    @ExperimentalCoroutinesApi
-    fun obsNumber(): StateFlow<Int>
-
     fun getUserPref(): Flow<UserPreferences>
 
     fun setNumPodcsts(num: Int)

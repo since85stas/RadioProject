@@ -41,10 +41,6 @@ class Repository @Inject constructor(): IRepository {
     @Inject
     lateinit var protoData: DataStore<UserPreferences>
 
-    @ExperimentalCoroutinesApi
-    val _numberFlow: MutableStateFlow<Int> = MutableStateFlow(1)
-    val numberFlow: StateFlow<Int> = _numberFlow
-
     val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
     val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
 
@@ -185,16 +181,6 @@ class Repository @Inject constructor(): IRepository {
             radioDao.updatePodcastLastPos(podcastId)
 //            radioDao.getActivePodcast()
         }
-    }
-
-    @ExperimentalCoroutinesApi
-    override fun emitNumber(num: Int) {
-        _numberFlow.value = (0..10).random()
-    }
-
-    @ExperimentalCoroutinesApi
-    override fun obsNumber(): StateFlow<Int> {
-        return numberFlow
     }
 
     override fun getUserPref(): Flow<UserPreferences> {
