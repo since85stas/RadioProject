@@ -10,3 +10,8 @@ fun getMillisTime(time: String): Long {
     val millis: Long = dateTime.getValue()
     return millis
 }
+
+enum class Year {
+    Y2020 = 2020
+
+}

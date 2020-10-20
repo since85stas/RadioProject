@@ -38,4 +38,6 @@ interface IRepository {
     suspend fun getAllPodcastListFlow()
 
     suspend fun getLastNPodcastListFlow(num: Int)
+
+    suspend fun getPodcastByYear()
 }
