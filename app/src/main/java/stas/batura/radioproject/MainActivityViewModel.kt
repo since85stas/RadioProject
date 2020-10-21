@@ -9,16 +9,15 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
 class MainActivityViewModel @ViewModelInject constructor(
@@ -163,6 +162,12 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun updatePrefPodcastNum(num: Int) {
         repository.setNumPodcsts(num)
+    }
+
+    fun getPodcasttsInYear(year: Year) {
+        viewModelScope.launch {
+            repository.getPodcastByYear(year)
+        }
     }
 
 
