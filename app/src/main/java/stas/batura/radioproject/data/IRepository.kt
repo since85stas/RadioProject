@@ -33,6 +33,8 @@ interface IRepository {
 
     fun setNumPodcsts(num: Int)
 
+    fun setPrefPodcastIsSmall(bol: Boolean)
+
     @ExperimentalCoroutinesApi
     fun currentPodcList(): StateFlow<List<Podcast>?>
 

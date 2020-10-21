@@ -57,6 +57,8 @@ class MainActivityViewModel @ViewModelInject constructor(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    val smallCheck = MutableLiveData<Boolean> (false)
+
     var _spinnerPlay: MutableLiveData<Boolean> = MutableLiveData(false)
     val spinnerPlay: LiveData<Boolean>
         get() = _spinnerPlay
@@ -170,5 +172,8 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
+    fun setPodcastIsSmall(bol: Boolean) {
+        repository.setPrefPodcastIsSmall(bol)
+    }
 
 }

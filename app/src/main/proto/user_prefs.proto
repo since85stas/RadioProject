@@ -6,5 +6,6 @@ option java_multiple_files = true;
 message UserPreferences {
   // filter for showing / hiding completed tasks
   bool show_completed = 1;
-  int32 num_shown_podcasts = 10;
+  int32 num_shown_podcasts = 2;
+  bool podcast_is_small = 3;
 }

@@ -94,7 +94,10 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.userPref.observe(viewLifecycleOwner) {
             Log.d(TAG, "addObservers: ${it.numShownPodcasts}")
             podcastListViewModel.setNumberPodcasts(it.numShownPodcasts)
+
+//            mainviewModel.setPodcastIsSmall(it.podcastIsSmall)
         }
+
 
     }
 

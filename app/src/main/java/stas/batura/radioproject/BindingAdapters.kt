@@ -2,6 +2,7 @@ package stas.batura.radioproject
 
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -81,5 +82,10 @@ fun TextView.combineTitleBind(string: String?) {
     if (string != null) {
         text = string
     }
+}
+
+@BindingAdapter("bindSmallCheckbox")
+fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
+    model.setPodcastIsSmall(isChecked)
 }
 

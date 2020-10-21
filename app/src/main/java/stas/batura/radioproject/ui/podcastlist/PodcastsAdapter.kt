@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import kotlinx.android.synthetic.main.podcast_item_view.view.*
+import kotlinx.android.synthetic.main.podcast_item_view_detailed.view.*
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.databinding.PodcastItemViewBinding
+import stas.batura.radioproject.databinding.PodcastItemViewDetailedBinding
+
 
 class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
@@ -25,7 +26,7 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         holder.bind(getItem(position))
     }
 
-    class ViewHolder (val binding: PodcastItemViewBinding, val mainActivityViewModel: MainActivityViewModel ) :
+    class ViewHolder (val binding: PodcastItemViewDetailedBinding, val mainActivityViewModel: MainActivityViewModel ) :
         RecyclerView.ViewHolder (binding.root) {
 
         fun bind (podcast: Podcast) {
@@ -62,7 +63,7 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         companion object {
             fun from(parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = PodcastItemViewBinding.inflate(layoutInflater,
+                val binding = PodcastItemViewDetailedBinding.inflate(layoutInflater,
                     parent,
                     false)
                 return ViewHolder(binding, mainActivityViewModel)

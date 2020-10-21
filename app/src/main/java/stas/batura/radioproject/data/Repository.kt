@@ -209,6 +209,14 @@ class Repository @Inject constructor(): IRepository {
         }
     }
 
+    override fun setPrefPodcastIsSmall(bol: Boolean) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setPodcastIsSmall(bol).build()
+            }
+        }
+    }
+
     /**
      * передаем текущие подкасты в UI
      */
