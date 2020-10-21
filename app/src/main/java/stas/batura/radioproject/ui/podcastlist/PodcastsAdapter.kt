@@ -12,13 +12,14 @@ import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.PodcastItemViewDetailedBinding
+import stas.batura.radioproject.databinding.PodcastItemViewSmallBinding
 
 
-class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
+class PodcastsAdapter(val isSmall: Boolean, val mainActivityViewModel: MainActivityViewModel) :
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent, mainActivityViewModel)
+        return ViewHolder.from(isSmall, parent, mainActivityViewModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -26,52 +27,89 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         holder.bind(getItem(position))
     }
 
-    class ViewHolder (val binding: PodcastItemViewDetailedBinding, val mainActivityViewModel: MainActivityViewModel ) :
-        RecyclerView.ViewHolder (binding.root) {
+    class ViewHolder(
+        val isSmall: Boolean,
+        val binding: PodcastItemViewDetailedBinding,
+        val smallBinding: PodcastItemViewSmallBinding,
+        val mainActivityViewModel: MainActivityViewModel
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind (podcast: Podcast) {
-            binding.podcast = podcast
-            binding.mainModel = mainActivityViewModel
+        fun bind(podcast: Podcast) {
 
-            val adapter = TimeStampsAdapter(mainActivityViewModel, podcast)
-            binding.root.timelabeles_recycler.adapter = adapter
+            if (!isSmall) {
+                binding.podcast = podcast
+                binding.mainModel = mainActivityViewModel
 
-            adapter.submitList(podcast.timeLabels)
+                val adapter = TimeStampsAdapter(mainActivityViewModel, podcast)
+                binding.root.timelabeles_recycler.adapter = adapter
 
-            binding.executePendingBindings()
+                adapter.submitList(podcast.timeLabels)
+
+                binding.executePendingBindings()
 
 //            Glide.with(binding.root.context)
 //                .load(podcast.imageUrl)
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .into(binding.root.logo_image)
 
-            if (podcast.isActive) {
-                binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+                if (podcast.isActive) {
+                    binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
 //                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
+                } else {
+                    Glide.with(binding.root.context)
+                        .load(podcast.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.root.logo_image)
+                }
             } else {
-                Glide.with(binding.root.context)
-                    .load(podcast.imageUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(binding.root.logo_image)
+                binding.podcast = podcast
+                binding.mainModel = mainActivityViewModel
+
+//                adapter.submitList(podcast.timeLabels)
+
+                binding.executePendingBindings()
+
+//            Glide.with(binding.root.context)
+//                .load(podcast.imageUrl)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(binding.root.logo_image)
+
+                if (podcast.isActive) {
+                    binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+//                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
+                } else {
+                    Glide.with(binding.root.context)
+                        .load(podcast.imageUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(binding.root.logo_image)
+                }
             }
         }
 
-        fun onItemClicked () {
+        fun onItemClicked() {
 
         }
 
         companion object {
-            fun from(parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
+            fun from(isSmall: Boolean ,parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = PodcastItemViewDetailedBinding.inflate(layoutInflater,
+                val binding = PodcastItemViewDetailedBinding.inflate(
+                    layoutInflater,
                     parent,
-                    false)
-                return ViewHolder(binding, mainActivityViewModel)
+                    false
+                )
+                val bindingS = PodcastItemViewSmallBinding.inflate(
+                    layoutInflater,
+                    parent,
+                    false
+                )
+                return ViewHolder(isSmall,binding, bindingS, mainActivityViewModel)
             }
         }
     }
 
-    class TrackDiffCalback : DiffUtil.ItemCallback<Podcast> (){
+    class TrackDiffCalback : DiffUtil.ItemCallback<Podcast>() {
 
         override fun areItemsTheSame(
             oldItem: Podcast,
@@ -84,10 +122,9 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             oldItem: Podcast,
             newItem: Podcast
         ): Boolean {
-            return  oldItem == newItem
+            return oldItem == newItem
         }
     }
-
 
 
 }
