@@ -218,9 +218,10 @@ class Repository @Inject constructor(): IRepository {
     }
 
     override suspend fun getPodcastByYear(year: Year) {
-//        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
-//        flow.collect() {
-//            _currentPodcList.value = it
-//        }
+        Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
+        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
+        flow.collect() {
+            _currentPodcList.value = it
+        }
     }
 }
