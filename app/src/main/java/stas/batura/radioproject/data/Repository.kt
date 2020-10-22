@@ -194,8 +194,16 @@ class Repository @Inject constructor(): IRepository {
     /***
      * получаем файл с настройками возможно надо будет разбить на отдельные запросы
      */
-    override fun getUserPref(): Flow<UserPreferences> {
-        return protoData.data
+    override fun getUserPrefPNumber(): Flow<Int> {
+        return protoData.data.map { it ->
+            it.numShownPodcasts
+        }
+    }
+
+    override fun getUserPrefSmallVis(): Flow<Boolean> {
+        return protoData.data.map {
+            it.podcastIsSmall
+        }
     }
 
     /**

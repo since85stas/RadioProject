@@ -29,7 +29,9 @@ interface IRepository {
 
     fun updatePodcastLastPos(podcastId: Long)
 
-    fun getUserPref(): Flow<UserPreferences>
+    fun getUserPrefPNumber(): Flow<Int>
+
+    fun getUserPrefSmallVis(): Flow<Boolean>
 
     fun setNumPodcsts(num: Int)
 

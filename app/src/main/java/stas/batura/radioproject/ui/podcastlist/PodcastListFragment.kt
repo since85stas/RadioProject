@@ -5,17 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_podcast_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import stas.batura.radioproject.MainActivity
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
@@ -29,7 +25,7 @@ class PodcastListFragment : Fragment() {
 
     private lateinit var mainviewModel: MainActivityViewModel
 
-//    private lateinit var adapter: PodcastsAdapter
+    private lateinit var adapter: PodcastsAdapter
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -52,13 +48,13 @@ class PodcastListFragment : Fragment() {
         bindings.podacstListViewModel = podcastListViewModel
         bindings.mainViewModel = mainviewModel
 
-        bindings.lifecycleOwner = requireActivity()
+        bindings.lifecycleOwner = viewLifecycleOwner
 
         return bindings.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel)
+        adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel, listModel = podcastListViewModel)
         podcast_recycler.adapter = adapter
 
 //        podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
@@ -91,13 +87,14 @@ class PodcastListFragment : Fragment() {
     @ExperimentalCoroutinesApi
     private fun addObservers() {
 
-        podcastListViewModel.userPref.observe(viewLifecycleOwner) {
-            Log.d(TAG, "addObservers: ${it.numShownPodcasts}")
-            podcastListViewModel.setNumberPodcasts(it.numShownPodcasts)
-
-//            mainviewModel.setPodcastIsSmall(it.podcastIsSmall)
+        podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
+            podcastListViewModel.setNumberPodcasts(it)
         }
 
+        podcastListViewModel.userPrefSmallV.observe(viewLifecycleOwner) {
+            Log.d(TAG, "addObservers: visible $it")
+            adapter.notifyDataSetChanged()
+        }
 
     }
 

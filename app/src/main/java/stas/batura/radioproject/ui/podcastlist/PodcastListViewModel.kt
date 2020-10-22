@@ -37,7 +37,9 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     @ExperimentalCoroutinesApi
     val currPodcasts = repository.currentPodcList().asLiveData()
 
-    val userPref = repository.getUserPref().asLiveData()
+    val userPrefNum = repository.getUserPrefPNumber().asLiveData()
+
+    val userPrefSmallV = repository.getUserPrefSmallVis().asLiveData()
 
     init {
         launchDataLoad {
