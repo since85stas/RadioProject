@@ -94,8 +94,8 @@ fun TextView.combineTitleBind(string: String?) {
     }
 }
 
-@BindingAdapter("bindSmallCheckbox")
-fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
-    model.setPodcastIsSmall(isChecked)
-}
+//@BindingAdapter("bindSmallCheckbox")
+//fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
+//    model.setPodcastIsSmall(isChecked)
+//}
 

@@ -64,6 +64,8 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.currPodcasts.observe(viewLifecycleOwner) {podcasts ->
             if (podcasts != null) {
                 adapter.submitList(podcasts)
+            } else {
+                Log.d(TAG, "onViewCreated: podcasts is null")
             }
         }
 
@@ -93,6 +95,9 @@ class PodcastListFragment : Fragment() {
 
         podcastListViewModel.userPrefSmallV.observe(viewLifecycleOwner) {
             Log.d(TAG, "addObservers: visible $it")
+            if (it) {
+                mainviewModel.setCheckBoxInitState(it)
+            }
             adapter.notifyDataSetChanged()
         }
 

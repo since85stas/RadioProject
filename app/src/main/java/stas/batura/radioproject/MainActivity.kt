@@ -87,7 +87,9 @@ class MainActivity : AppCompatActivity() {
 
         mainActivityViewModel.smallCheck.observe(this) {
             Log.d(TAG, "onCreate: small bol= $it")
-            mainActivityViewModel.setPodcastIsSmall(it)
+            if (it != null) {
+                mainActivityViewModel.setPodcastIsSmall(it)
+            }
         }
 
         // нициализируем сервис

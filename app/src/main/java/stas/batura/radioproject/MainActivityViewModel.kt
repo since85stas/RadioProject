@@ -57,7 +57,7 @@ class MainActivityViewModel @ViewModelInject constructor(
     // the Coroutine runs using the Main (UI) dispatcher
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    val smallCheck = MutableLiveData<Boolean> (false)
+    val smallCheck = MutableLiveData<Boolean?> (null)
 
     var _spinnerPlay: MutableLiveData<Boolean> = MutableLiveData(false)
     val spinnerPlay: LiveData<Boolean>
@@ -174,6 +174,10 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun setPodcastIsSmall(bol: Boolean) {
         repository.setPrefPodcastIsSmall(bol)
+    }
+
+    fun setCheckBoxInitState(boolean: Boolean) {
+        smallCheck.value = boolean
     }
 
 }
