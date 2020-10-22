@@ -10,7 +10,12 @@
 
         <variable
             name="mainModel"
-            type="stas.batura.radioproject.MainActivityViewModel" />
+            type="stas.batura.radioproject.MainActivityViewModel"
+            />
+
+        <variable
+            name="podcastViewModel"
+            type="stas.batura.radioproject.ui.podcastlist.PodcastListViewModel" />
     </data>
 
     <LinearLayout
@@ -94,7 +99,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/play_button"
-
+                    recyclerBarVisibility="@{podcastViewModel.userPrefSmallV}"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

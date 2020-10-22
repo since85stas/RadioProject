@@ -2,9 +2,11 @@ package stas.batura.radioproject
 
 import android.util.Log
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ui.PlayerControlView
 import kotlinx.android.synthetic.main.control_fragment_new.view.*
@@ -24,6 +26,15 @@ fun TextView.podcastUrlBind(podcast: Podcast) {
 
 @BindingAdapter("progressBarVisibility")
 fun ProgressBar.bindVisibility(visible: Boolean) {
+    if (visible) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+@BindingAdapter("recyclerBarVisibility")
+fun RecyclerView.bindVisibility(visible: Boolean) {
     if (visible) {
         visibility = View.VISIBLE
     } else {
@@ -82,4 +93,9 @@ fun TextView.combineTitleBind(string: String?) {
         text = string
     }
 }
+
+//@BindingAdapter("bindSmallCheckbox")
+//fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
+//    model.setPodcastIsSmall(isChecked)
+//}
 

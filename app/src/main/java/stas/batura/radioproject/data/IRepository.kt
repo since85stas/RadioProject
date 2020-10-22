@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.UserPreferences
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 
@@ -28,9 +29,13 @@ interface IRepository {
 
     fun updatePodcastLastPos(podcastId: Long)
 
-    fun getUserPref(): Flow<UserPreferences>
+    fun getUserPrefPNumber(): Flow<Int>
+
+    fun getUserPrefSmallVis(): Flow<Boolean>
 
     fun setNumPodcsts(num: Int)
+
+    fun setPrefPodcastIsSmall(bol: Boolean)
 
     @ExperimentalCoroutinesApi
     fun currentPodcList(): StateFlow<List<Podcast>?>
@@ -39,5 +44,5 @@ interface IRepository {
 
     suspend fun getLastNPodcastListFlow(num: Int)
 
-    suspend fun getPodcastByYear()
+    suspend fun getPodcastByYear(year: Year)
 }

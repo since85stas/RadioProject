@@ -7,17 +7,21 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import kotlinx.android.synthetic.main.podcast_item_view.view.*
+import kotlinx.android.synthetic.main.podcast_item_view_detailed.view.*
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
-import stas.batura.radioproject.databinding.PodcastItemViewBinding
+import stas.batura.radioproject.databinding.PodcastItemViewDetailedBinding
 
-class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
+
+class PodcastsAdapter(
+    val mainActivityViewModel: MainActivityViewModel,
+    val listModel: PodcastListViewModel
+) :
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent, mainActivityViewModel)
+        return ViewHolder.from(parent, mainActivityViewModel, listModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -25,12 +29,17 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
         holder.bind(getItem(position))
     }
 
-    class ViewHolder (val binding: PodcastItemViewBinding, val mainActivityViewModel: MainActivityViewModel ) :
-        RecyclerView.ViewHolder (binding.root) {
+    class ViewHolder(
+        val binding: PodcastItemViewDetailedBinding,
+        val mainActivityViewModel: MainActivityViewModel,
+        val listModel: PodcastListViewModel
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind (podcast: Podcast) {
+        fun bind(podcast: Podcast) {
             binding.podcast = podcast
             binding.mainModel = mainActivityViewModel
+            binding.podcastViewModel = listModel
 
             val adapter = TimeStampsAdapter(mainActivityViewModel, podcast)
             binding.root.timelabeles_recycler.adapter = adapter
@@ -38,11 +47,6 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             adapter.submitList(podcast.timeLabels)
 
             binding.executePendingBindings()
-
-//            Glide.with(binding.root.context)
-//                .load(podcast.imageUrl)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .into(binding.root.logo_image)
 
             if (podcast.isActive) {
                 binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
@@ -55,22 +59,27 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             }
         }
 
-        fun onItemClicked () {
+        fun onItemClicked() {
 
         }
 
         companion object {
-            fun from(parent: ViewGroup, mainActivityViewModel: MainActivityViewModel): ViewHolder {
+            fun from(
+                parent: ViewGroup,
+                mainActivityViewModel: MainActivityViewModel,
+                listModel: PodcastListViewModel): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = PodcastItemViewBinding.inflate(layoutInflater,
+                val binding = PodcastItemViewDetailedBinding.inflate(
+                    layoutInflater,
                     parent,
-                    false)
-                return ViewHolder(binding, mainActivityViewModel)
+                    false
+                )
+                return ViewHolder(binding, mainActivityViewModel, listModel)
             }
         }
     }
 
-    class TrackDiffCalback : DiffUtil.ItemCallback<Podcast> (){
+    class TrackDiffCalback : DiffUtil.ItemCallback<Podcast>() {
 
         override fun areItemsTheSame(
             oldItem: Podcast,
@@ -83,10 +92,9 @@ class PodcastsAdapter (val mainActivityViewModel: MainActivityViewModel):
             oldItem: Podcast,
             newItem: Podcast
         ): Boolean {
-            return  oldItem == newItem
+            return oldItem == newItem
         }
     }
-
 
 
 }

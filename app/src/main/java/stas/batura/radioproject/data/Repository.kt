@@ -6,6 +6,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import ru.batura.stat.batchat.repository.room.RadioDao
 import stas.batura.radioproject.UserPreferences
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
@@ -93,7 +94,7 @@ class Repository @Inject constructor(): IRepository {
      * Берет информацию из последних N данных и добавляет в БД
      */
     suspend fun updatePodacastInfo() {
-        val podcastBodis = retrofit.getLastNPodcasts(10)
+        val podcastBodis = retrofit.getLastNPodcasts(100)
 
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
@@ -193,8 +194,16 @@ class Repository @Inject constructor(): IRepository {
     /***
      * получаем файл с настройками возможно надо будет разбить на отдельные запросы
      */
-    override fun getUserPref(): Flow<UserPreferences> {
-        return protoData.data
+    override fun getUserPrefPNumber(): Flow<Int> {
+        return protoData.data.map { it ->
+            it.numShownPodcasts
+        }
+    }
+
+    override fun getUserPrefSmallVis(): Flow<Boolean> {
+        return protoData.data.map {
+            it.podcastIsSmall
+        }
     }
 
     /**
@@ -208,11 +217,27 @@ class Repository @Inject constructor(): IRepository {
         }
     }
 
+    override fun setPrefPodcastIsSmall(bol: Boolean) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setPodcastIsSmall(bol).build()
+            }
+        }
+    }
+
     /**
      * передаем текущие подкасты в UI
      */
     @ExperimentalCoroutinesApi
     override fun currentPodcList(): StateFlow<List<Podcast>?> {
         return currentPodcList
+    }
+
+    override suspend fun getPodcastByYear(year: Year) {
+        Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
+        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
+        flow.collect() {
+            _currentPodcList.value = it
+        }
     }
 }
