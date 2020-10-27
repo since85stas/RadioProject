@@ -153,14 +153,14 @@ class Repository @Inject constructor() : IRepository {
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
-    override fun setActivePodcast(podcastId: Int, active: Int?) {
-        Log.d(TAG, "setActivePodcast out: $podcastId")
+    override fun  setActivePodcast(podcastId: Int, active: Int?) {
         repScope.launch {
             Log.d(TAG, "setActivePodcast: $podcastId")
 //            radioDao.setAllPodIsNOTActive()
             if (active != null) {
                 radioDao.setPodIsNOTActive(active)
             } else {
+                Log.d(TAG, "setActivePodcast: All")
                 radioDao.setAllPodIsNOTActive()
             }
             radioDao.setPodcastActive(podcastId)
@@ -241,6 +241,20 @@ class Repository @Inject constructor() : IRepository {
         val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
         flow.collect() {
             _currentPodcList.value = it
+        }
+    }
+
+    override fun getPrefActivePodcastNum(): Flow<Int> {
+        return protoData.data.map {
+            it.activePodcNum
+        }
+    }
+
+    override fun setPrefActivePodcastNum(num: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setActivePodcNum(num).build()
+            }
         }
     }
 }

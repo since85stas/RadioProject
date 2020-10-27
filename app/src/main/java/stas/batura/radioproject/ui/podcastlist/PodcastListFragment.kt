@@ -102,6 +102,10 @@ class PodcastListFragment : Fragment() {
             adapter.notifyDataSetChanged()
         }
 
+        podcastListViewModel.activeNumPref.observe(viewLifecycleOwner) {
+            Log.d(TAG, "activeNumberPref: $it")
+        }
+
     }
 
     /**

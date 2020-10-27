@@ -157,7 +157,8 @@ class MainActivityViewModel @ViewModelInject constructor(
         if (activePodcast.value != null) {
             lastId = activePodcast.value!!.podcastId
         }
-        repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
+//        repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
+        setActiveNumberPref(podcast.podcastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
         playClicked()
     }
@@ -178,6 +179,10 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun setCheckBoxInitState(boolean: Boolean) {
         smallCheck.value = boolean
+    }
+
+    fun setActiveNumberPref(number: Int) {
+        repository.setPrefActivePodcastNum(number)
     }
 
 }

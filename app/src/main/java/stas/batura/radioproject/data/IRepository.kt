@@ -25,6 +25,8 @@ interface IRepository {
 
     fun getActivePodcast(): Flow<Podcast>
 
+
+
     fun setFinishPodcast(podcstId: Int)
 
     fun updatePodcastLastPos(podcastId: Long)
@@ -36,6 +38,10 @@ interface IRepository {
     fun setNumPodcsts(num: Int)
 
     fun setPrefPodcastIsSmall(bol: Boolean)
+
+    fun getPrefActivePodcastNum(): Flow<Int>
+
+    fun setPrefActivePodcastNum(num: Int)
 
     @ExperimentalCoroutinesApi
     fun currentPodcList(): StateFlow<List<Podcast>?>
