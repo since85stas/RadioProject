@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_podcast_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
+import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.databinding.FragmentPodcastListBinding
 
 @AndroidEntryPoint
@@ -91,7 +92,7 @@ class PodcastListFragment : Fragment() {
     private fun addObservers() {
 
         podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
-            podcastListViewModel.setNumberPodcasts(it)
+//            podcastListViewModel.setNumberPodcasts(it)
         }
 
         podcastListViewModel.userPrefSmallV.observe(viewLifecycleOwner) {
@@ -105,6 +106,14 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.activeNumPref.observe(viewLifecycleOwner) {
             Log.d(TAG, "activeNumberPref: $it")
         }
+
+//        podcastListViewModel.listTypePref.observe(viewLifecycleOwner) {
+//            when (it) {
+//                ListViewType.NUMBER -> {
+//
+//                }
+//             }
+//        }
 
     }
 

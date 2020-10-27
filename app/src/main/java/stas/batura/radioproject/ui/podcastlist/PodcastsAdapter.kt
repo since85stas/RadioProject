@@ -48,7 +48,7 @@ class PodcastsAdapter(
 
             binding.executePendingBindings()
 
-            if (podcast.isActive) {
+            if (podcast.podcastId == listModel.activeNumPref.value) {
                 binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
 //                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
             } else {

@@ -70,11 +70,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
-                    playProgressBarVisibility="@{mainModel.spinnerPlay}"
-                    activePodcast="@{mainModel.activePodcast}"
-                    currentPodcast="@{podcast}"
                     app:layout_constraintRight_toLeftOf="@id/play_button"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:visibility="gone"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -227,6 +227,20 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    override fun setPrefListType(type: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setNumShownPodcasts(type).build()
+            }
+        }
+    }
+
+    override fun getPrefListType(): Flow<ListViewType> {
+        return protoData.data.map {
+            ListViewType.valueOf(it.listViewType)
+        }
+    }
+
     /**
      * передаем текущие подкасты в UI
      */
