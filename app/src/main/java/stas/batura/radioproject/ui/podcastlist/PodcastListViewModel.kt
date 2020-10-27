@@ -83,7 +83,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     fun setNumberPodcasts(number: Int) {
 //       val num = (0..10).random()
-
+        Log.d(TAG, "setNumberPodcasts: $number")
         viewModelScope.launch {
             repository.getLastNPodcastListFlow(number)
         }

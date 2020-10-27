@@ -64,6 +64,7 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.currPodcasts.observe(viewLifecycleOwner) {podcasts ->
             if (podcasts != null) {
                 adapter.submitList(podcasts)
+                Log.d(TAG, "onViewCreated: size ${podcasts.size}")
             } else {
                 Log.d(TAG, "onViewCreated: podcasts is null")
             }
