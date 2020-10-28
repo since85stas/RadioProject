@@ -64,6 +64,7 @@ class PodcastListFragment : Fragment() {
         podcastListViewModel.currPodcasts.observe(viewLifecycleOwner) {podcasts ->
             if (podcasts != null) {
                 adapter.submitList(podcasts)
+                Log.d(TAG, "onViewCreated: size ${podcasts.size}")
             } else {
                 Log.d(TAG, "onViewCreated: podcasts is null")
             }
@@ -99,6 +100,10 @@ class PodcastListFragment : Fragment() {
                 mainviewModel.setCheckBoxInitState(it)
             }
             adapter.notifyDataSetChanged()
+        }
+
+        podcastListViewModel.activeNumPref.observe(viewLifecycleOwner) {
+            Log.d(TAG, "activeNumberPref: $it")
         }
 
     }

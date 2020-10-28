@@ -45,13 +45,13 @@ fun RecyclerView.bindVisibility(visible: Boolean) {
 @BindingAdapter(value = ["playProgressBarVisibility","currentPodcast", "activePodcast"])
 fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast, podcastActive: Podcast?) {
     if (visible) {
-        Log.d("bindplayPVisibility", "$visible is visible: ")
+//        Log.d("bindplayPVisibility", "$visible is visible: ")
         if (podcastActive != null) {
             if (podcast == podcastActive) {
-                Log.d("bindplayPVisibility", "is active: ")
+//                Log.d("bindplayPVisibility", "is active: ")
                 visibility = View.VISIBLE
             } else {
-                Log.d("bindplayPVisibility", "not active: ")
+//                Log.d("bindplayPVisibility", "not active: ")
                 visibility = View.GONE
             }
         }
