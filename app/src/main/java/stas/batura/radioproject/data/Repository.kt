@@ -271,4 +271,15 @@ class Repository @Inject constructor() : IRepository {
             }
         }
     }
+
+    override fun getPrefActivePodcast(): Flow<Podcast> {
+        val num = getPrefActivePodcastNum()
+        return flow<Podcast> {
+            radioDao.getPodcastByNum(num.first())
+        }
+    }
+
+    override suspend fun getActivePodcastSus(podcastId: Int): Podcast {
+        return radioDao.getPodcastByNum(podcastId)!!
+    }
 }

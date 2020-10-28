@@ -52,6 +52,8 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     val activePodcast = repository.getActivePodcast().asLiveData()
 
+    val activePodcastPref: MutableLiveData<Podcast?> = MutableLiveData(null)
+
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
 
@@ -190,6 +192,11 @@ class MainActivityViewModel @ViewModelInject constructor(
         repository.setPrefActivePodcastNum(number)
     }
 
-
+    fun updateActivePodcast(num: Int) {
+        viewModelScope.launch {
+            val podcast = repository.getActivePodcastSus(num)
+            activePodcastPref.value = podcast
+        }
+    }
 
 }

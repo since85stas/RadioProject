@@ -81,9 +81,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainActivityViewModel.activePodcast.observe(this, {
-            Log.d(TAG, "onCreate:active podcast $it")
-        })
+//        mainActivityViewModel.activePodcast.observe(this, {
+//            Log.d(TAG, "onCreate:active podcast $it")
+//            mainActivityViewModel.updateActivePodcast(it)
+//        })
 
         mainActivityViewModel.smallCheck.observe(this) {
             Log.d(TAG, "onCreate: small bol= $it")

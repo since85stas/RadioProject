@@ -105,6 +105,7 @@ class PodcastListFragment : Fragment() {
 
         podcastListViewModel.activeNumPref.observe(viewLifecycleOwner) {
             Log.d(TAG, "activeNumberPref: $it")
+            mainviewModel.updateActivePodcast(it)
         }
 
         podcastListViewModel.listTypePref.observe(viewLifecycleOwner) {
