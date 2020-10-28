@@ -227,17 +227,17 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    override fun setPrefListType(type: Int) {
+    override fun setPrefListType(type: ListViewType) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
-                t.toBuilder().setNumShownPodcasts(type).build()
+                t.toBuilder().setListViewType(type.ordinal).build()
             }
         }
     }
 
     override fun getPrefListType(): Flow<ListViewType> {
         return protoData.data.map {
-            ListViewType.valueOf(it.listViewType)
+            ListViewType.getByValue(it.listViewType)!!
         }
     }
 

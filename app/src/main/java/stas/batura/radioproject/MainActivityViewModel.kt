@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
+import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
@@ -164,10 +165,14 @@ class MainActivityViewModel @ViewModelInject constructor(
     }
 
     fun updatePrefPodcastNum(num: Int) {
+        repository.setPrefListType(ListViewType.NUMBER)
+
         repository.setNumPodcsts(num)
     }
 
     fun getPodcasttsInYear(year: Year) {
+        repository.setPrefListType(ListViewType.YEAR)
+
         viewModelScope.launch {
             repository.getPodcastByYear(year)
         }
@@ -184,5 +189,7 @@ class MainActivityViewModel @ViewModelInject constructor(
     fun setActiveNumberPref(number: Int) {
         repository.setPrefActivePodcastNum(number)
     }
+
+
 
 }

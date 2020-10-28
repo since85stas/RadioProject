@@ -41,9 +41,9 @@ interface IRepository {
 
     fun setPrefActivePodcastNum(num: Int)
 
-    fun setPrefListType(type:Int)
+    fun setPrefListType(type:ListViewType)
 
-    fun getPrefListType(): Flow<Int>
+    fun getPrefListType(): Flow<ListViewType>
 
     @ExperimentalCoroutinesApi
     fun currentPodcList(): StateFlow<List<Podcast>?>
@@ -57,8 +57,14 @@ interface IRepository {
 
 enum class ListViewType(type: Int) {
 
-    NUMBER(10),
-    YEAR(11),
-    MONTH(12)
+    NUMBER(0),
+    YEAR(1),
+    MONTH(2);
+
+    companion object {
+        private val VALUES = values()
+
+        fun getByValue(value: Int) = VALUES.firstOrNull { it.ordinal == value }
+    }
 
 }
