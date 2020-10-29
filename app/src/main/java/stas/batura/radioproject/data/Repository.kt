@@ -187,9 +187,9 @@ class Repository @Inject constructor() : IRepository {
     /**
      * обновляем информацию на каком месте закончили проигрывать трек
      */
-    override fun updatePodcastLastPos(podcastId: Long) {
+    override fun updatePodcastLastPos(podcastId: Int, position: Long) {
         repScope.launch {
-            radioDao.updatePodcastLastPos(podcastId)
+            radioDao.updatePodcastLastPos(podcastId, position)
         }
     }
 

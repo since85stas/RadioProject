@@ -66,7 +66,7 @@
                     app:layout_constraintLeft_toRightOf="@id/logo_image"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:layout_marginLeft="12dp"
-                    android:onClick="@{() -> mainModel.movingPlayToPosition(0, podcast)}"
+                    android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"
                     />
 
                 <ProgressBar

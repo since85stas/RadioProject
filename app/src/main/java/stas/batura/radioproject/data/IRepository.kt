@@ -29,7 +29,7 @@ interface IRepository {
 
     fun setFinishPodcast(podcstId: Int)
 
-    fun updatePodcastLastPos(podcastId: Long)
+    fun updatePodcastLastPos(podcastId: Int, position: Long)
 
     fun getUserPrefPNumber(): Flow<Int>
 

@@ -621,7 +621,9 @@ class MusicService : LifecycleService() {
     }
 
     fun updateCurrePodcastPosit(position: Long) {
-        repositoryS.updatePodcastLastPos(position)
+        if (podcast != null) {
+            repositoryS.updatePodcastLastPos(podcast!!.podcastId, position)
+        }
     }
 
 }
