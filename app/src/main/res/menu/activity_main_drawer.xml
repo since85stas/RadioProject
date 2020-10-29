@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/mainGroup"  android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_home"
+            android:title="home" />
+
+        <item
+            android:orderInCategory="2"
+            android:id="@+id/nav_rate"
+            android:icon="@drawable/ic_star_black_24dp"
+            android:title="rate" />
+
+    </group>
+
+
+</menu>
