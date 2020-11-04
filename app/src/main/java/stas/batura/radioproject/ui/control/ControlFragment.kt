@@ -84,6 +84,17 @@ class ControlFragment () : Fragment() {
             }
         })
 
+//        mainViewModel.activePodcastPref.observe(viewLifecycleOwner, Observer {
+//            Log.d(TAG, "addObservers: $it")
+//            mainViewModel.updateActivePodcast(it)
+//        })
+
+        mainViewModel.activePodcastPref.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                Log.d(TAG, "addObservers: $it")
+            }
+        })
+
     }
 
     private fun removeObservers() {

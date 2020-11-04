@@ -35,7 +35,7 @@
             >
 
             <TextView
-                controlTitleBind="@{mainActViewModel.activePodcast}"
+                controlTitleBind="@{mainActViewModel.activePodcastPref}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

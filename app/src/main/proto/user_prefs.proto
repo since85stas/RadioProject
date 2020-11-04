@@ -9,4 +9,5 @@ message UserPreferences {
   int32 num_shown_podcasts = 2;
   bool podcast_is_small = 3;
   int32 active_podc_num = 4;
+  int32 list_view_type = 5;
 }

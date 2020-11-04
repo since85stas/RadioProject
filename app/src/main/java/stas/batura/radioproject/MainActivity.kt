@@ -8,6 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +33,11 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -81,9 +87,10 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainActivityViewModel.activePodcast.observe(this, {
-            Log.d(TAG, "onCreate:active podcast $it")
-        })
+//        mainActivityViewModel.activePodcast.observe(this, {
+//            Log.d(TAG, "onCreate:active podcast $it")
+//            mainActivityViewModel.updateActivePodcast(it)
+//        })
 
         mainActivityViewModel.smallCheck.observe(this) {
             Log.d(TAG, "onCreate: small bol= $it")

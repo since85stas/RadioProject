@@ -25,11 +25,11 @@ interface IRepository {
 
     fun getActivePodcast(): Flow<Podcast>
 
-
+    suspend fun getActivePodcastSus(podcastId: Int): Podcast
 
     fun setFinishPodcast(podcstId: Int)
 
-    fun updatePodcastLastPos(podcastId: Long)
+    fun updatePodcastLastPos(podcastId: Int, position: Long)
 
     fun getUserPrefPNumber(): Flow<Int>
 
@@ -41,7 +41,13 @@ interface IRepository {
 
     fun getPrefActivePodcastNum(): Flow<Int>
 
+    fun getPrefActivePodcast(): Flow<Podcast>
+
     fun setPrefActivePodcastNum(num: Int)
+
+    fun setPrefListType(type:ListViewType)
+
+    fun getPrefListType(): Flow<ListViewType>
 
     @ExperimentalCoroutinesApi
     fun currentPodcList(): StateFlow<List<Podcast>?>
@@ -51,4 +57,18 @@ interface IRepository {
     suspend fun getLastNPodcastListFlow(num: Int)
 
     suspend fun getPodcastByYear(year: Year)
+}
+
+enum class ListViewType(type: Int) {
+
+    NUMBER(0),
+    YEAR(1),
+    MONTH(2);
+
+    companion object {
+        private val VALUES = values()
+
+        fun getByValue(value: Int) = VALUES.firstOrNull { it.ordinal == value }
+    }
+
 }

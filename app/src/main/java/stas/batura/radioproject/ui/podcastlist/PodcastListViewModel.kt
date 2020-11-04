@@ -43,6 +43,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
 
+    val listTypePref = repository.getPrefListType().asLiveData()
+
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()

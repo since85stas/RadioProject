@@ -66,7 +66,7 @@
                     app:layout_constraintLeft_toRightOf="@id/logo_image"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:layout_marginLeft="12dp"
-                    android:onClick="@{() -> mainModel.movingPlayToPosition(0, podcast)}"
+                    android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"
                     />
 
                 <ProgressBar
@@ -75,11 +75,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
-                    playProgressBarVisibility="@{mainModel.spinnerPlay}"
-                    activePodcast="@{mainModel.activePodcast}"
-                    currentPodcast="@{podcast}"
                     app:layout_constraintRight_toLeftOf="@id/play_button"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:visibility="gone"
                     />
 
 <!--                <TextView-->

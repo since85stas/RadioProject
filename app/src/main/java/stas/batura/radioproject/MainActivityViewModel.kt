@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.data.IRepository
+import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
@@ -50,6 +51,8 @@ class MainActivityViewModel @ViewModelInject constructor(
         get() = _createServiceListner
 
     val activePodcast = repository.getActivePodcast().asLiveData()
+
+    val activePodcastPref: MutableLiveData<Podcast?> = MutableLiveData(null)
 
     // Create a Coroutine scope using a job to be able to cancel when needed
     private var viewModelJob = Job()
@@ -164,10 +167,14 @@ class MainActivityViewModel @ViewModelInject constructor(
     }
 
     fun updatePrefPodcastNum(num: Int) {
+        repository.setPrefListType(ListViewType.NUMBER)
+
         repository.setNumPodcsts(num)
     }
 
     fun getPodcasttsInYear(year: Year) {
+        repository.setPrefListType(ListViewType.YEAR)
+
         viewModelScope.launch {
             repository.getPodcastByYear(year)
         }
@@ -183,6 +190,13 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun setActiveNumberPref(number: Int) {
         repository.setPrefActivePodcastNum(number)
+    }
+
+    fun updateActivePodcast(num: Int) {
+        viewModelScope.launch {
+            val podcast = repository.getActivePodcastSus(num)
+            activePodcastPref.value = podcast
+        }
     }
 
 }

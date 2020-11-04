@@ -187,9 +187,9 @@ class Repository @Inject constructor() : IRepository {
     /**
      * обновляем информацию на каком месте закончили проигрывать трек
      */
-    override fun updatePodcastLastPos(podcastId: Long) {
+    override fun updatePodcastLastPos(podcastId: Int, position: Long) {
         repScope.launch {
-            radioDao.updatePodcastLastPos(podcastId)
+            radioDao.updatePodcastLastPos(podcastId, position)
         }
     }
 
@@ -227,6 +227,20 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    override fun setPrefListType(type: ListViewType) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setListViewType(type.ordinal).build()
+            }
+        }
+    }
+
+    override fun getPrefListType(): Flow<ListViewType> {
+        return protoData.data.map {
+            ListViewType.getByValue(it.listViewType)!!
+        }
+    }
+
     /**
      * передаем текущие подкасты в UI
      */
@@ -256,5 +270,16 @@ class Repository @Inject constructor() : IRepository {
                 t.toBuilder().setActivePodcNum(num).build()
             }
         }
+    }
+
+    override fun getPrefActivePodcast(): Flow<Podcast> {
+        val num = getPrefActivePodcastNum()
+        return flow<Podcast> {
+            radioDao.getPodcastByNum(num.first())
+        }
+    }
+
+    override suspend fun getActivePodcastSus(podcastId: Int): Podcast {
+        return radioDao.getPodcastByNum(podcastId)!!
     }
 }
