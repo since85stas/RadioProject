@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,12 +17,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.control_fragment_new.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import stas.batura.radioproject.musicservice.MusicService
+import stas.batura.radioproject.utils.CircleTransform
+
+private lateinit var appBarConfiguration: AppBarConfiguration
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,10 +53,13 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
+        appBarConfiguration = AppBarConfiguration(setOf(
                 R.id.navigation_podcastlist), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // загружаем хидер
+        loadNavHeader()
 
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
@@ -101,6 +112,38 @@ class MainActivity : AppCompatActivity() {
 
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
+    }
+
+
+
+    /***
+     * Load navigation menu header information
+     * like background image, profile image
+     * name, website, notifications action view (dot)
+     */
+    private fun loadNavHeader() { // name, website
+        val navView = nav_view.getHeaderView(0)
+        navView.name.text = ("Stanislav Batura")
+        navView.website.text = ("stanislav.batura85@gmail.com")
+        navView.img_header_bg.setImageResource(R.drawable.drawer_back)
+        Glide.with(this).load(R.drawable.cat_my).transform(CircleTransform(this))
+            .into(navView.img_profile)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.main, menu)
+
+        //        addTour()
+        return true
+    }
+
+    /**
+     * прописывает базовое нажатие на открытие NavView
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     private fun bindCurrentService(serviceConnection: ServiceConnection) {
