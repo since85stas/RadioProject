@@ -25,7 +25,7 @@ interface IRepository {
 
     fun getActivePodcast(): Flow<Podcast>
 
-    suspend fun getActivePodcastSus(podcastId: Int): Podcast
+    suspend fun getActivePodcastSus(podcastId: Int): Podcast?
 
     fun setFinishPodcast(podcstId: Int)
 

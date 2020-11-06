@@ -279,7 +279,7 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    override suspend fun getActivePodcastSus(podcastId: Int): Podcast {
-        return radioDao.getPodcastByNum(podcastId)!!
+    override suspend fun getActivePodcastSus(podcastId: Int): Podcast? {
+        return radioDao.getPodcastByNum(podcastId)
     }
 }
