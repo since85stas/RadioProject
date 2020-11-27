@@ -130,6 +130,22 @@ class MainActivity : AppCompatActivity() {
             .into(navView.img_profile)
     }
 
+    private fun addNavViewActions() {
+        //        // устанавливаем слушатель на нажатие клавиш
+        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+//                    drawer_layout.closeDrawers()
+                    true
+                }
+
+
+
+                else -> false
+            }
+        }) )
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
 //        menuInflater.inflate(R.menu.main, menu)
@@ -145,6 +161,8 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
 
     private fun bindCurrentService(serviceConnection: ServiceConnection) {
         // привязываем сервис к активити
