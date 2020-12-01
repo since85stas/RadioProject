@@ -6,6 +6,10 @@ import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -45,17 +49,29 @@ class TimeStampsAdapter (
             binding.executePendingBindings()
 
             // открываем страницу с новостью
-            binding.root.topic_title.setOnClickListener {
-                val intent =                     Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(podcast.bodyHtml!![adapterPosition])
-                )
-                try {
-                    binding.root.context.startActivity(intent)
-                } catch (e : ActivityNotFoundException) {
-                    Log.d("Timestamp", "bind: $e")
+//            binding.root.topic_title.setOnClickListener {
+//                val intent =                     Intent(
+//                    Intent.ACTION_VIEW,
+//                    Uri.parse(podcast.bodyHtml!![adapterPosition])
+//                )
+//                try {
+//                    binding.root.context.startActivity(intent)
+//                } catch (e : ActivityNotFoundException) {
+//                    Log.d("Timestamp", "bind: $e")
+//                }
+//
+//            }
+            binding.timelableItemCompose.setContent {
+                MaterialTheme() {
+                    TimeStampItem()
                 }
+            }
+        }
 
+        @Composable
+        fun TimeStampItem () {
+            Column() {
+                Text("Hello")
             }
         }
 
@@ -73,6 +89,8 @@ class TimeStampsAdapter (
             }
         }
     }
+
+
 
     class TrackDiffCallback : DiffUtil.ItemCallback<TimeLabel> (){
 
