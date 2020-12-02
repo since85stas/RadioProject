@@ -23,9 +23,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.control_fragment_new.*
-import kotlinx.android.synthetic.main.nav_header_main.view.*
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.utils.CircleTransform
 
@@ -34,7 +31,7 @@ private lateinit var appBarConfiguration: AppBarConfiguration
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = MainActivity::class.java.simpleName
+    private val TAG = "ACtivityMain"
 
     lateinit var mainActivityViewModel: MainActivityViewModel
 
@@ -59,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         // загружаем хидер
-        loadNavHeader()
+//        loadNavHeader()
 
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
@@ -116,35 +113,35 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    /***
-     * Load navigation menu header information
-     * like background image, profile image
-     * name, website, notifications action view (dot)
-     */
-    private fun loadNavHeader() { // name, website
-        val navView = nav_view.getHeaderView(0)
-        navView.name.text = ("Stanislav Batura")
-        navView.website.text = ("stanislav.batura85@gmail.com")
-        navView.img_header_bg.setImageResource(R.drawable.drawer_back)
-        Glide.with(this).load(R.drawable.cat_my).transform(CircleTransform(this))
-            .into(navView.img_profile)
-    }
-
-    private fun addNavViewActions() {
-        //        // устанавливаем слушатель на нажатие клавиш
-        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_home -> {
-//                    drawer_layout.closeDrawers()
-                    true
-                }
-
-
-
-                else -> false
-            }
-        }) )
-    }
+//    /***
+//     * Load navigation menu header information
+//     * like background image, profile image
+//     * name, website, notifications action view (dot)
+//     */
+//    private fun loadNavHeader() { // name, website
+//        val navView = nav_view.getHeaderView(0)
+//        navView.name.text = ("Stanislav Batura")
+//        navView.website.text = ("stanislav.batura85@gmail.com")
+//        navView.img_header_bg.setImageResource(R.drawable.drawer_back)
+//        Glide.with(this).load(R.drawable.cat_my).transform(CircleTransform(this))
+//            .into(navView.img_profile)
+//    }
+//
+//    private fun addNavViewActions() {
+//        //        // устанавливаем слушатель на нажатие клавиш
+//        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.nav_home -> {
+////                    drawer_layout.closeDrawers()
+//                    true
+//                }
+//
+//
+//
+//                else -> false
+//            }
+//        }) )
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
