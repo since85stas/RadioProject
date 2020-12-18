@@ -80,7 +80,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
             } finally {
                 _spinner.value = false
 
-                repository.getAllPodcastListFlow()
+//                repository.getAllPodcastListFlow()
             }
         }
     }
