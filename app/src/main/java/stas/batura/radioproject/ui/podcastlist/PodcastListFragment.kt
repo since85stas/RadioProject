@@ -63,7 +63,7 @@ class PodcastListFragment : Fragment() {
 //            adapter.submitList(podcasts)
 //        }
 
-        podcastListViewModel.currPodcasts.observe(viewLifecycleOwner) {podcasts ->
+        podcastListViewModel.newPodcastList.observe(viewLifecycleOwner) {podcasts ->
             if (podcasts != null) {
                 adapter.submitList(podcasts)
                 Log.d(TAG, "onViewCreated: size ${podcasts.size}")
@@ -109,30 +109,30 @@ class PodcastListFragment : Fragment() {
             mainviewModel.updateActivePodcast(it)
         }
 
-        podcastListViewModel.listTypePref.observe(viewLifecycleOwner) {
-            when (it) {
-                ListViewType.NUMBER -> {
-                    addObserversNum()
-                    Log.d(TAG, "addObservers: NUMBER")
-                }
-                ListViewType.YEAR -> {
-                    removeObserversNum()
-                    Log.d(TAG, "addObservers: YEAR")
-                }
-             }
-        }
+//        podcastListViewModel.listTypePref.observe(viewLifecycleOwner) {
+//            when (it) {
+//                ListViewType.NUMBER -> {
+//                    addObserversNum()
+//                    Log.d(TAG, "addObservers: NUMBER")
+//                }
+//                ListViewType.YEAR -> {
+//                    removeObserversNum()
+//                    Log.d(TAG, "addObservers: YEAR")
+//                }
+//             }
+//        }
 
     }
 
-    private fun addObserversNum() {
-        podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
-            podcastListViewModel.setNumberPodcasts(it)
-        }
-    }
-
-    private fun removeObserversNum() {
-        podcastListViewModel.userPrefNum.removeObservers(viewLifecycleOwner)
-    }
+//    private fun addObserversNum() {
+//        podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
+//            podcastListViewModel.setNumberPodcasts(it)
+//        }
+//    }
+//
+//    private fun removeObserversNum() {
+//        podcastListViewModel.userPrefNum.removeObservers(viewLifecycleOwner)
+//    }
 
     /**
      * stoping observing a viewModel

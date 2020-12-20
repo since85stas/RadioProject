@@ -176,7 +176,7 @@ class MainActivityViewModel @ViewModelInject constructor(
         repository.setPrefListType(ListViewType.YEAR)
 
         viewModelScope.launch {
-            repository.getPodcastByYear(year)
+            repository.getPodcastByYearState(year)
         }
     }
 

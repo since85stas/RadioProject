@@ -2,6 +2,7 @@ package stas.batura.radioproject.data
 
 import android.util.Log
 import androidx.datastore.DataStore
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import ru.batura.stat.batchat.repository.room.RadioDao
@@ -45,6 +46,8 @@ class Repository @Inject constructor() : IRepository {
     // контейнер для передачи массива в UI
     val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
     val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
+
+
 
     init {
         Log.d(TAG, "repository started: ")
@@ -142,16 +145,18 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем последние N подкастов
      */
-    override suspend fun getLastNPodcastListFlow(num: Int) {
+    override suspend fun getLastNPodcastListState(num: Int) {
         Log.d(TAG, "getLastNPodcastListFlow: $num")
-//        repScope.launch {
         val flow = radioDao.getLastNPodcastsList(num)
         flow.collect() {
             if (it.size > 0) {
                 _currentPodcList.value = it
             }
         }
-//        }
+    }
+
+    override fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
+        return radioDao.getLastNPodcastsList(num)
     }
 
     /**
@@ -254,7 +259,7 @@ class Repository @Inject constructor() : IRepository {
         return currentPodcList
     }
 
-    override suspend fun getPodcastByYear(year: Year) {
+    override suspend fun getPodcastByYearState(year: Year) {
         Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
         val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
         flow.collect() {
@@ -262,6 +267,10 @@ class Repository @Inject constructor() : IRepository {
                 _currentPodcList.value = it
             }
         }
+    }
+
+    override fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>> {
+        return radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
     }
 
     override fun getPrefActivePodcastNum(): Flow<Int> {
