@@ -12,6 +12,7 @@ import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
+@ExperimentalCoroutinesApi
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {
 
     private val TAG = PodcastListViewModel::class.java.simpleName
@@ -29,41 +30,21 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val text: LiveData<String> = _text
 
-//    val podcasts: LiveData<List<Podcast>> = repository.getAllPodcastsList().asLiveData()
-//    val podcasts: LiveData<List<Podcast>> = repository.getlastNPodcastsList(5).asLiveData()
-//
-//    val podcastsFlow: Flow<List<Podcast>> = repository.getlastNPodcastsList(5)
-
-//    @ExperimentalCoroutinesApi
-//    val currPodcasts = repository.currentPodcList().asLiveData()
-
-//    val userPrefNum = repository.getUserPrefPNumber().asLiveData()
-
     val userPrefSmallV = repository.getUserPrefSmallVis().asLiveData()
 
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
 
-//    val listTypePref = repository.getPrefListType().asLiveData()
-
+    // получаем список в зависимости от типа отображения
     val newPodcastList: LiveData<List<Podcast>> = repository.getPrefListType().
         flatMapLatest { listType ->
             if (listType == ListViewType.YEAR) {
-                repository.getPodcastByYearFlow(Year.Y2020)
+                repository.yearTypeList()
             } else {
                 repository.numberTypeList()
             }
         }.asLiveData()
 
-//     = repository.
-
     init {
-        launchDataLoad {
-            repository.tryUpdateRecentRadioCache()
-        }
-//        repository.
-    }
-
-    fun addPodcast() {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
         }
@@ -96,11 +77,4 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         }
     }
 
-//    fun setNumberPodcasts(number: Int) {
-////       val num = (0..10).random()
-//        Log.d(TAG, "setNumberPodcasts: $number")
-//        viewModelScope.launch {
-//            repository.getLastNPodcastListState(number)
-//        }
-//    }
 }

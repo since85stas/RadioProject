@@ -1,6 +1,7 @@
 package stas.batura.radioproject.data.dataUtils
 
 import android.util.Log
+import stas.batura.radioproject.data.ListViewType
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,8 +27,13 @@ enum class Year(val yearS: Long, val yearE: Long) {
     Y2016(getYearStart(2016), getYearEnd(2016)),
     Y2015(getYearStart(2015), getYearEnd(2015)),
     Y2014(getYearStart(2014), getYearEnd(2014)),
-    Y2013(getYearStart(2013), getYearEnd(2013)),
+    Y2013(getYearStart(2013), getYearEnd(2013));
 
+    companion object {
+        private val VALUES = Year.values()
+
+        fun getByValue(value: Int) = VALUES.firstOrNull { it.ordinal == value }
+    }
 }
 
 fun getYearStart(year: Int): Long {
