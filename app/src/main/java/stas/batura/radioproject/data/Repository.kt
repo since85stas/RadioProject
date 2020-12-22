@@ -132,7 +132,9 @@ class Repository @Inject constructor() : IRepository {
         Log.d(TAG, "getAllPodcastListFlow: ")
         val flow = radioDao.getLastNPodcastsList(100)
         flow.collect() {
-            _currentPodcList.value = it
+            if (it.size > 0) {
+                _currentPodcList.value = it
+            }
         }
 //        }
     }
@@ -145,7 +147,9 @@ class Repository @Inject constructor() : IRepository {
 //        repScope.launch {
         val flow = radioDao.getLastNPodcastsList(num)
         flow.collect() {
-            _currentPodcList.value = it
+            if (it.size > 0) {
+                _currentPodcList.value = it
+            }
         }
 //        }
     }
@@ -254,7 +258,9 @@ class Repository @Inject constructor() : IRepository {
         Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
         val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
         flow.collect() {
-            _currentPodcList.value = it
+            if (it.size > 0) {
+                _currentPodcList.value = it
+            }
         }
     }
 

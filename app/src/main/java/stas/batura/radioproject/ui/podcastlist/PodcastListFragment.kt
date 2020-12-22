@@ -54,6 +54,7 @@ class PodcastListFragment : Fragment() {
         return bindings.root
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel, listModel = podcastListViewModel)
         podcast_recycler.adapter = adapter
