@@ -47,13 +47,14 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val newPodcastList: LiveData<List<Podcast>> = repository.getPrefListType().
         flatMapLatest { listType ->
-            repository.getLastNPodcastListFlow(10)
             if (listType == ListViewType.YEAR) {
                 repository.getPodcastByYearFlow(Year.Y2020)
             } else {
-                repository.getLastNPodcastListFlow(10)
+                repository.numberTypeList()
             }
         }.asLiveData()
+
+//     = repository.
 
     init {
         launchDataLoad {

@@ -58,6 +58,8 @@ interface IRepository {
 
     fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
 
+    fun numberTypeList(): Flow<List<Podcast>>
+
     suspend fun getPodcastByYearState(year: Year)
 
     fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>

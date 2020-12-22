@@ -46,8 +46,10 @@ class Repository @Inject constructor() : IRepository {
     // контейнер для передачи массива в UI
     val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
     val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
-
-
+//
+//    val numberTypeList: Flow<List<Podcast>> = getUserPrefPNumber().flatMapLatest {
+//        num -> getLastNPodcastListFlow(num)
+//    }
 
     init {
         Log.d(TAG, "repository started: ")
@@ -158,6 +160,11 @@ class Repository @Inject constructor() : IRepository {
     override fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
         return radioDao.getLastNPodcastsList(num)
     }
+
+//    override fun getLastNPodcastListFlow(): Flow<List<Podcast>> {
+////        getUserPrefPNumber().collect { num -> radioDao.getLastNPodcastsList(num) }
+//
+//    }
 
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
@@ -296,5 +303,11 @@ class Repository @Inject constructor() : IRepository {
 
     override suspend fun getActivePodcastSus(podcastId: Int): Podcast? {
         return radioDao.getPodcastByNum(podcastId)
+    }
+
+    override fun numberTypeList(): Flow<List<Podcast>> {
+        return getUserPrefPNumber().flatMapLatest {
+                num -> getLastNPodcastListFlow(num)
+        }
     }
 }
