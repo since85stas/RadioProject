@@ -5,11 +5,11 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
+import stas.batura.radioproject.data.ListViewType
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {
@@ -44,6 +44,16 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
 
     val listTypePref = repository.getPrefListType().asLiveData()
+
+    val newPodcastList: LiveData<List<Podcast>> = repository.getPrefListType().
+        flatMapLatest { listType ->
+            repository.getLastNPodcastListFlow(10)
+            if (listType == ListViewType.YEAR) {
+                repository.getPodcastByYearFlow(Year.Y2020)
+            } else {
+                repository.getLastNPodcastListFlow(10)
+            }
+        }.asLiveData()
 
     init {
         launchDataLoad {
@@ -89,7 +99,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //       val num = (0..10).random()
         Log.d(TAG, "setNumberPodcasts: $number")
         viewModelScope.launch {
-            repository.getLastNPodcastListFlow(number)
+            repository.getLastNPodcastListState(number)
         }
     }
 }

@@ -54,9 +54,13 @@ interface IRepository {
 
     suspend fun getAllPodcastListFlow()
 
-    suspend fun getLastNPodcastListFlow(num: Int)
+    suspend fun getLastNPodcastListState(num: Int)
 
-    suspend fun getPodcastByYear(year: Year)
+    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
+
+    suspend fun getPodcastByYearState(year: Year)
+
+    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }
 
 enum class ListViewType(type: Int) {
