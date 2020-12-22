@@ -175,9 +175,9 @@ class MainActivityViewModel @ViewModelInject constructor(
     fun getPodcasttsInYear(year: Year) {
         repository.setPrefListType(ListViewType.YEAR)
 
-        viewModelScope.launch {
-            repository.getPodcastByYearState(year)
-        }
+//        viewModelScope.launch {
+//            repository.getPodcastByYearState(year)
+//        }
     }
 
     fun setPodcastIsSmall(bol: Boolean) {

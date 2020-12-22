@@ -49,18 +49,18 @@ interface IRepository {
 
     fun getPrefListType(): Flow<ListViewType>
 
-    @ExperimentalCoroutinesApi
-    fun currentPodcList(): StateFlow<List<Podcast>?>
+//    @ExperimentalCoroutinesApi
+//    fun currentPodcList(): StateFlow<List<Podcast>?>
 
-    suspend fun getAllPodcastListFlow()
+//    suspend fun getAllPodcastListFlow()
 
-    suspend fun getLastNPodcastListState(num: Int)
+//    suspend fun getLastNPodcastListState(num: Int)
 
     fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
 
     fun numberTypeList(): Flow<List<Podcast>>
 
-    suspend fun getPodcastByYearState(year: Year)
+//    suspend fun getPodcastByYearState(year: Year)
 
     fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }

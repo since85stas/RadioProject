@@ -6,8 +6,22 @@ option java_multiple_files = true;
 message UserPreferences {
   // filter for showing / hiding completed tasks
   bool show_completed = 1;
+
+  // число отображаемых подкастов
   int32 num_shown_podcasts = 2;
+
+  // показывать в полном или сокращенном виде
   bool podcast_is_small = 3;
+
+  // номер активного подкаста
   int32 active_podc_num = 4;
+
+  // текущий тип отображения списков
   int32 list_view_type = 5;
+
+  // выбранное число на странице
+  int32 number_on_page = 6;
+
+  // текущий выбранный год
+  int32 selected_year = 7;
 }

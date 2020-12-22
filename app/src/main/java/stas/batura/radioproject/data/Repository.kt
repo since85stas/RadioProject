@@ -43,9 +43,9 @@ class Repository @Inject constructor() : IRepository {
     @Inject
     lateinit var protoData: DataStore<UserPreferences>
 
-    // контейнер для передачи массива в UI
-    val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
-    val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
+//    // контейнер для передачи массива в UI
+//    val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
+//    val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
 //
 //    val numberTypeList: Flow<List<Podcast>> = getUserPrefPNumber().flatMapLatest {
 //        num -> getLastNPodcastListFlow(num)
@@ -129,33 +129,33 @@ class Repository @Inject constructor() : IRepository {
 //        return radioDao.getLastNPodcastsList(num)
 //    }
 
-    /**
-     * запускается при первом запуске, возможно моно будет убрать
-     */
-    override suspend fun getAllPodcastListFlow() {
-//        repScope.launch {
-        Log.d(TAG, "getAllPodcastListFlow: ")
-        val flow = radioDao.getLastNPodcastsList(100)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
-        }
+//    /**
+//     * запускается при первом запуске, возможно моно будет убрать
+//     */
+//    override suspend fun getAllPodcastListFlow() {
+////        repScope.launch {
+//        Log.d(TAG, "getAllPodcastListFlow: ")
+//        val flow = radioDao.getLastNPodcastsList(100)
+//        flow.collect() {
+//            if (it.size > 0) {
+//                _currentPodcList.value = it
+//            }
 //        }
-    }
+////        }
+//    }
 
-    /**
-     * получаем последние N подкастов
-     */
-    override suspend fun getLastNPodcastListState(num: Int) {
-        Log.d(TAG, "getLastNPodcastListFlow: $num")
-        val flow = radioDao.getLastNPodcastsList(num)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
-        }
-    }
+//    /**
+//     * получаем последние N подкастов
+//     */
+//    override suspend fun getLastNPodcastListState(num: Int) {
+//        Log.d(TAG, "getLastNPodcastListFlow: $num")
+//        val flow = radioDao.getLastNPodcastsList(num)
+//        flow.collect() {
+//            if (it.size > 0) {
+//                _currentPodcList.value = it
+//            }
+//        }
+//    }
 
     override fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
         return radioDao.getLastNPodcastsList(num)
@@ -257,24 +257,24 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    /**
-     * передаем текущие подкасты в UI
-     */
-    @ExperimentalCoroutinesApi
-    override fun currentPodcList(): StateFlow<List<Podcast>?> {
-        Log.d(TAG, "currentPodcList: ")
-        return currentPodcList
-    }
-
-    override suspend fun getPodcastByYearState(year: Year) {
-        Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
-        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
-        }
-    }
+//    /**
+//     * передаем текущие подкасты в UI
+//     */
+//    @ExperimentalCoroutinesApi
+//    override fun currentPodcList(): StateFlow<List<Podcast>?> {
+//        Log.d(TAG, "currentPodcList: ")
+//        return currentPodcList
+//    }
+//
+//    override suspend fun getPodcastByYearState(year: Year) {
+//        Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
+//        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
+//        flow.collect() {
+//            if (it.size > 0) {
+//                _currentPodcList.value = it
+//            }
+//        }
+//    }
 
     override fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>> {
         return radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
