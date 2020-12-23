@@ -95,9 +95,9 @@ fun TextView.combineTitleBind(string: String?) {
 }
 
 @BindingAdapter("bindProgress")
-fun ProgressBar.bindProgress(int: Int) {
-    Log.d("bind progress", "bindProgress: $int" )
-    progress = int
+fun ProgressBar.bindProgress(podcast: Podcast) {
+    Log.d("bind progress", "bindProgress: ${podcast} ${podcast.getPlayedInPercent()}" )
+    progress = podcast.getPlayedInPercent()
 }
 
 //@BindingAdapter("bindSmallCheckbox")

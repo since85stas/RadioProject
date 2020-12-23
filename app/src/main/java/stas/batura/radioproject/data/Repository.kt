@@ -297,4 +297,10 @@ class Repository @Inject constructor() : IRepository {
             getPodcastByYearFlow(year)
         }
     }
+
+    override fun updateTrackDuration(podcastId: Int, duration: Long) {
+        repScope.launch {
+            radioDao.updateTrackDuration(podcastId, duration)
+        }
+    }
 }

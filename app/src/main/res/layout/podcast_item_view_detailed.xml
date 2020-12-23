@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintRight_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bindProgress="@{podcast.getPlayedInPercent()}"
+                    bindProgress="@{podcast}"
                     />
 
                 <ImageButton
