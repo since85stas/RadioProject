@@ -14,6 +14,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
 
+@ExperimentalCoroutinesApi
 @Singleton
 class Repository @Inject constructor() : IRepository {
 
@@ -42,12 +43,6 @@ class Repository @Inject constructor() : IRepository {
 
     @Inject
     lateinit var protoData: DataStore<UserPreferences>
-
-    // контейнер для передачи массива в UI
-    val _currentPodcList: MutableStateFlow<List<Podcast>?> = MutableStateFlow(null)
-    val currentPodcList: StateFlow<List<Podcast>?> = _currentPodcList
-
-
 
     init {
         Log.d(TAG, "repository started: ")
@@ -89,10 +84,6 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-//    suspend fun getLastPodcast(): Podcast {
-//
-//    }
-
     /**
      * Берет информацию из последних N данных и добавляет в БД
      */
@@ -113,45 +104,6 @@ class Repository @Inject constructor() : IRepository {
     override fun addPodcast(podcast: Podcast) {
         repScope.launch {
             radioDao.insertPodcast(podcast)
-        }
-    }
-
-    /**
-     * выдает список подкастов из базы данных
-     */
-//    override fun getAllPodcastsList(): Flow<List<Podcast>> {
-//        return radioDao.getAllPodcastsList()
-//    }
-
-//    override fun getlastNPodcastsList(num: Int): Flow<List<Podcast>> {
-//        return radioDao.getLastNPodcastsList(num)
-//    }
-
-    /**
-     * запускается при первом запуске, возможно моно будет убрать
-     */
-    override suspend fun getAllPodcastListFlow() {
-//        repScope.launch {
-        Log.d(TAG, "getAllPodcastListFlow: ")
-        val flow = radioDao.getLastNPodcastsList(100)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
-        }
-//        }
-    }
-
-    /**
-     * получаем последние N подкастов
-     */
-    override suspend fun getLastNPodcastListState(num: Int) {
-        Log.d(TAG, "getLastNPodcastListFlow: $num")
-        val flow = radioDao.getLastNPodcastsList(num)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
         }
     }
 
@@ -203,9 +155,9 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /***
-     * получаем файл с настройками возможно надо будет разбить на отдельные запросы
+     * получаем число отображаемых подкастов
      */
-    override fun getUserPrefPNumber(): Flow<Int> {
+    fun getUserPrefPNumber(): Flow<Int> {
         return protoData.data.map { it ->
             it.numShownPodcasts
         }
@@ -228,6 +180,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * устанавливаем показывать полный или сокращенный подкаст
+     */
     override fun setPrefPodcastIsSmall(bol: Boolean) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
@@ -236,6 +191,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * устанавливаем по какому типу отображать подкасты
+     */
     override fun setPrefListType(type: ListViewType) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
@@ -244,6 +202,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * получаем по какому типу отображать подкасты
+     */
     override fun getPrefListType(): Flow<ListViewType> {
         return protoData.data.map {
             ListViewType.getByValue(it.listViewType)!!
@@ -251,34 +212,24 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
-     * передаем текущие подкасты в UI
+     * получаем список подкастов за выбранный год из БД
      */
-    @ExperimentalCoroutinesApi
-    override fun currentPodcList(): StateFlow<List<Podcast>?> {
-        Log.d(TAG, "currentPodcList: ")
-        return currentPodcList
-    }
-
-    override suspend fun getPodcastByYearState(year: Year) {
-        Log.d(TAG, "getPodcastByYear: ${year.yearS} ${year.yearE}")
-        val flow = radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
-        flow.collect() {
-            if (it.size > 0) {
-                _currentPodcList.value = it
-            }
-        }
-    }
-
-    override fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>> {
+    private fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>> {
         return radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
     }
 
+    /**
+     * получаем номер активный подкаст
+     */
     override fun getPrefActivePodcastNum(): Flow<Int> {
         return protoData.data.map {
             it.activePodcNum
         }
     }
 
+    /**
+     * записывем номер активный подкаст
+     */
     override fun setPrefActivePodcastNum(num: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
@@ -287,6 +238,37 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    override fun setPrefNumOnPage(num: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setNumberOnPage(num).build()
+            }
+        }
+    }
+
+    /**
+     * записываем выбранный для отображения год
+     */
+    override fun setPrefSelectedYear(year: Year) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setSelectedYear(year.ordinal).build()
+            }
+        }
+    }
+
+    /**
+     * получаем выбранный для отображения год
+     */
+    fun getPrefSelectedYear(): Flow<Year> {
+        return protoData.data.map {
+            Year.getByValue(it.selectedYear)!!
+        }
+    }
+
+    /**
+     * получаем активный подкаст
+     */
     override fun getPrefActivePodcast(): Flow<Podcast> {
         val num = getPrefActivePodcastNum()
         return flow<Podcast> {
@@ -296,5 +278,23 @@ class Repository @Inject constructor() : IRepository {
 
     override suspend fun getActivePodcastSus(podcastId: Int): Podcast? {
         return radioDao.getPodcastByNum(podcastId)
+    }
+
+    /**
+     * список по порядку
+     */
+    override fun numberTypeList(): Flow<List<Podcast>> {
+        return getUserPrefPNumber().flatMapLatest {
+                num -> getLastNPodcastListFlow(num)
+        }
+    }
+
+    /**
+     * список за год
+     */
+    override fun yearTypeList(): Flow<List<Podcast>> {
+        return getPrefSelectedYear().flatMapLatest { year ->
+            getPodcastByYearFlow(year)
+        }
     }
 }

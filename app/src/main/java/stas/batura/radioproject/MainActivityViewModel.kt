@@ -50,7 +50,7 @@ class MainActivityViewModel @ViewModelInject constructor(
     val createServiceListner: LiveData<Boolean>
         get() = _createServiceListner
 
-    val activePodcast = repository.getActivePodcast().asLiveData()
+//    val activePodcast = repository.getActivePodcast().asLiveData()
 
     val activePodcastPref: MutableLiveData<Podcast?> = MutableLiveData(null)
 
@@ -156,10 +156,10 @@ class MainActivityViewModel @ViewModelInject constructor(
             mediaController.value!!.transportControls.stop()
         }
 
-        var lastId: Int? = null
-        if (activePodcast.value != null) {
-            lastId = activePodcast.value!!.podcastId
-        }
+//        var lastId: Int? = null
+//        if (activePodcast.value != null) {
+//            lastId = activePodcast.value!!.podcastId
+//        }
 //        repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         setActiveNumberPref(podcast.podcastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
@@ -174,10 +174,10 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     fun getPodcasttsInYear(year: Year) {
         repository.setPrefListType(ListViewType.YEAR)
-
-        viewModelScope.launch {
-            repository.getPodcastByYearState(year)
-        }
+        repository.setPrefSelectedYear(year)
+//        viewModelScope.launch {
+//            repository.getPodcastByYearState(year)
+//        }
     }
 
     fun setPodcastIsSmall(bol: Boolean) {

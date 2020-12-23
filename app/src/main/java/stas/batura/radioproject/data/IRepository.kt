@@ -31,7 +31,7 @@ interface IRepository {
 
     fun updatePodcastLastPos(podcastId: Int, position: Long)
 
-    fun getUserPrefPNumber(): Flow<Int>
+//    fun getUserPrefPNumber(): Flow<Int>
 
     fun getUserPrefSmallVis(): Flow<Boolean>
 
@@ -49,18 +49,17 @@ interface IRepository {
 
     fun getPrefListType(): Flow<ListViewType>
 
-    @ExperimentalCoroutinesApi
-    fun currentPodcList(): StateFlow<List<Podcast>?>
+    fun setPrefNumOnPage(num: Int)
 
-    suspend fun getAllPodcastListFlow()
-
-    suspend fun getLastNPodcastListState(num: Int)
+    fun setPrefSelectedYear(year: Year)
 
     fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
 
-    suspend fun getPodcastByYearState(year: Year)
+    fun numberTypeList(): Flow<List<Podcast>>
 
-    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
+    fun yearTypeList(): Flow<List<Podcast>>
+
+//    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }
 
 enum class ListViewType(type: Int) {
