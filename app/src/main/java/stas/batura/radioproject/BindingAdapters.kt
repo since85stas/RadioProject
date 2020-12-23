@@ -94,6 +94,12 @@ fun TextView.combineTitleBind(string: String?) {
     }
 }
 
+@BindingAdapter("bindProgress")
+fun ProgressBar.bindProgress(int: Int) {
+    Log.d("bind progress", "bindProgress: $int" )
+    progress = int
+}
+
 //@BindingAdapter("bindSmallCheckbox")
 //fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
 //    model.setPodcastIsSmall(isChecked)

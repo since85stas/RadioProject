@@ -90,7 +90,9 @@ data class Podcast(
                 }
     }
 
-
+    fun getPlayedInPercent(): Int {
+        return (lastPosition/timeMillis*100).toInt()
+    }
 
 
     override fun toString(): String {

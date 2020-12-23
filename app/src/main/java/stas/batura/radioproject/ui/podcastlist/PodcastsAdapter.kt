@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.podcast_item_view_detailed.view.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import stas.batura.radioproject.MainActivityViewModel
 import stas.batura.radioproject.R
 import stas.batura.radioproject.data.room.Podcast
 import stas.batura.radioproject.databinding.PodcastItemViewDetailedBinding
 
-
+//@OptIn(ExperimentalCoroutinesApi::class)
 class PodcastsAdapter(
     val mainActivityViewModel: MainActivityViewModel,
     val listModel: PodcastListViewModel
@@ -25,7 +26,6 @@ class PodcastsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.bind(getItem(position))
     }
 

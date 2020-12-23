@@ -26,22 +26,6 @@
         android:layout_marginTop="?attr/actionBarSize"
         tools:context=".ui.podcastlist.PodcastListFragment">
 
-<!--        <Button-->
-<!--            android:id="@+id/add_podcast_item"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:onClick="@{() -> mainViewModel.createService()}"-->
-<!--            />-->
-
-<!--        <Button-->
-<!--            android:text="play"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:onClick="@{() -> mainViewModel.playClicked()}"-->
-<!--            />-->
-
         <ProgressBar
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
@@ -52,30 +36,6 @@
             progressBarVisibility="@{podacstListViewModel.spinner}"
 
             />
-
-<!--        <Button-->
-<!--            android:text="5"-->
-<!--            android:onClick="@{() -> mainViewModel.updatePrefPodcastNum(5)}"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <Button-->
-<!--            android:text="10"-->
-<!--            android:onClick="@{() -> mainViewModel.updatePrefPodcastNum(10)}"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <Button-->
-<!--            android:text="2020"-->
-<!--            android:onClick="@{() -> mainViewModel.getPodcasttsInYear(Year.Y2020)}"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
-
-<!--        <Button-->
-<!--            android:text="2019"-->
-<!--            android:onClick="@{() -> mainViewModel.getPodcasttsInYear(Year.Y2019)}"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
 
         <CheckBox
             android:layout_width="wrap_content"
