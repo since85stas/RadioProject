@@ -14,6 +14,12 @@
             android:icon="@drawable/ic_star_black_24dp"
             android:title="rate" />
 
+        <item
+            android:orderInCategory="2"
+            android:id="@+id/nav_5per_title"
+            android:icon="@drawable/ic_star_black_24dp"
+            android:title="rate" />
+
     </group>
 
 
