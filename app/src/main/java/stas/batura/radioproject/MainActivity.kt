@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.control_fragment_new.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.utils.CircleTransform
 
@@ -113,7 +114,12 @@ class MainActivity : AppCompatActivity() {
 
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
+
+        // описываем nav drawer
+        createSectionsInMenu()
     }
+
+
 
 
 
@@ -175,22 +181,33 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_10per_page -> {
+                    mainActivityViewModel.updatePrefPodcastNum(10)
+                    drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_20per_page -> {
+                    mainActivityViewModel.updatePrefPodcastNum(20)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2021 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2021)
+                    drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2020 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2020)
+                    drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2019 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2019)
+                    drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2018 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2018)
+                    drawer_layout.closeDrawers()
                     true
                 }
                 else -> false
