@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -152,6 +153,50 @@ class MainActivity : AppCompatActivity() {
             Intent(applicationContext!!, MusicService::class.java),
             serviceConnection,
             Context.BIND_AUTO_CREATE)
+    }
+
+    /**
+     * создает отображение списка секций в меню
+     */
+    private fun createSectionsInMenu() {
+//        val view = LayoutInflater.from(this).inflate(R.layout.nav_view_play_item, null)
+//
+//        for (playlist in playlists) {
+//            menu.add(SECT_GROUP_ID, playlist.playlistId, 2, playlist.name )
+//
+//            count++
+//            listId.add(playlist.playlistId)
+//        }
+
+//        // устанавливаем слушатель на нажатие клавиш
+        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+                    true
+                }
+                R.id.nav_10per_page -> {
+                    true
+                }
+                R.id.nav_20per_page -> {
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_year_2021 -> {
+                    true
+                }
+                R.id.nav_year_2020 -> {
+                    true
+                }
+                R.id.nav_year_2019 -> {
+                    true
+                }
+                R.id.nav_year_2018 -> {
+                    true
+                }
+                else -> false
+            }
+        }) )
+
     }
 
 
