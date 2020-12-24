@@ -56,4 +56,7 @@ interface RadioDao {
 
     @Query("UPDATE podcast_table SET durationInMillis =:duration WHERE podcastId =:podcastId")
     suspend fun updateTrackDuration(podcastId: Int, duration: Long)
+
+    @Query("UPDATE podcast_table SET isDetailed =:isDetailed WHERE podcastId =:podcastId")
+    suspend fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
 }

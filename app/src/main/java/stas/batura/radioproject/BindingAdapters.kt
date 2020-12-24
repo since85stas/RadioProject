@@ -100,6 +100,12 @@ fun ProgressBar.bindProgress(podcast: Podcast) {
     progress = podcast.getPlayedInPercent()
 }
 
+@BindingAdapter("bindCheckChange")
+fun CheckBox.stateChanged(mainActivityViewModel: MainActivityViewModel) {
+
+}
+
+
 //@BindingAdapter("bindSmallCheckbox")
 //fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
 //    model.setPodcastIsSmall(isChecked)

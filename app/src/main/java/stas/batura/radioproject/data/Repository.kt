@@ -303,4 +303,10 @@ class Repository @Inject constructor() : IRepository {
             radioDao.updateTrackDuration(podcastId, duration)
         }
     }
+
+    override fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean) {
+        repScope.launch {
+            radioDao.updateTrackIdDetailed(podcastId, isDetailed)
+        }
+    }
 }
