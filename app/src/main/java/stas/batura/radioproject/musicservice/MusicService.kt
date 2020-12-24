@@ -344,8 +344,6 @@ class MusicService : LifecycleService() {
 
         // при остановки проигрыша
         override fun onStop() {
-//            playbackPosition = exoPlayer!!.currentPosition
-
             updateCurrePodcastPosit(playbackPosition)
 
             Log.d(TAG, "onStop: ")
@@ -439,11 +437,6 @@ class MusicService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    //    override fun onBind(intent: Intent?): IBinder? {
-//        super.onBind(intent)
-//        println("Service bind")
-//        return PlayerServiceBinder()
-//    }
     override fun onBind(intent: Intent): IBinder? {
         super.onBind(intent)
         println("Service bind")
@@ -469,6 +462,13 @@ class MusicService : LifecycleService() {
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
 //                mediaSessionCallback.onSkipToNext()
                 //TODO: сделать обработку конца проигрывания
+            }           else  if (playbackState == ExoPlayer.STATE_READY ) {
+                val realDurationMillis = exoPlayer!!.duration
+
+                // updating duration in DB
+                repositoryS.updateTrackDuration(podcast!!.podcastId, realDurationMillis)
+
+                Log.d(TAG, "onPlayerStateChanged: duration $realDurationMillis")
             }
         }
 

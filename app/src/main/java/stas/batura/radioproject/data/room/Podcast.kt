@@ -48,7 +48,9 @@ data class Podcast(
 
     var isFinish: Boolean = false,
 
-    var lastPosition: Long = 0
+    var lastPosition: Long = 0,
+
+    var durationInMillis: Long = 0
 
 //    var localImageUrl: String? = null
 ) {
@@ -90,11 +92,18 @@ data class Podcast(
                 }
     }
 
-
+    /**
+     * get played duration of track in percents
+     */
+    fun getPlayedInPercent(): Int {
+        val pos = lastPosition.toDouble()
+        val dur = durationInMillis.toDouble()
+        return if (durationInMillis==0L) 0 else (pos/dur*100.0f).toInt()
+    }
 
 
     override fun toString(): String {
-        return "Podcast $podcastId $url $title"
+        return "Podcast $podcastId $url $title $lastPosition $durationInMillis"
     }
 }
 

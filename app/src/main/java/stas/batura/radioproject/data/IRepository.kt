@@ -59,6 +59,7 @@ interface IRepository {
 
     fun yearTypeList(): Flow<List<Podcast>>
 
+    fun updateTrackDuration(podcastId: Int, duration: Long)
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }
 
