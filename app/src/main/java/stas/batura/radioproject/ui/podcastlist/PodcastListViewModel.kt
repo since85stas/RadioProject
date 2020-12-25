@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.ListViewType
-import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
 
 @ExperimentalCoroutinesApi
@@ -33,6 +32,10 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     val userPrefSmallV = repository.getUserPrefSmallVis().asLiveData()
 
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
+    
+//    val detailedStateLstnr = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+//        repository.upda
+//    }
 
     // получаем список в зависимости от типа отображения
     val newPodcastList: LiveData<List<Podcast>> = repository.getPrefListType().
@@ -76,5 +79,13 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
             }
         }
     }
+    
+    fun onDetailCheckClick(boolean: Boolean) {
+        Log.d(TAG, "onDetailCheckClick: $boolean")
+    }
 
+    fun onEnabled(podcast: Podcast, enabled: Boolean) {
+        Log.d(TAG, "onEnabled: ")
+        repository.updateTrackIdDetailed(podcast.podcastId, enabled)
+    }
 }

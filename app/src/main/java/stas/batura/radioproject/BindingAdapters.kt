@@ -12,6 +12,7 @@ import com.google.android.exoplayer2.ui.PlayerControlView
 import kotlinx.android.synthetic.main.control_fragment_new.view.*
 import stas.batura.radioproject.data.net.TimeLabel
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.ui.podcastlist.PodcastListViewModel
 import java.text.SimpleDateFormat
 
 @BindingAdapter("titleBind")
@@ -100,9 +101,10 @@ fun ProgressBar.bindProgress(podcast: Podcast) {
     progress = podcast.getPlayedInPercent()
 }
 
-@BindingAdapter("bindCheckChange")
-fun CheckBox.stateChanged(mainActivityViewModel: MainActivityViewModel) {
-
+@BindingAdapter("podcID","podcViewMod","android:checked")
+fun CheckBox.stateCheckChanged( podcastId: Int, model: PodcastListViewModel,checked: Boolean ) {
+    Log.d("stateCheckChanged", "stateCheckChanged: ")
+    model.repository.updateTrackIdDetailed(podcastId, isChecked)
 }
 
 
