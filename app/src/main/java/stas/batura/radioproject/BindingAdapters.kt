@@ -58,7 +58,7 @@ fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast, podcastA
         }
     } else {
         visibility = View.GONE
-        Log.d("bindplayPVisibility", "$visible not visible: ")
+//        Log.d("bindplayPVisibility", "$visible not visible: ")
     }
 }
 
@@ -83,13 +83,13 @@ fun PlayerControlView.bindPlayer(exoPlayer: ExoPlayer?) {
 
 @BindingAdapter("controlTitleBind")
 fun TextView.controlTitleBind(podcast: Podcast?) {
-    Log.d("controlTitle", "controlTitleBind: $podcast")
+//    Log.d("controlTitle", "controlTitleBind: $podcast")
     text = podcast?.title
 }
 
 @BindingAdapter("combineTitleBind")
 fun TextView.combineTitleBind(string: String?) {
-    Log.d("controlTitle", "combineTitleBind: $string")
+//    Log.d("controlTitle", "combineTitleBind: $string")
     if (string != null) {
         text = string
     }
@@ -97,19 +97,7 @@ fun TextView.combineTitleBind(string: String?) {
 
 @BindingAdapter("bindProgress")
 fun ProgressBar.bindProgress(podcast: Podcast) {
-    Log.d("bind progress", "bindProgress: ${podcast} ${podcast.getPlayedInPercent()}" )
+//    Log.d("bind progress", "bindProgress: ${podcast} ${podcast.getPlayedInPercent()}" )
     progress = podcast.getPlayedInPercent()
 }
-
-@BindingAdapter("podcID","podcViewMod","android:checked")
-fun CheckBox.stateCheckChanged( podcastId: Int, model: PodcastListViewModel,checked: Boolean ) {
-    Log.d("stateCheckChanged", "stateCheckChanged: ")
-    model.repository.updateTrackIdDetailed(podcastId, isChecked)
-}
-
-
-//@BindingAdapter("bindSmallCheckbox")
-//fun CheckBox.bindSmallCheckbox(model: MainActivityViewModel) {
-//    model.setPodcastIsSmall(isChecked)
-//}
 

@@ -10,9 +10,6 @@ message UserPreferences {
   // число отображаемых подкастов
   int32 num_shown_podcasts = 2;
 
-  // показывать в полном или сокращенном виде
-  bool podcast_is_small = 3;
-
   // номер активного подкаста
   int32 active_podc_num = 4;
 

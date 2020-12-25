@@ -163,11 +163,11 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    override fun getUserPrefSmallVis(): Flow<Boolean> {
-        return protoData.data.map {
-            it.podcastIsSmall
-        }
-    }
+//    override fun getUserPrefSmallVis(): Flow<Boolean> {
+//        return protoData.data.map {
+//            it.podcastIsSmall
+//        }
+//    }
 
     /**
      * записываем число показоваемых треков в настройки
@@ -180,16 +180,16 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    /**
-     * устанавливаем показывать полный или сокращенный подкаст
-     */
-    override fun setPrefPodcastIsSmall(bol: Boolean) {
-        repScope.launch {
-            protoData.updateData { t: UserPreferences ->
-                t.toBuilder().setPodcastIsSmall(bol).build()
-            }
-        }
-    }
+//    /**
+//     * устанавливаем показывать полный или сокращенный подкаст
+//     */
+//    override fun setPrefPodcastIsSmall(bol: Boolean) {
+//        repScope.launch {
+//            protoData.updateData { t: UserPreferences ->
+//                t.toBuilder().setPodcastIsSmall(bol).build()
+//            }
+//        }
+//    }
 
     /**
      * устанавливаем по какому типу отображать подкасты

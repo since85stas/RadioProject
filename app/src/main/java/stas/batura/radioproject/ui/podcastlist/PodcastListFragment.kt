@@ -92,47 +92,12 @@ class PodcastListFragment : Fragment() {
     @ExperimentalCoroutinesApi
     private fun addObservers() {
 
-//        podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
-////            podcastListViewModel.setNumberPodcasts(it)
-//        }
-
-        podcastListViewModel.userPrefSmallV.observe(viewLifecycleOwner) {
-            Log.d(TAG, "addObservers: visible $it")
-            if (it) {
-                mainviewModel.setCheckBoxInitState(it)
-            }
-            adapter.notifyDataSetChanged()
-        }
-
         podcastListViewModel.activeNumPref.observe(viewLifecycleOwner) {
             Log.d(TAG, "activeNumberPref: $it")
             mainviewModel.updateActivePodcast(it)
         }
 
-//        podcastListViewModel.listTypePref.observe(viewLifecycleOwner) {
-//            when (it) {
-//                ListViewType.NUMBER -> {
-//                    addObserversNum()
-//                    Log.d(TAG, "addObservers: NUMBER")
-//                }
-//                ListViewType.YEAR -> {
-//                    removeObserversNum()
-//                    Log.d(TAG, "addObservers: YEAR")
-//                }
-//             }
-//        }
-
     }
-
-//    private fun addObserversNum() {
-//        podcastListViewModel.userPrefNum.observe(viewLifecycleOwner) {
-//            podcastListViewModel.setNumberPodcasts(it)
-//        }
-//    }
-//
-//    private fun removeObserversNum() {
-//        podcastListViewModel.userPrefNum.removeObservers(viewLifecycleOwner)
-//    }
 
     /**
      * stoping observing a viewModel

@@ -29,13 +29,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     val text: LiveData<String> = _text
 
-    val userPrefSmallV = repository.getUserPrefSmallVis().asLiveData()
-
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
-    
-//    val detailedStateLstnr = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-//        repository.upda
-//    }
 
     // получаем список в зависимости от типа отображения
     val newPodcastList: LiveData<List<Podcast>> = repository.getPrefListType().

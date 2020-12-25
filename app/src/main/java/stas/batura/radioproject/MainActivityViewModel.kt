@@ -155,12 +155,6 @@ class MainActivityViewModel @ViewModelInject constructor(
         ) {
             mediaController.value!!.transportControls.stop()
         }
-
-//        var lastId: Int? = null
-//        if (activePodcast.value != null) {
-//            lastId = activePodcast.value!!.podcastId
-//        }
-//        repository.setActivePodcast(podcastId = podcast.podcastId, active =  lastId)
         setActiveNumberPref(podcast.podcastId)
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
         playClicked()
@@ -175,13 +169,6 @@ class MainActivityViewModel @ViewModelInject constructor(
     fun getPodcasttsInYear(year: Year) {
         repository.setPrefListType(ListViewType.YEAR)
         repository.setPrefSelectedYear(year)
-//        viewModelScope.launch {
-//            repository.getPodcastByYearState(year)
-//        }
-    }
-
-    fun setPodcastIsSmall(bol: Boolean) {
-        repository.setPrefPodcastIsSmall(bol)
     }
 
     fun setCheckBoxInitState(boolean: Boolean) {

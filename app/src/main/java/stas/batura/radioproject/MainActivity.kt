@@ -100,13 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainActivityViewModel.smallCheck.observe(this) {
-            Log.d(TAG, "onCreate: small bol= $it")
-            if (it != null) {
-                mainActivityViewModel.setPodcastIsSmall(it)
-            }
-        }
-
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
 
