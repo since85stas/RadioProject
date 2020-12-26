@@ -17,10 +17,6 @@ interface IRepository {
 
     fun addPodcast(podcast: Podcast)
 
-//    fun getAllPodcastsList(): Flow<List<Podcast>>
-
-//    fun getlastNPodcastsList(num: Int): Flow<List<Podcast>>
-
     fun setActivePodcast(podcastId: Int, active: Int?)
 
     fun getActivePodcast(): Flow<Podcast>
@@ -31,13 +27,7 @@ interface IRepository {
 
     fun updatePodcastLastPos(podcastId: Int, position: Long)
 
-//    fun getUserPrefPNumber(): Flow<Int>
-
-    fun getUserPrefSmallVis(): Flow<Boolean>
-
     fun setNumPodcsts(num: Int)
-
-    fun setPrefPodcastIsSmall(bol: Boolean)
 
     fun getPrefActivePodcastNum(): Flow<Int>
 
@@ -60,6 +50,8 @@ interface IRepository {
     fun yearTypeList(): Flow<List<Podcast>>
 
     fun updateTrackDuration(podcastId: Int, duration: Long)
+
+    fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }
 
