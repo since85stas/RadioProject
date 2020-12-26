@@ -46,7 +46,7 @@ fun getYearStart(year: Int): Long {
     calendar.set(Calendar.MINUTE, 0)
     calendar.set(Calendar.SECOND, 10)
 
-    Log.d(TAG, "getYearStart: ${getTimeFormat(calendar)}")
+//    Log.d(TAG, "getYearStart: ${getTimeFormat(calendar)}")
 
     return calendar.timeInMillis
 }
@@ -61,7 +61,7 @@ fun getYearEnd(year: Int): Long {
     calendar.set(Calendar.MINUTE, 59)
     calendar.set(Calendar.SECOND, 50)
 
-    Log.d(TAG, "getYearУтв: ${getTimeFormat(calendar)}")
+//    Log.d(TAG, "getYearУтв: ${getTimeFormat(calendar)}")
 
     return calendar.timeInMillis
 }

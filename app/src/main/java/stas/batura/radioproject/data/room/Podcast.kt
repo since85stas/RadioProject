@@ -100,7 +100,8 @@ data class Podcast(
     fun getPlayedInPercent(): Int {
         val pos = lastPosition.toDouble()
         val dur = durationInMillis.toDouble()
-        return if (durationInMillis == 0L) 0 else (pos / dur * 100.0f).toInt()
+        if (pos>dur) return 100
+        return if (durationInMillis == 0L) 0 else (Math.round(pos / dur * 100.0f)).toInt()
     }
 
 
