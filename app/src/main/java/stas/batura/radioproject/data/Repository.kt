@@ -45,6 +45,7 @@ class Repository @Inject constructor() : IRepository {
     lateinit var protoData: DataStore<UserPreferences>
 
     init {
+
         Log.d(TAG, "repository started: ")
     }
 
@@ -64,6 +65,7 @@ class Repository @Inject constructor() : IRepository {
     @Throws(NullPointerException::class)
     private suspend fun shouldUpdateRadioCacheDB(): Boolean {
 //        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
+        val lastT = getPrefLastPtime()
         val lastPodcast = radioDao.getLastPodcast()
         if (lastPodcast != null) {
             return lastPodcast.isWeekGone(System.currentTimeMillis())
@@ -109,6 +111,17 @@ class Repository @Inject constructor() : IRepository {
 
     override fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
         return radioDao.getLastNPodcastsList(num)
+    }
+
+    override fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
+        val flowList = radioDao.getNPodcastsListFromCurrent(num, time)
+        repScope.launch {
+            val lastT = flowList.firstOrNull()
+            if (lastT!=null && lastT.size>0) {
+                setPrefLastPtime(lastT.last().timeMillis)
+            }
+        }
+        return flowList
     }
 
     /**
@@ -285,7 +298,7 @@ class Repository @Inject constructor() : IRepository {
      */
     override fun numberTypeList(): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getLastNPodcastListFlow(num)
+                num -> getNPodcastsListFromCurrent(num, 0L)
         }
     }
 
@@ -308,5 +321,29 @@ class Repository @Inject constructor() : IRepository {
         repScope.launch {
             radioDao.updateTrackIdDetailed(podcastId, isDetailed)
         }
+    }
+
+    /**
+     * записываем выбранный для отображения год
+     */
+    override fun setPrefLastPtime(time: Long) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setLastPodcTimee(time).build()
+            }
+        }
+    }
+
+    /**
+     * получаем выбранный для отображения год
+     */
+    fun getPrefLastPtime(): Flow<Long> {
+        return protoData.data.map {
+            it.lastPodcTimee
+        }
+    }
+
+    override suspend fun PrefLastPtime(): Long? {
+        return getPrefLastPtime().firstOrNull()
     }
 }

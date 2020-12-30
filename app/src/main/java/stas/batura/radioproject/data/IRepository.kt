@@ -39,11 +39,17 @@ interface IRepository {
 
     fun getPrefListType(): Flow<ListViewType>
 
+    fun setPrefLastPtime(time:Long)
+
+    suspend fun PrefLastPtime(): Long?
+
     fun setPrefNumOnPage(num: Int)
 
     fun setPrefSelectedYear(year: Year)
 
     fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
+
+    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
 
     fun numberTypeList(): Flow<List<Podcast>>
 

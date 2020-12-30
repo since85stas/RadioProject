@@ -68,6 +68,10 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     init {
         Log.d(TAG, "view model created: ")
+        viewModelScope.launch { 
+            val time = repository.PrefLastPtime()
+            Log.d(TAG, "$time: ")
+        }
     }
 
     fun createService() {

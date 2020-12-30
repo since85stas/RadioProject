@@ -21,4 +21,7 @@ message UserPreferences {
 
   // текущий выбранный год
   int32 selected_year = 7;
+
+  // дата последнего подкаста
+  int64 last_podc_timee = 8;
 }
