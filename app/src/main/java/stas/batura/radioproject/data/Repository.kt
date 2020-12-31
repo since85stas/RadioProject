@@ -2,7 +2,6 @@ package stas.batura.radioproject.data
 
 import android.util.Log
 import androidx.datastore.DataStore
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import ru.batura.stat.batchat.repository.room.RadioDao
@@ -12,7 +11,6 @@ import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 @Singleton
@@ -109,16 +107,16 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    override fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
+    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
         return radioDao.getLastNPodcastsList(num)
     }
 
-    override fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
+    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
         val flowList = radioDao.getNPodcastsListFromCurrent(num, time)
         repScope.launch {
             val lastT = flowList.firstOrNull()
             if (lastT!=null && lastT.size>0) {
-                setPrefLastPtime(lastT.last().timeMillis)
+                setPrefLastPtime(lastT.first().timeMillis)
             }
         }
         return flowList
@@ -296,9 +294,9 @@ class Repository @Inject constructor() : IRepository {
     /**
      * список по порядку
      */
-    override fun numberTypeList(): Flow<List<Podcast>> {
+    override fun numberTypeList(time: Long): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getNPodcastsListFromCurrent(num, 0L)
+                num -> getNPodcastsListFromCurrent(num, time)
         }
     }
 
@@ -337,7 +335,7 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем выбранный для отображения год
      */
-    fun getPrefLastPtime(): Flow<Long> {
+    override fun getPrefLastPtime(): Flow<Long> {
         return protoData.data.map {
             it.lastPodcTimee
         }
@@ -346,4 +344,14 @@ class Repository @Inject constructor() : IRepository {
     override suspend fun PrefLastPtime(): Long? {
         return getPrefLastPtime().firstOrNull()
     }
+
+    override fun getNumbAndTime(): Flow<PodcastLoadInfo> =
+        getPrefListType().combine(getPrefLastPtime()) {num, time ->
+            PodcastLoadInfo(num, time)
+    }
 }
+
+data class PodcastLoadInfo(
+    val listType: ListViewType,
+    val timeL: Long
+)

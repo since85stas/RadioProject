@@ -1,14 +1,7 @@
 package stas.batura.radioproject.data
 
-import androidx.lifecycle.LiveData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import ru.batura.stat.batchat.repository.room.RadioDao
-import stas.batura.radioproject.UserPreferences
 import stas.batura.radioproject.data.dataUtils.Year
-import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
 
 interface IRepository {
@@ -41,23 +34,27 @@ interface IRepository {
 
     fun setPrefLastPtime(time:Long)
 
+    fun getPrefLastPtime(): Flow<Long>
+
     suspend fun PrefLastPtime(): Long?
 
     fun setPrefNumOnPage(num: Int)
 
     fun setPrefSelectedYear(year: Year)
 
-    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
+//    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
+//
+//    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
 
-    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
-
-    fun numberTypeList(): Flow<List<Podcast>>
+    fun numberTypeList(time: Long): Flow<List<Podcast>>
 
     fun yearTypeList(): Flow<List<Podcast>>
 
     fun updateTrackDuration(podcastId: Int, duration: Long)
 
     fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
+
+    fun getNumbAndTime(): Flow<PodcastLoadInfo>
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
 }
 
