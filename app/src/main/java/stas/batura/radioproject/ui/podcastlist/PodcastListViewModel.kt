@@ -32,12 +32,12 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
 
     // получаем список в зависимости от типа отображения
-    val newPodcastList: LiveData<List<Podcast>> = repository.getNumbAndTime().
+    val newPodcastList: LiveData<List<Podcast>> = repository.getTypeAndNumb().
         flatMapLatest { loadInfo ->
             if (loadInfo.listType == ListViewType.YEAR) {
                 repository.yearTypeList()
             } else {
-                repository.numberTypeList(loadInfo.timeL)
+                repository.numberTypeList(loadInfo.lastNumb)
             }
         }.asLiveData()
 

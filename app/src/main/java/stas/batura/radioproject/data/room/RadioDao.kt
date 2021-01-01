@@ -33,6 +33,9 @@ interface RadioDao {
     @Query("SELECT * FROM podcast_table WHERE timeMillis > :timeStart AND timeMillis < :timeEnd ORDER BY podcastId DESC")
     fun getPodcastsBetweenTimes(timeStart: Long, timeEnd: Long): Flow<List<Podcast>>
 
+    @Query("SELECT * FROM podcast_table WHERE podcastId < :lastId ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListBeforeId(num: Int, lastId: Int): Flow<List<Podcast>>
+
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
     fun getPodcastFlowByNum (num: Int): Flow<Podcast>
 
