@@ -111,12 +111,26 @@ class Repository @Inject constructor() : IRepository {
         return radioDao.getLastNPodcastsList(num)
     }
 
-    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
-        val flowList = radioDao.getNPodcastsListFromCurrent(num, time)
+    fun getNPodcastsListHighFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
+        Log.d(TAG, "getNPodcastsListHighFromCurrent: $time")
+        val flowList = radioDao.getNPodcastsListHighFromCurrent(num, time)
         repScope.launch {
             val lastT = flowList.firstOrNull()
             if (lastT!=null && lastT.size>0) {
                 setPrefLastPtime(lastT.first().timeMillis)
+            }
+        }
+        return flowList
+    }
+
+    fun getNPodcastsListLowFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
+        Log.d(TAG, "getNPodcastsListLowFromCurrent: $time $num")
+        val flowList = radioDao.getNPodcastsListLowFromCurrent(num, time)
+        repScope.launch {
+            val lastT = flowList.firstOrNull()
+            if (lastT!=null && lastT.size>0) {
+                setPrefLastPtime(lastT.last().timeMillis)
+                setPrefFirstPtime(lastT.first().timeMillis)
             }
         }
         return flowList
@@ -296,7 +310,7 @@ class Repository @Inject constructor() : IRepository {
      */
     override fun numberTypeList(time: Long): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getNPodcastsListFromCurrent(num, time)
+                num -> getNPodcastsListLowFromCurrent(num, time)
         }
     }
 
@@ -341,12 +355,32 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * записываем выбранный для отображения год
+     */
+    override fun setPrefFirstPtime(time: Long) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setFirstPodcTimee(time).build()
+            }
+        }
+    }
+
+    /**
+     * получаем выбранный для отображения год
+     */
+    override fun getPrefFirstPtime(): Flow<Long> {
+        return protoData.data.map {
+            it.firstPodcTimee
+        }
+    }
+
     override suspend fun PrefLastPtime(): Long? {
         return getPrefLastPtime().firstOrNull()
     }
 
     override fun getNumbAndTime(): Flow<PodcastLoadInfo> =
-        getPrefListType().combine(getPrefLastPtime()) {num, time ->
+        getPrefListType().combine(getPrefFirstPtime()) {num, time ->
             PodcastLoadInfo(num, time)
     }
 }

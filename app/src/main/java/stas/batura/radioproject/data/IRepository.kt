@@ -36,6 +36,10 @@ interface IRepository {
 
     fun getPrefLastPtime(): Flow<Long>
 
+    fun setPrefFirstPtime(time:Long)
+
+    fun getPrefFirstPtime(): Flow<Long>
+
     suspend fun PrefLastPtime(): Long?
 
     fun setPrefNumOnPage(num: Int)

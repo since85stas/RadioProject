@@ -24,4 +24,7 @@ message UserPreferences {
 
   // дата последнего подкаста
   int64 last_podc_timee = 8;
+
+  // дата последнего подкаста
+  int64 first_podc_timee = 9;
 }

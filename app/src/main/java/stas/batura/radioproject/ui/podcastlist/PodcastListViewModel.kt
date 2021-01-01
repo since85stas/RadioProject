@@ -83,4 +83,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         Log.d(TAG, "onEnabled: ")
         repository.updateTrackIdDetailed(podcast.podcastId, enabled)
     }
+
+    fun getNextNPodcasts() {
+//        repository.setPrefLastPtime(pod)
+    }
 }
