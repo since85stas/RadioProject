@@ -66,12 +66,10 @@ class MainActivityViewModel @ViewModelInject constructor(
     val spinnerPlay: LiveData<Boolean>
         get() = _spinnerPlay
 
+    val pLastNumb = repository.getPrefLastPnumb().asLiveData()
+
     init {
         Log.d(TAG, "view model created: ")
-        viewModelScope.launch { 
-            val time = repository.PrefLastPtime()
-            Log.d(TAG, "$time: ")
-        }
     }
 
     fun createService() {

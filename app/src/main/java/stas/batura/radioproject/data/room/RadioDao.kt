@@ -43,7 +43,7 @@ interface RadioDao {
     suspend fun getPodcastByNum (num: Int): Podcast?
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
-    suspend fun getLastPodcast(): Podcast?
+    fun getLastPodcast(): Podcast?
 
     @Query("UPDATE podcast_table SET isActive = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastActive(podcastId: Int)

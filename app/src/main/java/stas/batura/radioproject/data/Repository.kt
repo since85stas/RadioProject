@@ -92,10 +92,18 @@ class Repository @Inject constructor() : IRepository {
 
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
-            for (category in podcst.categories) {
-//                radioDao.insertCategory(Category(podcastId, category))
-            }
+//            for (category in podcst.categories) {
+////                radioDao.insertCategory(Category(podcastId, category))
+//            }
         }
+
+
+    }
+
+    override suspend fun updateLastPodcPrefsNumber() {
+        val lastPodcast = radioDao.getLastPodcast()
+        Log.d(TAG, "updatePodacastInfo: $lastPodcast")
+        lastPodcast?.let { setPrefLastPnumb(lastPodcast.podcastId) }
     }
 
     /**
@@ -130,6 +138,19 @@ class Repository @Inject constructor() : IRepository {
             val lastT = flowList.firstOrNull()
             if (lastT!=null && lastT.size>0) {
 //                setPrefLastPtime(lastT.last().timeMillis)
+//                setPrefFirstPtime(lastT.first().timeMillis)
+            }
+        }
+        return flowList
+    }
+
+    fun getNPodcastsListBeforeId(num: Int, podcId: Int): Flow<List<Podcast>> {
+        Log.d(TAG, "getNPodcastsListLowFromCurrent: $podcId $num")
+        val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
+        repScope.launch {
+            val lastT = flowList.firstOrNull()
+            if (lastT!=null && lastT.size>0) {
+                setPrefLastPnumb(lastT.first().podcastId)
 //                setPrefFirstPtime(lastT.first().timeMillis)
             }
         }
@@ -310,7 +331,7 @@ class Repository @Inject constructor() : IRepository {
      */
     override fun numberTypeList(lastId:Int): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getNPodcastsListLowFromCurrent(num, time)
+                num -> getNPodcastsListBeforeId(num, lastId)
         }
     }
 

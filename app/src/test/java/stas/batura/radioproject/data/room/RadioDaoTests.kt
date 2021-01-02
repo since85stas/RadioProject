@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.batura.stat.batchat.repository.room.RadioDatabase
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
