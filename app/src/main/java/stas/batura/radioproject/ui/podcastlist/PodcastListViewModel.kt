@@ -44,7 +44,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
-            repository.updateLastPodcPrefsNumber()
+//            repository.updateLastPodcPrefsNumber()
 //            repository.setPrefLastPtime(0)
         }
     }
@@ -70,7 +70,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //                _snackbar.value = error.message
             } finally {
                 _spinner.value = false
-
+                repository.updateLastPodcPrefsNumber()
 //                repository.getAllPodcastListFlow()
             }
         }

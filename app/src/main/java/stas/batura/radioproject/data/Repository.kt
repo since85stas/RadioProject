@@ -79,7 +79,7 @@ class Repository @Inject constructor() : IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCacheDB()) {
+        if (true) {
             updatePodacastInfo()
         }
     }
@@ -89,21 +89,19 @@ class Repository @Inject constructor() : IRepository {
      */
     suspend fun updatePodacastInfo() {
         val podcastBodis = retrofit.getLastNPodcasts(100)
-
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
-//            for (category in podcst.categories) {
-////                radioDao.insertCategory(Category(podcastId, category))
-//            }
         }
-
-
     }
 
-    override suspend fun updateLastPodcPrefsNumber() {
-        val lastPodcast = radioDao.getLastPodcast()
-        Log.d(TAG, "updatePodacastInfo: $lastPodcast")
-        lastPodcast?.let { setPrefLastPnumb(lastPodcast.podcastId) }
+    override fun updateLastPodcPrefsNumber() {
+        repScope.launch {
+            val lastPodcast = radioDao.getLastPodcast()
+            lastPodcast?.let {
+                Log.d(TAG, "updatePodacastInfo: $lastPodcast")
+                setPrefLastPnumb(it.podcastId)
+            }
+        }
     }
 
     /**
@@ -115,37 +113,8 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
-        return radioDao.getLastNPodcastsList(num)
-    }
-
-    fun getNPodcastsListHighFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
-        Log.d(TAG, "getNPodcastsListHighFromCurrent: $time")
-        val flowList = radioDao.getNPodcastsListHighFromCurrent(num, time)
-        repScope.launch {
-            val lastT = flowList.firstOrNull()
-            if (lastT!=null && lastT.size>0) {
-//                setPrefLastPtime(lastT.first().timeMillis)
-            }
-        }
-        return flowList
-    }
-
-    fun getNPodcastsListLowFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
-        Log.d(TAG, "getNPodcastsListLowFromCurrent: $time $num")
-        val flowList = radioDao.getNPodcastsListLowFromCurrent(num, time)
-        repScope.launch {
-            val lastT = flowList.firstOrNull()
-            if (lastT!=null && lastT.size>0) {
-//                setPrefLastPtime(lastT.last().timeMillis)
-//                setPrefFirstPtime(lastT.first().timeMillis)
-            }
-        }
-        return flowList
-    }
-
     fun getNPodcastsListBeforeId(num: Int, podcId: Int): Flow<List<Podcast>> {
-        Log.d(TAG, "getNPodcastsListLowFromCurrent: $podcId $num")
+        Log.d(TAG, "getNPodcastsListBeforeId: $podcId $num")
         val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
         repScope.launch {
             val lastT = flowList.firstOrNull()
@@ -208,12 +177,6 @@ class Repository @Inject constructor() : IRepository {
             it.numShownPodcasts
         }
     }
-
-//    override fun getUserPrefSmallVis(): Flow<Boolean> {
-//        return protoData.data.map {
-//            it.podcastIsSmall
-//        }
-//    }
 
     /**
      * записываем число показоваемых треков в настройки

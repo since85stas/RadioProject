@@ -44,10 +44,6 @@ interface IRepository {
 
     fun setPrefSelectedYear(year: Year)
 
-//    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
-//
-//    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
-
     fun numberTypeList(lastId: Int): Flow<List<Podcast>>
 
     fun yearTypeList(): Flow<List<Podcast>>
@@ -58,7 +54,7 @@ interface IRepository {
 
     fun getTypeAndNumb(): Flow<PodcastLoadInfo>
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
-    suspend fun updateLastPodcPrefsNumber()
+    fun updateLastPodcPrefsNumber()
 }
 
 enum class ListViewType(type: Int) {
