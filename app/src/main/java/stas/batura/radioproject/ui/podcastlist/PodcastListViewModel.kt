@@ -44,7 +44,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
-//            repository.updateLastPodcPrefsNumber()
+            repository.updateLastPodcPrefsNumber()
 //            repository.setPrefLastPtime(0)
         }
     }
@@ -87,5 +87,11 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     fun getNextNPodcasts() {
 //        repository.setPrefLastPtime(pod)
+    }
+
+    fun changeNextListByNum(num: Int) {
+        viewModelScope.launch {
+            repository.changeLastPnumberByValue(num)
+        }
     }
 }

@@ -55,6 +55,8 @@ interface IRepository {
     fun getTypeAndNumb(): Flow<PodcastLoadInfo>
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
     fun updateLastPodcPrefsNumber()
+
+    suspend fun changeLastPnumberByValue(num: Int)
 }
 
 enum class ListViewType(type: Int) {

@@ -118,10 +118,10 @@ class Repository @Inject constructor() : IRepository {
         val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
         repScope.launch {
             val lastT = flowList.firstOrNull()
-            if (lastT!=null && lastT.size>0) {
-                setPrefLastPnumb(lastT.first().podcastId)
-//                setPrefFirstPtime(lastT.first().timeMillis)
-            }
+//            if (lastT!=null && lastT.size>0) {
+////                setPrefLastPnumb(lastT.first().podcastId)
+////                setPrefFirstPtime(lastT.first().timeMillis)
+//            }
         }
         return flowList
     }
@@ -356,13 +356,19 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-//    override suspend fun PrefLastPtime(): Long? {
-//        return getPrefLastPtime().firstOrNull()
-//    }
-
     override fun getTypeAndNumb(): Flow<PodcastLoadInfo> =
         getPrefListType().combine(getPrefLastPnumb()) {num, time ->
             PodcastLoadInfo(num, time)
+    }
+
+    override suspend fun changeLastPnumberByValue(num: Int) {
+        val lastId = getPrefLastPnumb().first()
+        val numb = getUserPrefPNumber().first()
+        if (num == 1) {
+            setPrefLastPnumb(lastId + numb)
+        } else if (num == -1){
+            setPrefLastPnumb(lastId -numb)
+        }
     }
 }
 

@@ -56,12 +56,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="p"
+                android:onClick="@{()->podacstListViewModel.changeNextListByNum(-1)}"
                 />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="l"
+                android:onClick="@{()->podacstListViewModel.changeNextListByNum(1)}"
                 />
 
         </LinearLayout>
