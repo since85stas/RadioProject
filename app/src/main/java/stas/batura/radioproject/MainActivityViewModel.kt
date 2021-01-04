@@ -66,8 +66,6 @@ class MainActivityViewModel @ViewModelInject constructor(
     val spinnerPlay: LiveData<Boolean>
         get() = _spinnerPlay
 
-    val pLastNumb = repository.getPrefLastPnumb().asLiveData()
-
     init {
         Log.d(TAG, "view model created: ")
     }

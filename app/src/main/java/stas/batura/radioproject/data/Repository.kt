@@ -79,7 +79,7 @@ class Repository @Inject constructor() : IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (true) {
+        if (shouldUpdateRadioCacheDB()) {
             updatePodacastInfo()
         }
     }
@@ -100,6 +100,7 @@ class Repository @Inject constructor() : IRepository {
             lastPodcast?.let {
                 Log.d(TAG, "updatePodacastInfo: $lastPodcast")
                 setPrefLastPnumb(it.podcastId)
+                setPrefMaxPnumb(it.podcastId)
             }
         }
     }
@@ -113,43 +114,22 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * берем N подкастов с номером меньше $podcId
+     */
     fun getNPodcastsListBeforeId(num: Int, podcId: Int): Flow<List<Podcast>> {
         Log.d(TAG, "getNPodcastsListBeforeId: $podcId $num")
         val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
-        repScope.launch {
-            val lastT = flowList.firstOrNull()
-//            if (lastT!=null && lastT.size>0) {
-////                setPrefLastPnumb(lastT.first().podcastId)
-////                setPrefFirstPtime(lastT.first().timeMillis)
-//            }
-        }
         return flowList
     }
 
-    /**
-     * отмечаем что трек играет, значит он считается активным и берется по умолчанию
-     */
-    override fun  setActivePodcast(podcastId: Int, active: Int?) {
-        repScope.launch {
-            Log.d(TAG, "setActivePodcast: $podcastId")
-//            radioDao.setAllPodIsNOTActive()
-            if (active != null) {
-                radioDao.setPodIsNOTActive(active)
-            } else {
-                Log.d(TAG, "setActivePodcast: All")
-                radioDao.setAllPodIsNOTActive()
-            }
-            radioDao.setPodcastActive(podcastId)
-        }
-    }
-
-    /**
-     * получаем активный подкаст
-     */
-    override fun getActivePodcast(): Flow<Podcast> {
-        Log.d(TAG, "getActivePodcast: ")
-        return radioDao.getActivePodcast().filterNotNull()
-    }
+//    /**
+//     * получаем активный подкаст
+//     */
+//    override fun getActivePodcast(): Flow<Podcast> {
+//        Log.d(TAG, "getActivePodcast: ")
+//        return radioDao.getActivePodcast().filterNotNull()
+//    }
 
     /**
      * отмечаем что трек прослушан
@@ -189,17 +169,6 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-//    /**
-//     * устанавливаем показывать полный или сокращенный подкаст
-//     */
-//    override fun setPrefPodcastIsSmall(bol: Boolean) {
-//        repScope.launch {
-//            protoData.updateData { t: UserPreferences ->
-//                t.toBuilder().setPodcastIsSmall(bol).build()
-//            }
-//        }
-//    }
-
     /**
      * устанавливаем по какому типу отображать подкасты
      */
@@ -214,7 +183,7 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем по какому типу отображать подкасты
      */
-    override fun getPrefListType(): Flow<ListViewType> {
+    fun getPrefListType(): Flow<ListViewType> {
         return protoData.data.map {
             ListViewType.getByValue(it.listViewType)!!
         }
@@ -237,7 +206,7 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
-     * записывем номер активный подкаст
+     * отмечаем что трек играет, значит он считается активным и берется по умолчанию
      */
     override fun setPrefActivePodcastNum(num: Int) {
         repScope.launch {
@@ -333,16 +302,16 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем выбранный для отображения год
      */
-    override fun getPrefLastPnumb(): Flow<Int> {
+    fun getPrefLastPnumb(): Flow<Int> {
         return protoData.data.map {
             it.lastPodcNumb
         }
     }
 
-    override fun setPrefFirstPnumb(numb: Int) {
+    override fun setPrefMaxPnumb(numb: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
-                t.toBuilder().setFirstPodcNumb(numb).build()
+                t.toBuilder().setMaxPodcNumb(numb).build()
             }
         }
     }
@@ -350,9 +319,9 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем выбранный для отображения год
      */
-    override fun getPrefFirstPnumb(): Flow<Int> {
+    fun getPrefMaxPnumb(): Flow<Int> {
         return protoData.data.map {
-            it.firstPodcNumb
+            it.maxPodcNumb
         }
     }
 
@@ -363,11 +332,12 @@ class Repository @Inject constructor() : IRepository {
 
     override suspend fun changeLastPnumberByValue(num: Int) {
         val lastId = getPrefLastPnumb().first()
+        val maxId = getPrefMaxPnumb().first()
         val numb = getUserPrefPNumber().first()
         if (num == 1) {
-            setPrefLastPnumb(lastId + numb)
+            if (lastId + numb < maxId) setPrefLastPnumb(lastId + numb) else setPrefLastPnumb(maxId)
         } else if (num == -1){
-            setPrefLastPnumb(lastId -numb)
+            if (lastId - numb > 0) setPrefLastPnumb(lastId -numb) else setPrefLastPnumb(numb)
         }
     }
 }

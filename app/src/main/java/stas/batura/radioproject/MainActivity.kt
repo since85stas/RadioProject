@@ -100,10 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        mainActivityViewModel.pLastNumb.observe(this) {
-            Log.d(TAG, "onCreate: $it")
-        }
-
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
 
