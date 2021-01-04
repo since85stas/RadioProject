@@ -25,10 +25,16 @@ interface RadioDao {
     fun getLastNPodcastsList(num: Int): Flow<List<Podcast>>
 
     @Query("SELECT * FROM podcast_table WHERE timeMillis > :time ORDER BY podcastId DESC LIMIT :num")
-    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
+    fun getNPodcastsListHighFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE timeMillis < :time ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListLowFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
 
     @Query("SELECT * FROM podcast_table WHERE timeMillis > :timeStart AND timeMillis < :timeEnd ORDER BY podcastId DESC")
     fun getPodcastsBetweenTimes(timeStart: Long, timeEnd: Long): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE podcastId < :lastId ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListBeforeId(num: Int, lastId: Int): Flow<List<Podcast>>
 
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
     fun getPodcastFlowByNum (num: Int): Flow<Podcast>
@@ -37,7 +43,7 @@ interface RadioDao {
     suspend fun getPodcastByNum (num: Int): Podcast?
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
-    suspend fun getLastPodcast(): Podcast?
+    fun getLastPodcast(): Podcast?
 
     @Query("UPDATE podcast_table SET isActive = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastActive(podcastId: Int)

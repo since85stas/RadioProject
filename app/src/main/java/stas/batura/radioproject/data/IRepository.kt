@@ -32,21 +32,19 @@ interface IRepository {
 
     fun getPrefListType(): Flow<ListViewType>
 
-    fun setPrefLastPtime(time:Long)
+    fun setPrefLastPnumb(numb:Int)
 
-    fun getPrefLastPtime(): Flow<Long>
+    fun getPrefLastPnumb(): Flow<Int>
 
-    suspend fun PrefLastPtime(): Long?
+    fun setPrefFirstPnumb(numb:Int)
+
+    fun getPrefFirstPnumb(): Flow<Int>
 
     fun setPrefNumOnPage(num: Int)
 
     fun setPrefSelectedYear(year: Year)
 
-//    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>>
-//
-//    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
-
-    fun numberTypeList(time: Long): Flow<List<Podcast>>
+    fun numberTypeList(lastId: Int): Flow<List<Podcast>>
 
     fun yearTypeList(): Flow<List<Podcast>>
 
@@ -54,8 +52,11 @@ interface IRepository {
 
     fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
 
-    fun getNumbAndTime(): Flow<PodcastLoadInfo>
+    fun getTypeAndNumb(): Flow<PodcastLoadInfo>
 //    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
+    fun updateLastPodcPrefsNumber()
+
+    suspend fun changeLastPnumberByValue(num: Int)
 }
 
 enum class ListViewType(type: Int) {

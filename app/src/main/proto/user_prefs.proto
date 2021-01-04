@@ -23,5 +23,14 @@ message UserPreferences {
   int32 selected_year = 7;
 
   // дата последнего подкаста
-  int64 last_podc_timee = 8;
+  int32 last_podc_numb = 8;
+
+  // дата последнего подкаста
+  int32 first_podc_numb = 9;
+
+//  // номер последнего подкаста
+//  int64 last_podc_numb = 8;
+//
+//  // номер последнего подкаста
+//  int64 first_podc_numb = 9;
 }

@@ -63,7 +63,7 @@ class Repository @Inject constructor() : IRepository {
     @Throws(NullPointerException::class)
     private suspend fun shouldUpdateRadioCacheDB(): Boolean {
 //        val lastPodcast = Podcast.FromPodcastBody.build(retrofit.getPodcastByNum("225"))
-        val lastT = getPrefLastPtime()
+//        val lastT = getPrefLastPtime()
         val lastPodcast = radioDao.getLastPodcast()
         if (lastPodcast != null) {
             return lastPodcast.isWeekGone(System.currentTimeMillis())
@@ -79,7 +79,7 @@ class Repository @Inject constructor() : IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCacheDB()) {
+        if (true) {
             updatePodacastInfo()
         }
     }
@@ -89,11 +89,17 @@ class Repository @Inject constructor() : IRepository {
      */
     suspend fun updatePodacastInfo() {
         val podcastBodis = retrofit.getLastNPodcasts(100)
-
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
-            for (category in podcst.categories) {
-//                radioDao.insertCategory(Category(podcastId, category))
+        }
+    }
+
+    override fun updateLastPodcPrefsNumber() {
+        repScope.launch {
+            val lastPodcast = radioDao.getLastPodcast()
+            lastPodcast?.let {
+                Log.d(TAG, "updatePodacastInfo: $lastPodcast")
+                setPrefLastPnumb(it.podcastId)
             }
         }
     }
@@ -107,17 +113,15 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    fun getLastNPodcastListFlow(num: Int): Flow<List<Podcast>> {
-        return radioDao.getLastNPodcastsList(num)
-    }
-
-    fun getNPodcastsListFromCurrent(num: Int, time: Long): Flow<List<Podcast>> {
-        val flowList = radioDao.getNPodcastsListFromCurrent(num, time)
+    fun getNPodcastsListBeforeId(num: Int, podcId: Int): Flow<List<Podcast>> {
+        Log.d(TAG, "getNPodcastsListBeforeId: $podcId $num")
+        val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
         repScope.launch {
             val lastT = flowList.firstOrNull()
-            if (lastT!=null && lastT.size>0) {
-                setPrefLastPtime(lastT.first().timeMillis)
-            }
+//            if (lastT!=null && lastT.size>0) {
+////                setPrefLastPnumb(lastT.first().podcastId)
+////                setPrefFirstPtime(lastT.first().timeMillis)
+//            }
         }
         return flowList
     }
@@ -173,12 +177,6 @@ class Repository @Inject constructor() : IRepository {
             it.numShownPodcasts
         }
     }
-
-//    override fun getUserPrefSmallVis(): Flow<Boolean> {
-//        return protoData.data.map {
-//            it.podcastIsSmall
-//        }
-//    }
 
     /**
      * записываем число показоваемых треков в настройки
@@ -294,9 +292,9 @@ class Repository @Inject constructor() : IRepository {
     /**
      * список по порядку
      */
-    override fun numberTypeList(time: Long): Flow<List<Podcast>> {
+    override fun numberTypeList(lastId:Int): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getNPodcastsListFromCurrent(num, time)
+                num -> getNPodcastsListBeforeId(num, lastId)
         }
     }
 
@@ -324,10 +322,10 @@ class Repository @Inject constructor() : IRepository {
     /**
      * записываем выбранный для отображения год
      */
-    override fun setPrefLastPtime(time: Long) {
+    override fun setPrefLastPnumb(numb: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
-                t.toBuilder().setLastPodcTimee(time).build()
+                t.toBuilder().setLastPodcNumb(numb).build()
             }
         }
     }
@@ -335,23 +333,46 @@ class Repository @Inject constructor() : IRepository {
     /**
      * получаем выбранный для отображения год
      */
-    override fun getPrefLastPtime(): Flow<Long> {
+    override fun getPrefLastPnumb(): Flow<Int> {
         return protoData.data.map {
-            it.lastPodcTimee
+            it.lastPodcNumb
         }
     }
 
-    override suspend fun PrefLastPtime(): Long? {
-        return getPrefLastPtime().firstOrNull()
+    override fun setPrefFirstPnumb(numb: Int) {
+        repScope.launch {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setFirstPodcNumb(numb).build()
+            }
+        }
     }
 
-    override fun getNumbAndTime(): Flow<PodcastLoadInfo> =
-        getPrefListType().combine(getPrefLastPtime()) {num, time ->
+    /**
+     * получаем выбранный для отображения год
+     */
+    override fun getPrefFirstPnumb(): Flow<Int> {
+        return protoData.data.map {
+            it.firstPodcNumb
+        }
+    }
+
+    override fun getTypeAndNumb(): Flow<PodcastLoadInfo> =
+        getPrefListType().combine(getPrefLastPnumb()) {num, time ->
             PodcastLoadInfo(num, time)
+    }
+
+    override suspend fun changeLastPnumberByValue(num: Int) {
+        val lastId = getPrefLastPnumb().first()
+        val numb = getUserPrefPNumber().first()
+        if (num == 1) {
+            setPrefLastPnumb(lastId + numb)
+        } else if (num == -1){
+            setPrefLastPnumb(lastId -numb)
+        }
     }
 }
 
 data class PodcastLoadInfo(
     val listType: ListViewType,
-    val timeL: Long
+    val lastNumb: Int
 )

@@ -32,18 +32,19 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
 
     // получаем список в зависимости от типа отображения
-    val newPodcastList: LiveData<List<Podcast>> = repository.getNumbAndTime().
+    val newPodcastList: LiveData<List<Podcast>> = repository.getTypeAndNumb().
         flatMapLatest { loadInfo ->
             if (loadInfo.listType == ListViewType.YEAR) {
                 repository.yearTypeList()
             } else {
-                repository.numberTypeList(loadInfo.timeL)
+                repository.numberTypeList(loadInfo.lastNumb)
             }
         }.asLiveData()
 
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
+            repository.updateLastPodcPrefsNumber()
 //            repository.setPrefLastPtime(0)
         }
     }
@@ -69,7 +70,7 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //                _snackbar.value = error.message
             } finally {
                 _spinner.value = false
-
+                repository.updateLastPodcPrefsNumber()
 //                repository.getAllPodcastListFlow()
             }
         }
@@ -82,5 +83,15 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     fun onEnabled(podcast: Podcast, enabled: Boolean) {
         Log.d(TAG, "onEnabled: ")
         repository.updateTrackIdDetailed(podcast.podcastId, enabled)
+    }
+
+    fun getNextNPodcasts() {
+//        repository.setPrefLastPtime(pod)
+    }
+
+    fun changeNextListByNum(num: Int) {
+        viewModelScope.launch {
+            repository.changeLastPnumberByValue(num)
+        }
     }
 }
