@@ -52,7 +52,7 @@ data class Podcast(
 
     var durationInMillis: Long = 0,
 
-    var isDetailed: Boolean = true
+    var isDetailed: Boolean = false
 
 //    var localImageUrl: String? = null
 ) {
