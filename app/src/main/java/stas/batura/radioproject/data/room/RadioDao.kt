@@ -68,4 +68,7 @@ interface RadioDao {
 
     @Query("UPDATE podcast_table SET isDetailed =:isDetailed WHERE podcastId =:podcastId")
     suspend fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
+
+    @Query("UPDATE podcast_table SET redraw = redraw +1 WHERE podcastId =:podcastId")
+    suspend fun updateRedrawField(podcastId: Int)
 }

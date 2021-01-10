@@ -87,15 +87,19 @@ class MainActivity : AppCompatActivity() {
                 if (it.state == PlaybackStateCompat.STATE_PLAYING) {
 //                    Log.d(TAG, "onCreate: play spinner visible")
                     mainActivityViewModel.playAnimVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else if (it.state == PlaybackStateCompat.STATE_PAUSED ) {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
                     mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else if (it.state == PlaybackStateCompat.STATE_NONE) {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
                     mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
                     mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 }
             }
         })

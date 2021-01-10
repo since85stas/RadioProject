@@ -263,8 +263,7 @@ class Repository @Inject constructor() : IRepository {
      */
     override fun numberTypeList(lastId:Int): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-            //--------------------------------------------------
-                num -> getNPodcastsListBeforeId(1, lastId)
+                num -> getNPodcastsListBeforeId(num, lastId)
         }
     }
 
@@ -340,6 +339,10 @@ class Repository @Inject constructor() : IRepository {
         } else if (num == -1){
             if (lastId - numb > 0) setPrefLastPnumb(lastId -numb) else setPrefLastPnumb(numb)
         }
+    }
+
+    override suspend fun updateRedrawField(podcastId: Int) {
+        radioDao.updateRedrawField(podcastId)
     }
 }
 

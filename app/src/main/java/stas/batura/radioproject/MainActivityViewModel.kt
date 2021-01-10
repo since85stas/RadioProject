@@ -50,6 +50,8 @@ class MainActivityViewModel @ViewModelInject constructor(
     val createServiceListner: LiveData<Boolean>
         get() = _createServiceListner
 
+//    val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
+
 //    val activePodcast = repository.getActivePodcast().asLiveData()
 
     val activePodcastPref: MutableLiveData<Podcast?> = MutableLiveData(null)
@@ -191,6 +193,14 @@ class MainActivityViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             val podcast = repository.getActivePodcastSus(num)
             activePodcastPref.value = podcast
+        }
+    }
+
+    fun redrawItemById() {
+        if (activePodcastPref.value != null) {
+            viewModelScope.launch {
+                repository.updateRedrawField(activePodcastPref.value!!.podcastId)
+            }
         }
     }
 

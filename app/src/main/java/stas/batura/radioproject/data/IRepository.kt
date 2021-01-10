@@ -50,6 +50,8 @@ interface IRepository {
     fun updateLastPodcPrefsNumber()
 
     suspend fun changeLastPnumberByValue(num: Int)
+
+    suspend fun updateRedrawField(podcastId: Int)
 }
 
 enum class ListViewType(type: Int) {

@@ -1,7 +1,13 @@
 package stas.batura.radioproject.ui.podcastlist
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +28,15 @@ class PodcastsAdapter(
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent, mainActivityViewModel, listModel)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding = PodcastItemViewDetailedBinding.inflate(
+            layoutInflater,
+            parent,
+            false
+        )
+
+        val viewHolder = ViewHolder(binding, mainActivityViewModel, listModel)
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -34,7 +48,7 @@ class PodcastsAdapter(
         val mainActivityViewModel: MainActivityViewModel,
         val listModel: PodcastListViewModel
     ) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root){
 
         fun bind(podcast: Podcast) {
             binding.podcast = podcast
@@ -50,17 +64,18 @@ class PodcastsAdapter(
 
             if (podcast.podcastId == listModel.activeNumPref.value) {
                 binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
-//                binding.backLay.background = binding.root.context.resources.getDrawable(R.drawable.my_boarder)
             } else {
                 Glide.with(binding.root.context)
                     .load(podcast.imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.root.logo_image)
             }
-        }
 
-        fun onItemClicked() {
-
+            if (podcast.podcastId == listModel.activeNumPref.value && mainActivityViewModel.spinnerPlay.value == true) {
+                binding.spinnerPlay.visibility = View.VISIBLE
+            } else {
+                binding.spinnerPlay.visibility = View.GONE
+            }
         }
 
         companion object {
@@ -74,9 +89,12 @@ class PodcastsAdapter(
                     parent,
                     false
                 )
+//                binding.lifecycleOwner = parent.context as LifecycleOwner
                 return ViewHolder(binding, mainActivityViewModel, listModel)
             }
         }
+
+
     }
 
     class TrackDiffCalback : DiffUtil.ItemCallback<Podcast>() {

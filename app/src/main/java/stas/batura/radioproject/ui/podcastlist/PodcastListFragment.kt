@@ -49,7 +49,7 @@ class PodcastListFragment : Fragment() {
         bindings.podacstListViewModel = podcastListViewModel
         bindings.mainViewModel = mainviewModel
 
-        bindings.lifecycleOwner = viewLifecycleOwner
+        bindings.lifecycleOwner = requireActivity()
 
         return bindings.root
     }
