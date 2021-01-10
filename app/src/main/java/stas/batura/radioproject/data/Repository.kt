@@ -263,7 +263,8 @@ class Repository @Inject constructor() : IRepository {
      */
     override fun numberTypeList(lastId:Int): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
-                num -> getNPodcastsListBeforeId(num, lastId)
+            //--------------------------------------------------
+                num -> getNPodcastsListBeforeId(1, lastId)
         }
     }
 

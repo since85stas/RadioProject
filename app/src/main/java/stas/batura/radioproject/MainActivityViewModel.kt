@@ -75,6 +75,14 @@ class MainActivityViewModel @ViewModelInject constructor(
         _createServiceListner.value = false
     }
 
+    fun playAnimVisible() {
+        _spinnerPlay.value = true
+    }
+
+    fun playAnimNotVisible() {
+        _spinnerPlay.value = false
+    }
+
     /**
      * создает музыкальный сервис и его контроллер
      */

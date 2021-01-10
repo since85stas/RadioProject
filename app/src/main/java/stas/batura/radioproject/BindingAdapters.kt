@@ -52,17 +52,28 @@ fun RecyclerView.bindVisibility(visible: Boolean) {
     }
 }
 
+@BindingAdapter("testVisibility")
+fun ProgressBar.testVisibility(visible: Boolean) {
+    Log.d("testVisibility", "testVisibility: $visible")
+    if (visible) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
 //@BindingAdapter("currentPodcast")
 //fun bindcurrentPodcast(podcast: Podcast) {
 //    Log.d("bindcurrentPodcast", "bindcurrentPodcast: $podcast")
 //}
 
-@BindingAdapter(value = ["playProgressBarVisibility","currentPodcast", "activePodcastId"])
-fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast?, podcastActiveId: Int?) {
+@BindingAdapter(value = ["playProgressBarVisibility", "activePodcastId","itemPodcast"])
+fun ProgressBar.bindplayPVisibility(visible: Boolean, podcastActiveId: Int?, itemPodcastId: Int) {
     if (visible) {
-//        Log.d("bindplayPVisibility", "$visible is visible: ")
+        visibility = View.VISIBLE
+        Log.d("bindplayPVisibility", "$visible is visible: $podcastActiveId $itemPodcastId ")
         if (podcastActiveId != null) {
-            if (podcast!!.podcastId == podcastActiveId) {
+            if (itemPodcastId == podcastActiveId) {
 //                Log.d("bindplayPVisibility", "is active: ")
                 visibility = View.VISIBLE
             } else {

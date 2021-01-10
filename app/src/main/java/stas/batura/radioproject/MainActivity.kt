@@ -86,16 +86,16 @@ class MainActivity : AppCompatActivity() {
             if (it != null) {
                 if (it.state == PlaybackStateCompat.STATE_PLAYING) {
 //                    Log.d(TAG, "onCreate: play spinner visible")
-                    mainActivityViewModel._spinnerPlay.value = true
+                    mainActivityViewModel.playAnimVisible()
                 } else if (it.state == PlaybackStateCompat.STATE_PAUSED ) {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+                    mainActivityViewModel.playAnimNotVisible()
                 } else if (it.state == PlaybackStateCompat.STATE_NONE) {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+                    mainActivityViewModel.playAnimNotVisible()
                 } else {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+                    mainActivityViewModel.playAnimNotVisible()
                 }
             }
         })
