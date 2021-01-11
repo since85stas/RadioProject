@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
 import stas.batura.radioproject.data.dataUtils.getLinksFromHtml
+import stas.batura.radioproject.data.dataUtils.getMillisTime
 import stas.batura.radioproject.data.net.PodcastBody
 import stas.batura.radioproject.data.net.TimeLabel
 
@@ -16,22 +17,24 @@ import stas.batura.radioproject.data.net.TimeLabel
 @Entity(tableName = "podcast_table")
 data class Podcast(
     @PrimaryKey()
-    val podcastId: Int ,
+    val podcastId: Int,
 
     // url поста
-    val url: String =     "url",
+    val url: String = "url",
 
     // заголовок поста
-    val title: String  =   "title",
+    val title: String = "title",
 
     // дата-время поста в RFC3339
-    val time: String     = "0",
+    val time: String = "0",
+
+    var timeMillis: Long = 0L,
 
     val categories: List<String>? = null,
 
     var imageUrl: String? = null,
 
-    var fileName:   String? = null,
+    var fileName: String? = null,
 
     var bodyHtml: List<String>? = null,
 
@@ -39,19 +42,26 @@ data class Podcast(
 
     var audioUrl: String? = null,
 
-    var timeLabels: List<TimeLabel>? = null ,
+    var timeLabels: List<TimeLabel>? = null,
 
     var isActive: Boolean = false,
 
     var isFinish: Boolean = false,
 
-    var lastPosition: Long = 0
+    var lastPosition: Long = 0,
+
+    var durationInMillis: Long = 0,
+
+    var isDetailed: Boolean = false,
+
+    var isPlaying: Boolean = false,
+
+    var redraw: Int = 0
 
 //    var localImageUrl: String? = null
 ) {
 
-
-    object FromPodcastBody  {
+    object FromPodcastBody {
 
         fun build(podcastBody: PodcastBody): Podcast {
 
@@ -59,10 +69,12 @@ data class Podcast(
             val reg = "\\D".toRegex()
             val num = reg.replace(podcastBody.title, "")
 
-            return Podcast(num.toInt() ,
+            return Podcast(
+                num.toInt(),
                 podcastBody.url,
                 podcastBody.title,
                 podcastBody.date.toString(),
+                getMillisTime(podcastBody.date),
                 podcastBody.categories,
                 podcastBody.imageUrl,
                 podcastBody.fileName,
@@ -79,43 +91,44 @@ data class Podcast(
      * check if week is passed after [newTime] value
      */
     fun isWeekGone(newTime: Long): Boolean {
-                if (newTime - getMillisTime() > TIME_WEEK) {
-                    return true
-                } else {
-                    return false
-                }
+        if (newTime - getMillisTime(time) > TIME_WEEK) {
+            return true
+        } else {
+            return false
+        }
     }
-
 
     /**
-     * transform class field [time] to Milliseconds
+     * get played duration of track in percents
      */
-    fun getMillisTime(): Long {
-        val dateTime: DateTime = DateTime.parseRfc3339(time)
-        val millis: Long = dateTime.getValue()
-        return millis
+    fun getPlayedInPercent(): Int {
+        val pos = lastPosition.toDouble()
+        val dur = durationInMillis.toDouble()
+        if (pos>dur) return 100
+        return if (durationInMillis == 0L) 0 else (Math.round(pos / dur * 100.0f)).toInt()
     }
 
+
     override fun toString(): String {
-        return "Podcast $podcastId $url $title"
+        return "Podcast $podcastId $url $title $lastPosition $durationInMillis"
     }
 }
 
 class CategoryDataConverter {
 
-        @TypeConverter()
-        fun fromCountryLangList(value: List<String>): String {
-            val gson = Gson()
-            val type = object : TypeToken<List<String>>() {}.type
-            return gson.toJson(value, type)
-        }
+    @TypeConverter()
+    fun fromCountryLangList(value: List<String>): String {
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.toJson(value, type)
+    }
 
-        @TypeConverter
-        fun toCountryLangList(value: String): List<String> {
-            val gson = Gson()
-            val type = object : TypeToken<List<String>>() {}.type
-            return gson.fromJson(value, type)
-        }
+    @TypeConverter
+    fun toCountryLangList(value: String): List<String> {
+        val gson = Gson()
+        val type = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(value, type)
+    }
 
 }
 

@@ -6,19 +6,32 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.Menu
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.control_fragment_new.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
+import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.musicservice.MusicService
+import stas.batura.radioproject.utils.CircleTransform
+
+private lateinit var appBarConfiguration: AppBarConfiguration
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -32,15 +45,23 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_podcastlist, R.id.navigation_chat))
+        appBarConfiguration = AppBarConfiguration(setOf(
+                R.id.navigation_podcastlist), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        // загружаем хидер
+        loadNavHeader()
 
         mainActivityViewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
 
@@ -48,53 +69,140 @@ class MainActivity : AppCompatActivity() {
 //        bindings.lifecycleOwner = this
 //        bindings.mainViewModel = mainActivityViewModel
 
+        // слушаем когда запускать сервис
         mainActivityViewModel.createServiceListner.observe(this) {it ->
             if (it) {
                 mainActivityViewModel.initMusicService()
             }
         }
 
+        // слушаем когда сервис успешно коннектится
         mainActivityViewModel.serviceConnection.observe(this) {it ->
             if (it != null) {
                 Log.d(TAG, "onCreate: " + it.toString())
                 bindCurrentService(it)
-
-//                mainActivityViewModel.playClicked()
             }
         }
 
+        // слушаем текущее состояние плеера и меняем UI
         mainActivityViewModel.callbackChanges.observe(this, Observer {
             if (it != null) {
                 if (it.state == PlaybackStateCompat.STATE_PLAYING) {
-                    Log.d(TAG, "onCreate: play spinner visible")
-                    mainActivityViewModel._spinnerPlay.value = true
+//                    Log.d(TAG, "onCreate: play spinner visible")
+                    mainActivityViewModel.playAnimVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else if (it.state == PlaybackStateCompat.STATE_PAUSED ) {
-                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+//                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else if (it.state == PlaybackStateCompat.STATE_NONE) {
-                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+//                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 } else {
-                    Log.d(TAG, "onCreate: play spinner not visible")
-                    mainActivityViewModel._spinnerPlay.value = false
+//                    Log.d(TAG, "onCreate: play spinner not visible")
+                    mainActivityViewModel.playAnimNotVisible()
+                    mainActivityViewModel.redrawItemById()
                 }
             }
         })
 
-        mainActivityViewModel.activePodcast.observe(this, {
-            Log.d(TAG, "onCreate:active podcast $it")
-        })
-
         // нициализируем сервис
         mainActivityViewModel.initMusicService()
+
+        // описываем nav drawer
+        createSectionsInMenu()
     }
 
+
+
+
+
+    /***
+     * Load navigation menu header information
+     * like background image, profile image
+     * name, website, notifications action view (dot)
+     */
+    private fun loadNavHeader() { // name, website
+        val navView = nav_view.getHeaderView(0)
+        navView.name.text = ("Stanislav Batura")
+        navView.website.text = ("stanislav.batura85@gmail.com")
+        navView.img_header_bg.setImageResource(R.drawable.drawer_back)
+        Glide.with(this).load(R.drawable.cat_my).transform(CircleTransform(this))
+            .into(navView.img_profile)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+//        menuInflater.inflate(R.menu.main, menu)
+
+        //        addTour()
+        return true
+    }
+
+    /**
+     * прописывает базовое нажатие на открытие NavView
+     */
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    /**
+     * привязываем сервис к активити
+     */
     private fun bindCurrentService(serviceConnection: ServiceConnection) {
         // привязываем сервис к активити
         bindService(
             Intent(applicationContext!!, MusicService::class.java),
             serviceConnection,
             Context.BIND_AUTO_CREATE)
+    }
+
+    /**
+     * создает отображение списка секций в меню
+     */
+    private fun createSectionsInMenu() {
+//        // устанавливаем слушатель на нажатие клавиш
+        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> {
+                    true
+                }
+                R.id.nav_10per_page -> {
+                    mainActivityViewModel.updatePrefPodcastNum(10)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_20per_page -> {
+                    mainActivityViewModel.updatePrefPodcastNum(20)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_year_2021 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2021)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_year_2020 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2020)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_year_2019 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2019)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                R.id.nav_year_2018 -> {
+                    mainActivityViewModel.getPodcasttsInYear(Year.Y2018)
+                    drawer_layout.closeDrawers()
+                    true
+                }
+                else -> false
+            }
+        }) )
+
     }
 
 

@@ -7,9 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -17,7 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.batura.stat.batchat.repository.room.RadioDatabase
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -40,8 +36,6 @@ class RadioDaoTests {
 
     @Before
     fun setUp() {
-
-
         // Using an in-memory database so that the information stored here disappears when the
         // process is killed.
         radioDB = Room.inMemoryDatabaseBuilder(
@@ -96,7 +90,7 @@ class RadioDaoTests {
         testList.add(podcast2)
         testList.add(podcast1)
 
-        val lastFlow = radioDB.radioDatabaseDao.getPodcastsList()
+        val lastFlow = radioDB.radioDatabaseDao.getAllPodcastsList()
 
         var last: Podcast? = null
 

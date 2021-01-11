@@ -10,25 +10,27 @@
 
         <variable
             name="mainModel"
-            type="stas.batura.radioproject.MainActivityViewModel" />
-    </data>
+            type="stas.batura.radioproject.MainActivityViewModel"
+            />
 
-    <LinearLayout
-        android:id="@+id/back_lay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        >
+        <variable
+            name="podcastViewModel"
+            type="stas.batura.radioproject.ui.podcastlist.PodcastListViewModel" />
+    </data>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:padding="8dp"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="8dp"
+                >
 
                 <ImageView
                     android:id="@+id/logo_image"
@@ -45,12 +47,21 @@
                     titleBind="@{podcast}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/playProgress"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:text="title"
                     android:textSize="20sp"
-
                     android:layout_marginLeft="16dp"
+                    />
+
+                <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:id="@+id/playProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    bindProgress="@{podcast}"
                     />
 
                 <ImageButton
@@ -61,7 +72,7 @@
                     app:layout_constraintLeft_toRightOf="@id/logo_image"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:layout_marginLeft="12dp"
-                    android:onClick="@{() -> mainModel.movingPlayToPosition(0, podcast)}"
+                    android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"
                     />
 
                 <ProgressBar
@@ -70,11 +81,34 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
-                    playProgressBarVisibility="@{mainModel.spinnerPlay}"
-                    activePodcast="@{mainModel.activePodcast}"
-                    currentPodcast="@{podcast}"
                     app:layout_constraintRight_toLeftOf="@id/play_button"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:visibility="gone"
+                    />
+
+
+<!--                <ProgressBar-->
+<!--                    android:id="@+id/spinnerPlay"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginBottom="16dp"-->
+<!--                    android:layout_marginEnd="16dp"-->
+<!--                    app:layout_constraintRight_toLeftOf="@id/play_button"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/titleText"-->
+<!--                    testVisibility="@{mainModel.spinnerPlay}"-->
+<!--                    activePodcastId="@{mainModel.activePodcastPref.podcastId}"-->
+<!--                    itemPodcast="@{podcast.podcastId}"-->
+<!--                    android:visibility="gone"-->
+<!--                    />-->
+
+                <CheckBox
+                    android:text="детали"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/playProgress"
+                    android:checked="@{podcast.isDetailed}"
+                    android:onCheckedChanged="@{(view, checked) -> podcastViewModel.onEnabled(podcast, checked)}"
                     />
 
 <!--                <TextView-->
@@ -94,11 +128,10 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/play_button"
-
+                    recyclerBarVisibility="@{podcast.isDetailed}"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-    </LinearLayout>
 </layout>

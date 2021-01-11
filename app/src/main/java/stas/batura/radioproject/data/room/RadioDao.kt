@@ -19,7 +19,22 @@ interface RadioDao {
     suspend fun insertAll(plants: List<Podcast>)
 
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
-    fun getPodcastsList(): Flow<List<Podcast>>
+    fun getAllPodcastsList(): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC LIMIT :num")
+    fun getLastNPodcastsList(num: Int): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE timeMillis > :time ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListHighFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE timeMillis < :time ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListLowFromCurrent(num: Int, time: Long): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE timeMillis > :timeStart AND timeMillis < :timeEnd ORDER BY podcastId DESC")
+    fun getPodcastsBetweenTimes(timeStart: Long, timeEnd: Long): Flow<List<Podcast>>
+
+    @Query("SELECT * FROM podcast_table WHERE podcastId <= :lastId ORDER BY podcastId DESC LIMIT :num")
+    fun getNPodcastsListBeforeId(num: Int, lastId: Int): Flow<List<Podcast>>
 
     @Query("SELECT * FROM podcast_table WHERE podcastId = :num")
     fun getPodcastFlowByNum (num: Int): Flow<Podcast>
@@ -45,7 +60,15 @@ interface RadioDao {
     @Query("UPDATE podcast_table SET isFinish = 1 WHERE podcastId = :podcastId")
     suspend fun setPodcastFinish(podcastId: Int)
 
-    @Query("UPDATE podcast_table SET lastPosition = podcastId WHERE podcastId = :podcastId")
-    suspend fun updatePodcastLastPos(podcastId: Long)
+    @Query("UPDATE podcast_table SET lastPosition = :position WHERE podcastId = :podcastId")
+    suspend fun updatePodcastLastPos(podcastId: Int, position: Long)
 
+    @Query("UPDATE podcast_table SET durationInMillis =:duration WHERE podcastId =:podcastId")
+    suspend fun updateTrackDuration(podcastId: Int, duration: Long)
+
+    @Query("UPDATE podcast_table SET isDetailed =:isDetailed WHERE podcastId =:podcastId")
+    suspend fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
+
+    @Query("UPDATE podcast_table SET redraw = redraw +1 WHERE podcastId =:podcastId")
+    suspend fun updateRedrawField(podcastId: Int)
 }
