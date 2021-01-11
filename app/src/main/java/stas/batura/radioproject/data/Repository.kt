@@ -94,6 +94,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * устанавливаем кокой номер подкаста последний на данный момент в БД
+     */
     override fun updateLastPodcPrefsNumber() {
         repScope.launch {
             val lastPodcast = radioDao.getLastPodcast()
@@ -122,14 +125,6 @@ class Repository @Inject constructor() : IRepository {
         val flowList = radioDao.getNPodcastsListBeforeId(num, podcId)
         return flowList
     }
-
-//    /**
-//     * получаем активный подкаст
-//     */
-//    override fun getActivePodcast(): Flow<Podcast> {
-//        Log.d(TAG, "getActivePodcast: ")
-//        return radioDao.getActivePodcast().filterNotNull()
-//    }
 
     /**
      * отмечаем что трек прослушан
@@ -216,6 +211,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * устанавливаем число отображаемых подкастов на странице
+     */
     override fun setPrefNumOnPage(num: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
@@ -254,6 +252,9 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * получить активный подкаст по номеру
+     */
     override suspend fun getActivePodcastSus(podcastId: Int): Podcast? {
         return radioDao.getPodcastByNum(podcastId)
     }
@@ -276,12 +277,18 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * задаем длительность подкаста в милисекндах
+     */
     override fun updateTrackDuration(podcastId: Int, duration: Long) {
         repScope.launch {
             radioDao.updateTrackDuration(podcastId, duration)
         }
     }
 
+    /**
+     * задаем выводить ли доп инф о подкасте
+     */
     override fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean) {
         repScope.launch {
             radioDao.updateTrackIdDetailed(podcastId, isDetailed)
@@ -291,7 +298,7 @@ class Repository @Inject constructor() : IRepository {
     /**
      * записываем выбранный для отображения год
      */
-    override fun setPrefLastPnumb(numb: Int) {
+    fun setPrefLastPnumb(numb: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
                 t.toBuilder().setLastPodcNumb(numb).build()
@@ -308,7 +315,7 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
-    override fun setPrefMaxPnumb(numb: Int) {
+    fun setPrefMaxPnumb(numb: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
                 t.toBuilder().setMaxPodcNumb(numb).build()

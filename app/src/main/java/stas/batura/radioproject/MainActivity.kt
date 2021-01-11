@@ -69,12 +69,14 @@ class MainActivity : AppCompatActivity() {
 //        bindings.lifecycleOwner = this
 //        bindings.mainViewModel = mainActivityViewModel
 
+        // слушаем когда запускать сервис
         mainActivityViewModel.createServiceListner.observe(this) {it ->
             if (it) {
                 mainActivityViewModel.initMusicService()
             }
         }
 
+        // слушаем когда сервис успешно коннектится
         mainActivityViewModel.serviceConnection.observe(this) {it ->
             if (it != null) {
                 Log.d(TAG, "onCreate: " + it.toString())
@@ -82,6 +84,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // слушаем текущее состояние плеера и меняем UI
         mainActivityViewModel.callbackChanges.observe(this, Observer {
             if (it != null) {
                 if (it.state == PlaybackStateCompat.STATE_PLAYING) {
@@ -145,6 +148,9 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    /**
+     * привязываем сервис к активити
+     */
     private fun bindCurrentService(serviceConnection: ServiceConnection) {
         // привязываем сервис к активити
         bindService(
@@ -157,15 +163,6 @@ class MainActivity : AppCompatActivity() {
      * создает отображение списка секций в меню
      */
     private fun createSectionsInMenu() {
-//        val view = LayoutInflater.from(this).inflate(R.layout.nav_view_play_item, null)
-//
-//        for (playlist in playlists) {
-//            menu.add(SECT_GROUP_ID, playlist.playlistId, 2, playlist.name )
-//
-//            count++
-//            listId.add(playlist.playlistId)
-//        }
-
 //        // устанавливаем слушатель на нажатие клавиш
         nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
             when (it.itemId) {

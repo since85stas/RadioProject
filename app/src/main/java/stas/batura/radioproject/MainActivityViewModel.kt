@@ -28,8 +28,6 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     private val TAG = MainActivityViewModel::class.java.simpleName
 
-//    var numberLive = repository.em
-
     // binder instance
     var playerServiceBinder: MusicService.PlayerServiceBinder? = null
 
@@ -50,10 +48,6 @@ class MainActivityViewModel @ViewModelInject constructor(
     val createServiceListner: LiveData<Boolean>
         get() = _createServiceListner
 
-//    val activeNumPref = repository.getPrefActivePodcastNum().asLiveData()
-
-//    val activePodcast = repository.getActivePodcast().asLiveData()
-
     val activePodcastPref: MutableLiveData<Podcast?> = MutableLiveData(null)
 
     // Create a Coroutine scope using a job to be able to cancel when needed
@@ -72,15 +66,16 @@ class MainActivityViewModel @ViewModelInject constructor(
         Log.d(TAG, "view model created: ")
     }
 
-    fun createService() {
-        _createServiceListner.value = true
-        _createServiceListner.value = false
-    }
-
+    /**
+     * омечаем что включаетсЯ анимация проигрывания
+     */
     fun playAnimVisible() {
         _spinnerPlay.value = true
     }
 
+    /**
+     * омечаем что выключаетсЯ анимация проигрывания
+     */
     fun playAnimNotVisible() {
         _spinnerPlay.value = false
     }
@@ -158,37 +153,57 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
+    /**
+     * начать проигрывание подкаста с заданного времени
+     */
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
+        // если уже играет то остонавливаем
         if (callbackChanges.value != null && callbackChanges.value!!.state.equals(
                 PlaybackStateCompat.STATE_PLAYING
             )
         ) {
             mediaController.value!!.transportControls.stop()
         }
+
+        // указываем, какой номер теперь активный
         setActiveNumberPref(podcast.podcastId)
+
+        // посылаем в сервис и проигрываем
         playerServiceBinder!!.setPodcastWithPosition(podcast, position)
         playClicked()
     }
 
+    /**
+     * устанавливаем, что выводится список по номерам, и задаем кол-во на странице
+     */
     fun updatePrefPodcastNum(num: Int) {
         repository.setPrefListType(ListViewType.NUMBER)
-
         repository.setNumPodcsts(num)
     }
 
+    /**
+     * устанавливаем, что выводится список по годам, и Год
+     */
     fun getPodcasttsInYear(year: Year) {
         repository.setPrefListType(ListViewType.YEAR)
         repository.setPrefSelectedYear(year)
     }
 
+    // пока не используется
     fun setCheckBoxInitState(boolean: Boolean) {
         smallCheck.value = boolean
     }
 
+    /**
+     * указывает номер активного подкаста
+     */
     fun setActiveNumberPref(number: Int) {
         repository.setPrefActivePodcastNum(number)
     }
 
+    /**
+     * получаем активный подкаст в ViewModel
+     */
     fun updateActivePodcast(num: Int) {
         viewModelScope.launch {
             val podcast = repository.getActivePodcastSus(num)
@@ -196,6 +211,10 @@ class MainActivityViewModel @ViewModelInject constructor(
         }
     }
 
+    // TODO: подумать как изменить
+    /**
+     * вспомог функция, для принуд перерисовки одной строки в списке
+     */
     fun redrawItemById() {
         if (activePodcastPref.value != null) {
             viewModelScope.launch {

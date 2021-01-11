@@ -28,15 +28,8 @@ class PodcastsAdapter(
     ListAdapter<Podcast, PodcastsAdapter.ViewHolder>(TrackDiffCalback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = PodcastItemViewDetailedBinding.inflate(
-            layoutInflater,
-            parent,
-            false
-        )
-
-        val viewHolder = ViewHolder(binding, mainActivityViewModel, listModel)
-        return viewHolder
+        val viewHolder =
+        return ViewHolder.from(parent, mainActivityViewModel, listModel)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -55,13 +48,14 @@ class PodcastsAdapter(
             binding.mainModel = mainActivityViewModel
             binding.podcastViewModel = listModel
 
+            // адаптер для списка тем
             val adapter = TimeStampsAdapter(mainActivityViewModel, podcast)
             binding.root.timelabeles_recycler.adapter = adapter
-
             adapter.submitList(podcast.timeLabels)
 
             binding.executePendingBindings()
 
+            // если это выбранный обект меняюем вид
             if (podcast.podcastId == listModel.activeNumPref.value) {
                 binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
             } else {
@@ -71,6 +65,7 @@ class PodcastsAdapter(
                     .into(binding.root.logo_image)
             }
 
+            // если в данный момент проигрывается то включаем анимацию
             if (podcast.podcastId == listModel.activeNumPref.value && mainActivityViewModel.spinnerPlay.value == true) {
                 binding.spinnerPlay.visibility = View.VISIBLE
             } else {
@@ -89,7 +84,6 @@ class PodcastsAdapter(
                     parent,
                     false
                 )
-//                binding.lifecycleOwner = parent.context as LifecycleOwner
                 return ViewHolder(binding, mainActivityViewModel, listModel)
             }
         }

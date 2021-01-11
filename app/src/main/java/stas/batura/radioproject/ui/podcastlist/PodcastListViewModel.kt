@@ -78,6 +78,9 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         Log.d(TAG, "onDetailCheckClick: $boolean")
     }
 
+    /**
+     * указываем выводить ли детали для текущеего подкаста
+     */
     fun onEnabled(podcast: Podcast, enabled: Boolean) {
         Log.d(TAG, "onEnabled: ")
         repository.updateTrackIdDetailed(podcast.podcastId, enabled)
@@ -87,6 +90,9 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 //        repository.setPrefLastPtime(pod)
     }
 
+    /**
+     * получаем следующие num объектов в список
+     */
     fun changeNextListByNum(num: Int) {
         viewModelScope.launch {
             repository.changeLastPnumberByValue(num)

@@ -25,18 +25,6 @@
         android:orientation="vertical"
         android:layout_marginTop="?attr/actionBarSize"
         tools:context=".ui.podcastlist.PodcastListFragment">
-
-        <ProgressBar
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            progressBarVisibility="@{podacstListViewModel.spinner}"
-
-            />
-
 <!--        <CheckBox-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->

@@ -43,9 +43,6 @@ class PodcastListFragment : Fragment() {
         R.layout.fragment_podcast_list,
         container,
         false)
-//        podcastListViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
         bindings.podacstListViewModel = podcastListViewModel
         bindings.mainViewModel = mainviewModel
 
@@ -58,10 +55,6 @@ class PodcastListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel, listModel = podcastListViewModel)
         podcast_recycler.adapter = adapter
-
-//        podcastListViewModel.podcasts.observe(viewLifecycleOwner) {podcasts ->
-//            adapter.submitList(podcasts)
-//        }
 
         podcastListViewModel.newPodcastList.observe(viewLifecycleOwner) {podcasts ->
             if (podcasts != null) {

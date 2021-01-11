@@ -28,10 +28,6 @@ interface IRepository {
 
     fun setPrefListType(type:ListViewType)
 
-    fun setPrefLastPnumb(numb:Int)
-
-    fun setPrefMaxPnumb(numb:Int)
-
     fun setPrefNumOnPage(num: Int)
 
     fun setPrefSelectedYear(year: Year)
