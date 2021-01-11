@@ -25,18 +25,6 @@
         android:orientation="vertical"
         android:layout_marginTop="?attr/actionBarSize"
         tools:context=".ui.podcastlist.PodcastListFragment">
-
-        <ProgressBar
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            progressBarVisibility="@{podacstListViewModel.spinner}"
-
-            />
-
 <!--        <CheckBox-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
@@ -64,6 +52,17 @@
                 android:layout_height="wrap_content"
                 android:text="l"
                 android:onClick="@{()->podacstListViewModel.changeNextListByNum(1)}"
+                />
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintRight_toLeftOf="@id/play_button"
+                app:layout_constraintTop_toBottomOf="@id/titleText"
+                testVisibility="@{mainViewModel.spinnerPlay}"
+                android:visibility="gone"
                 />
 
         </LinearLayout>

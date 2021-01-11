@@ -34,6 +34,15 @@ fun ProgressBar.bindVisibility(visible: Boolean) {
     }
 }
 
+@BindingAdapter("playProgressBarVisibility")
+fun ProgressBar.playProgressBarVisibility(visible: Boolean) {
+    visibility = if (visible) {
+        View.VISIBLE
+    } else {
+        View.GONE
+    }
+}
+
 @BindingAdapter("recyclerBarVisibility")
 fun RecyclerView.bindVisibility(visible: Boolean) {
     if (visible) {
@@ -43,12 +52,28 @@ fun RecyclerView.bindVisibility(visible: Boolean) {
     }
 }
 
-@BindingAdapter(value = ["playProgressBarVisibility","currentPodcast", "activePodcast"])
-fun ProgressBar.bindplayPVisibility(visible: Boolean, podcast: Podcast, podcastActive: Podcast?) {
+@BindingAdapter("testVisibility")
+fun ProgressBar.testVisibility(visible: Boolean) {
+    Log.d("testVisibility", "testVisibility: $visible")
     if (visible) {
-//        Log.d("bindplayPVisibility", "$visible is visible: ")
-        if (podcastActive != null) {
-            if (podcast == podcastActive) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+//@BindingAdapter("currentPodcast")
+//fun bindcurrentPodcast(podcast: Podcast) {
+//    Log.d("bindcurrentPodcast", "bindcurrentPodcast: $podcast")
+//}
+
+@BindingAdapter(value = ["playProgressBarVisibility", "activePodcastId","itemPodcast"])
+fun ProgressBar.bindplayPVisibility(visible: Boolean, podcastActiveId: Int?, itemPodcastId: Int) {
+    if (visible) {
+        visibility = View.VISIBLE
+        Log.d("bindplayPVisibility", "$visible is visible: $podcastActiveId $itemPodcastId ")
+        if (podcastActiveId != null) {
+            if (itemPodcastId == podcastActiveId) {
 //                Log.d("bindplayPVisibility", "is active: ")
                 visibility = View.VISIBLE
             } else {
@@ -83,13 +108,11 @@ fun PlayerControlView.bindPlayer(exoPlayer: ExoPlayer?) {
 
 @BindingAdapter("controlTitleBind")
 fun TextView.controlTitleBind(podcast: Podcast?) {
-//    Log.d("controlTitle", "controlTitleBind: $podcast")
     text = podcast?.title
 }
 
 @BindingAdapter("combineTitleBind")
 fun TextView.combineTitleBind(string: String?) {
-//    Log.d("controlTitle", "combineTitleBind: $string")
     if (string != null) {
         text = string
     }
@@ -97,7 +120,6 @@ fun TextView.combineTitleBind(string: String?) {
 
 @BindingAdapter("bindProgress")
 fun ProgressBar.bindProgress(podcast: Podcast) {
-//    Log.d("bind progress", "bindProgress: ${podcast} ${podcast.getPlayedInPercent()}" )
     progress = podcast.getPlayedInPercent()
 }
 
