@@ -28,6 +28,8 @@ message UserPreferences {
   // дата последнего подкаста
   int32 max_podc_numb = 9;
 
+  bool is_not_first_open = 10;
+
 //  // номер последнего подкаста
 //  int64 last_podc_numb = 8;
 //

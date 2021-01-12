@@ -6,6 +6,7 @@ import org.junit.Test
 import org.junit.experimental.theories.suppliers.TestedOn
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
+import stas.batura.radioproject.data.dataUtils.getMillisTime
 import stas.batura.radioproject.data.room.Podcast
 import java.text.SimpleDateFormat
 import java.time.ZoneId
@@ -47,11 +48,19 @@ class PadcastClassTests {
         assertEquals(100, podcast6.getPlayedInPercent())
     }
 
-//    @Test
-//    fun test_thatweekIsGonefun_ok() {
-//        assertEquals(true, currPodcast.isWeekGone(currPodcast.timeMillis + TIME_WEEK + 10L))
-//        assertEquals(true, currPodcast.isWeekGone(currPodcast.timeMillis + TIME_WEEK + 1000000L))
-//        assertEquals(false, currPodcast.isWeekGone(currPodcast.timeMillis + TIME_WEEK - 10L))
-//        assertEquals(false, currPodcast.isWeekGone(currPodcast.timeMillis + TIME_WEEK - 10000L))
-//    }
+    @Test
+    fun test_thatweekIsGonefun_ok() {
+        assertEquals(true, currPodcast.isWeekGone(getMillisTime(currPodcast.time) + TIME_WEEK + 10L))
+        assertEquals(true, currPodcast.isWeekGone(getMillisTime(currPodcast.time) + TIME_WEEK + 1000000L))
+        assertEquals(false, currPodcast.isWeekGone(getMillisTime(currPodcast.time) + TIME_WEEK - 10L))
+        assertEquals(false, currPodcast.isWeekGone(getMillisTime(currPodcast.time) + TIME_WEEK - 10000L))
+    }
+
+    @Test
+    fun test_thatNumweekIsGone_ok() {
+        assertEquals(1, currPodcast.numWeekGone(getMillisTime(currPodcast.time) + TIME_WEEK + 10L))
+        assertEquals(3, currPodcast.numWeekGone(getMillisTime(currPodcast.time) + 3*TIME_WEEK + 10L))
+        assertEquals(2, currPodcast.numWeekGone(getMillisTime(currPodcast.time) + 3*TIME_WEEK - 10L))
+        assertEquals(0, currPodcast.numWeekGone(0))
+    }
 }
