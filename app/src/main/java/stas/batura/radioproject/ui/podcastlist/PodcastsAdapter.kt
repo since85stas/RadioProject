@@ -56,17 +56,18 @@ class PodcastsAdapter(
             binding.executePendingBindings()
 
             // если это выбранный обект меняюем вид
-            if (podcast.podcastId == listModel.activeNumPref.value) {
-                binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
-            } else {
+//            if (podcast.podcastId == listModel.activeNumPref.value) {
+////                binding.logoImage.setImageResource(R.drawable.ic_pause_black_24dp)
+//            } else {
                 Glide.with(binding.root.context)
                     .load(podcast.imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(binding.root.logo_image)
-            }
+//            }
 
             // если в данный момент проигрывается то включаем анимацию
             if (podcast.podcastId == listModel.activeNumPref.value && mainActivityViewModel.spinnerPlay.value == true) {
+                Log.d("PodcastAdapter", "bind: $listModel.activeNumPref.value")
                 binding.spinnerPlay.visibility = View.VISIBLE
             } else {
                 binding.spinnerPlay.visibility = View.GONE

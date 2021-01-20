@@ -99,6 +99,18 @@ data class Podcast(
     }
 
     /**
+     * check if week is passed after [newTime] value
+     */
+    fun numWeekGone(newTime: Long): Int {
+        if (newTime - getMillisTime(time) > TIME_WEEK) {
+            val del = (newTime - getMillisTime(time))/ TIME_WEEK
+            return del.toInt()
+        } else {
+            return 0
+        }
+    }
+
+    /**
      * get played duration of track in percents
      */
     fun getPlayedInPercent(): Int {

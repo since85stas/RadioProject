@@ -79,16 +79,37 @@ class Repository @Inject constructor() : IRepository {
      * cache-invalidation policy.
      */
     override suspend fun tryUpdateRecentRadioCache() {
-        if (shouldUpdateRadioCacheDB()) {
-            updatePodacastInfo()
+        if (isFirstOpen().first()) {
+            if (shouldUpdateRadioCacheDB()) {
+                updatePodacastAllInfo()
+            }
+            setFistOpen(true)
+        } else {
+            if (shouldUpdateRadioCacheDB()) {
+                val lastPodcast = radioDao.getLastPodcast()
+                lastPodcast?.let {
+                    updatePodacastLastNumInfo(it.numWeekGone(System.currentTimeMillis()))
+                }
+
+            }
         }
     }
 
     /**
      * Берет информацию из последних N данных и добавляет в БД
      */
-    suspend fun updatePodacastInfo() {
-        val podcastBodis = retrofit.getLastNPodcasts(100)
+    suspend fun updatePodacastAllInfo() {
+        val podcastBodis = retrofit.getLastNPodcasts(200)
+        for (podcst in podcastBodis) {
+            val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
+        }
+    }
+
+    /**
+     * Берет информацию из последних N данных и добавляет в БД
+     */
+    suspend fun updatePodacastLastNumInfo(num: Int) {
+        val podcastBodis = retrofit.getLastNPodcasts(num)
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
         }
@@ -350,6 +371,21 @@ class Repository @Inject constructor() : IRepository {
 
     override suspend fun updateRedrawField(podcastId: Int) {
         radioDao.updateRedrawField(podcastId)
+    }
+
+    /**
+     * получаем выбранный для отображения год
+     */
+    fun isFirstOpen(): Flow<Boolean> {
+        return protoData.data.map {
+            !it.isNotFirstOpen
+        }
+    }
+
+    suspend fun setFistOpen(boolean: Boolean) {
+            protoData.updateData { t: UserPreferences ->
+                t.toBuilder().setIsNotFirstOpen(boolean).build()
+            }
     }
 }
 

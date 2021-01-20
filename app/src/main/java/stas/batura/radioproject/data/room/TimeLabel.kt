@@ -5,6 +5,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import stas.batura.radioproject.data.net.TimeLabel
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -34,7 +35,7 @@ fun fillTimelable(timelables: List<TimeLabel>?): List<TimeLabel>? {
         for (lable in timelables) {
             val newLable = lable
             newLable.newStartTime = start
-            newLable.startTimeString = setTrackDurat(start)
+            newLable.startTimeString = setTrackDuratNative(start)
             if (lable.duration != null) {
                 start = start + lable.duration * 1000L
             }
@@ -68,7 +69,40 @@ class TimeLabelsDataConverter {
 
 
 fun setTrackDurat (dur: Long): String {
-    val formatter = SimpleDateFormat("HH:mm:ss");
+
+    val formatter = SimpleDateFormat("HH:mm:ss", Locale.GERMAN);
     val dateString = formatter.format( dur );
    return dateString
+}
+
+fun setTrackDuratNative(dur: Long): String {
+    val timeInSec = dur/1000
+//    val timeSec = dur/1000
+//    val timeMin = timeSec/1000
+    val timeHourPr = timeInSec/60/60
+    val timeMin = timeInSec - timeHourPr*60*60
+    val timeMinPr = timeMin/60
+    val timeSec = timeMin - timeMinPr*60
+//    val timeSecPr =
+    val timeStr = StringBuilder()
+    if (timeHourPr < 10) {
+        timeStr.append("0$timeHourPr")
+    } else {
+        timeStr.append("$timeHourPr")
+    }
+    timeStr.append(":")
+
+    if (timeMinPr < 10) {
+        timeStr.append("0$timeMinPr")
+    } else {
+        timeStr.append("$timeMinPr")
+    }
+    timeStr.append(":")
+
+    if (timeSec < 10) {
+        timeStr.append("0$timeSec")
+    } else {
+        timeStr.append("$timeSec")
+    }
+    return timeStr.toString()
 }
