@@ -19,10 +19,12 @@
     </data>
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:padding="8dp"
+            android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,8 +36,8 @@
 
                 <ImageView
                     android:id="@+id/logo_image"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:src="@drawable/bat_logo_gr_smal"
@@ -64,16 +66,16 @@
                     bindProgress="@{podcast}"
                     />
 
-                <ImageButton
-                    android:id="@+id/play_button"
-                    android:src="@android:drawable/ic_media_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toRightOf="@id/logo_image"
-                    app:layout_constraintTop_toBottomOf="@id/titleText"
-                    android:layout_marginLeft="12dp"
-                    android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"
-                    />
+<!--                <ImageButton-->
+<!--                    android:id="@+id/play_button"-->
+<!--                    android:src="@android:drawable/ic_media_play"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintLeft_toRightOf="@id/logo_image"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/titleText"-->
+<!--                    android:layout_marginLeft="12dp"-->
+<!--                    android:onClick="@{() -> mainModel.movingPlayToPosition(podcast.lastPosition, podcast)}"-->
+<!--                    />-->
 
                 <ProgressBar
                     android:id="@+id/spinnerPlay"
@@ -81,28 +83,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
-                    app:layout_constraintRight_toLeftOf="@id/play_button"
+                    app:layout_constraintRight_toLeftOf="@id/logo_image"
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:visibility="gone"
                     />
 
-
-<!--                <ProgressBar-->
-<!--                    android:id="@+id/spinnerPlay"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginBottom="16dp"-->
-<!--                    android:layout_marginEnd="16dp"-->
-<!--                    app:layout_constraintRight_toLeftOf="@id/play_button"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/titleText"-->
-<!--                    testVisibility="@{mainModel.spinnerPlay}"-->
-<!--                    activePodcastId="@{mainModel.activePodcastPref.podcastId}"-->
-<!--                    itemPodcast="@{podcast.podcastId}"-->
-<!--                    android:visibility="gone"-->
-<!--                    />-->
-
                 <CheckBox
-                    android:text="детали"
+                    android:text="темы"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintRight_toRightOf="parent"
@@ -127,7 +114,7 @@
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/play_button"
+                    app:layout_constraintTop_toBottomOf="@id/logo_image"
                     recyclerBarVisibility="@{podcast.isDetailed}"
                     />
 
