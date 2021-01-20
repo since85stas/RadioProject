@@ -63,4 +63,12 @@ class PadcastClassTests {
         assertEquals(2, currPodcast.numWeekGone(getMillisTime(currPodcast.time) + 3*TIME_WEEK - 10L))
         assertEquals(0, currPodcast.numWeekGone(0))
     }
+
+    @Test
+    fun test_timeLableToTimeString() {
+        assertEquals("00:00:12", setTrackDuratNative(12000))
+        assertEquals("00:00:12", setTrackDuratNative(12500))
+        assertEquals("00:01:00", setTrackDuratNative(60500))
+        assertEquals("00:10:00", setTrackDuratNative(600500))
+    }
 }
