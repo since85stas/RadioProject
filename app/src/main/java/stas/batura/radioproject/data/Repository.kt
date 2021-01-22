@@ -43,7 +43,6 @@ class Repository @Inject constructor() : IRepository {
     lateinit var protoData: DataStore<UserPreferences>
 
     init {
-
         Log.d(TAG, "repository started: ")
     }
 
