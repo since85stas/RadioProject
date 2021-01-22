@@ -155,6 +155,8 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     /**
      * начать проигрывание подкаста с заданного времени
+     * @param position: позиция с которой начинаем проигрывать в мс от начала
+     * @param podcast: подкаст который проигрываем
      */
     fun movingPlayToPosition(position: Long, podcast: Podcast) {
         // если уже играет то остонавливаем
@@ -175,6 +177,7 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     /**
      * устанавливаем, что выводится список по номерам, и задаем кол-во на странице
+     * @param num: число подкастов выводимых на экран
      */
     fun updatePrefPodcastNum(num: Int) {
         repository.setPrefListType(ListViewType.NUMBER)
@@ -183,6 +186,7 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     /**
      * устанавливаем, что выводится список по годам, и Год
+     * @param year: год за который выводим список
      */
     fun getPodcasttsInYear(year: Year) {
         repository.setPrefListType(ListViewType.YEAR)
@@ -195,7 +199,8 @@ class MainActivityViewModel @ViewModelInject constructor(
     }
 
     /**
-     * указывает номер активного подкаста
+     * сохраняем номер активного подкаста
+     * @param number: номер выбранного подкаста
      */
     fun setActiveNumberPref(number: Int) {
         repository.setPrefActivePodcastNum(number)
@@ -203,6 +208,7 @@ class MainActivityViewModel @ViewModelInject constructor(
 
     /**
      * получаем активный подкаст в ViewModel
+     * @param num: номер выбранного подкаста
      */
     fun updateActivePodcast(num: Int) {
         viewModelScope.launch {

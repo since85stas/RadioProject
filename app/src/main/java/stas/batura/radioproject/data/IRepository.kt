@@ -14,7 +14,7 @@ interface IRepository {
 
     suspend fun getActivePodcastSus(podcastId: Int): Podcast?
 
-    fun setFinishPodcast(podcstId: Int)
+//    fun setFinishPodcast(podcstId: Int)
 
     fun updatePodcastLastPos(podcastId: Int, position: Long)
 
