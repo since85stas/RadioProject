@@ -56,7 +56,9 @@ data class Podcast(
 
     var isPlaying: Boolean = false,
 
-    var redraw: Int = 0
+    var redraw: Int = 0,
+
+    var isFavorite: Boolean = false
 
 //    var localImageUrl: String? = null
 ) {
