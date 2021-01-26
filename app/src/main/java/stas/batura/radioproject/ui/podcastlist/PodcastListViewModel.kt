@@ -41,6 +41,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
             }
         }.asLiveData()
 
+    val podcastTypeAndNumb = repository.getTypeAndNumb().asLiveData()
+
     init {
         launchDataLoad {
             repository.tryUpdateRecentRadioCache()
@@ -80,6 +82,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
 
     /**
      * указываем выводить ли детали для текущеего подкаста
+     * @param podcast изменяемый подкаст
+     * @param enabled статус изменения
      */
     fun onEnabled(podcast: Podcast, enabled: Boolean) {
         Log.d(TAG, "onEnabled: ")
@@ -91,7 +95,8 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
     }
 
     /**
-     * получаем следующие num объектов в список
+     * сохраняем сколько выводить на экран
+     * @param num число выводимых на экран подкастов
      */
     fun changeNextListByNum(num: Int) {
         viewModelScope.launch {

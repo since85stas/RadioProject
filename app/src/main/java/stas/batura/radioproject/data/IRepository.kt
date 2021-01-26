@@ -10,11 +10,7 @@ interface IRepository {
 
     fun addPodcast(podcast: Podcast)
 
-//    fun getActivePodcast(): Flow<Podcast>
-
     suspend fun getActivePodcastSus(podcastId: Int): Podcast?
-
-    fun setFinishPodcast(podcstId: Int)
 
     fun updatePodcastLastPos(podcastId: Int, position: Long)
 
@@ -42,12 +38,13 @@ interface IRepository {
 
     fun getTypeAndNumb(): Flow<PodcastLoadInfo>
 
-//    fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>>
     fun updateLastPodcPrefsNumber()
 
     suspend fun changeLastPnumberByValue(num: Int)
 
     suspend fun updateRedrawField(podcastId: Int)
+
+
 }
 
 enum class ListViewType(type: Int) {

@@ -43,7 +43,6 @@ class Repository @Inject constructor() : IRepository {
     lateinit var protoData: DataStore<UserPreferences>
 
     init {
-
         Log.d(TAG, "repository started: ")
     }
 
@@ -107,9 +106,14 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * Берет информацию из последних N данных и добавляет в БД
+     * @param num число подкастов которое будем запрашивать
      */
     suspend fun updatePodacastLastNumInfo(num: Int) {
+
+        // делаем запрос на {num} последних записей с сервера
         val podcastBodis = retrofit.getLastNPodcasts(num)
+
+        // сохраняем полученной в БД
         for (podcst in podcastBodis) {
             val podcastId = radioDao.insertPodcast(Podcast.FromPodcastBody.build(podcst))
         }
@@ -131,6 +135,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * добавляет подкаст в базу данных
+     * @param podcast сохраняемый подкаст
      */
     override fun addPodcast(podcast: Podcast) {
         repScope.launch {
@@ -139,7 +144,11 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
-     * берем N подкастов с номером меньше $podcId
+     * берем N подкастов с номером меньше заданного
+     * @param podcId номер от которого остчитываем
+     * @param num число подкастов
+     *
+     * В итоге выводится список с номерами podcId до (podcId-num)
      */
     fun getNPodcastsListBeforeId(num: Int, podcId: Int): Flow<List<Podcast>> {
         Log.d(TAG, "getNPodcastsListBeforeId: $podcId $num")
@@ -147,17 +156,19 @@ class Repository @Inject constructor() : IRepository {
         return flowList
     }
 
-    /**
-     * отмечаем что трек прослушан
-     */
-    override fun setFinishPodcast(podcstId: Int) {
-        repScope.launch {
-            radioDao.setPodcastFinish(podcstId)
-        }
-    }
+//    /**
+//     * отмечаем что трек прослушан
+//     */
+//    override fun setFinishPodcast(podcstId: Int) {
+//        repScope.launch {
+//            radioDao.setPodcastFinish(podcstId)
+//        }
+//    }
 
     /**
      * обновляем информацию на каком месте закончили проигрывать трек
+     * @param podcastId номер подкаста
+     * @param время в мс
      */
     override fun updatePodcastLastPos(podcastId: Int, position: Long) {
         repScope.launch {
@@ -187,6 +198,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * устанавливаем по какому типу отображать подкасты
+     * @param type тип выводимого списка
      */
     override fun setPrefListType(type: ListViewType) {
         repScope.launch {
@@ -207,6 +219,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * получаем список подкастов за выбранный год из БД
+     * @param year год за который выводим список
      */
     private fun getPodcastByYearFlow(year: Year): Flow<List<Podcast>> {
         return radioDao.getPodcastsBetweenTimes(year.yearS, year.yearE)
@@ -223,6 +236,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * отмечаем что трек играет, значит он считается активным и берется по умолчанию
+     * @param num номер активного подкаста
      */
     override fun setPrefActivePodcastNum(num: Int) {
         repScope.launch {
@@ -234,6 +248,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * устанавливаем число отображаемых подкастов на странице
+     * @param num число выводимых подкастов
      */
     override fun setPrefNumOnPage(num: Int) {
         repScope.launch {
@@ -245,6 +260,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * записываем выбранный для отображения год
+     * @param year год
      */
     override fun setPrefSelectedYear(year: Year) {
         repScope.launch {
@@ -275,6 +291,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * получить активный подкаст по номеру
+     * @param podcastId номер подкаста
      */
     override suspend fun getActivePodcastSus(podcastId: Int): Podcast? {
         return radioDao.getPodcastByNum(podcastId)
@@ -282,6 +299,7 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * список по порядку
+     * @param lastId номер последнего подкаста от которого выводим номера
      */
     override fun numberTypeList(lastId:Int): Flow<List<Podcast>> {
         return getUserPrefPNumber().flatMapLatest {
@@ -300,6 +318,8 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * задаем длительность подкаста в милисекндах
+     * @param podcastId номер подкаста
+     * @param duration длительность в мс
      */
     override fun updateTrackDuration(podcastId: Int, duration: Long) {
         repScope.launch {
@@ -309,6 +329,8 @@ class Repository @Inject constructor() : IRepository {
 
     /**
      * задаем выводить ли доп инф о подкасте
+     * @param podcastId номер подкаста
+     * @param isDetailed статус вывода
      */
     override fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean) {
         repScope.launch {
@@ -317,7 +339,8 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
-     * записываем выбранный для отображения год
+     * сохраняем номер последнего подкаста из отображаемых на экране
+     * @param numb номер подкаста
      */
     fun setPrefLastPnumb(numb: Int) {
         repScope.launch {
@@ -336,6 +359,10 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * сохраняем номер последнего подкаста в БД
+     * @param numb номер подкаста
+     */
     fun setPrefMaxPnumb(numb: Int) {
         repScope.launch {
             protoData.updateData { t: UserPreferences ->
