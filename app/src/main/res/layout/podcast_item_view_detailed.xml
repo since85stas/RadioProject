@@ -98,6 +98,28 @@
                     android:onCheckedChanged="@{(view, checked) -> podcastViewModel.onEnabled(podcast, checked)}"
                     />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_favorite_border_24"
+                    app:layout_constraintLeft_toRightOf="@id/logo_image"
+                    app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:layout_margin="12dp"
+                    favoriteDisableVisibility="@{podcast}"
+                    >
+                </ImageView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_favorite_24"
+                    app:layout_constraintLeft_toRightOf="@id/logo_image"
+                    app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:layout_margin="12dp"
+                    favoriteEnebleVisibility="@{podcast}"
+                    >
+                </ImageView>
+
 <!--                <TextView-->
 <!--                    urlBind="@{podcast}"-->
 <!--                    android:layout_width="0dp"-->
