@@ -42,6 +42,7 @@
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:src="@drawable/bat_logo_gr_smal"
                     android:layout_marginLeft="16dp"
+
                     />
 
                 <TextView
@@ -97,6 +98,30 @@
                     android:checked="@{podcast.isDetailed}"
                     android:onCheckedChanged="@{(view, checked) -> podcastViewModel.onEnabled(podcast, checked)}"
                     />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_favorite_border_24"
+                    app:layout_constraintLeft_toRightOf="@id/logo_image"
+                    app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:layout_margin="12dp"
+                    favoriteDisableVisibility="@{podcast}"
+                    android:onClick="@{() -> podcastViewModel.changeFavoritePodcastStatus(podcast.podcastId, true)}"
+                    >
+                </ImageView>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_favorite_24"
+                    app:layout_constraintLeft_toRightOf="@id/logo_image"
+                    app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:layout_margin="12dp"
+                    favoriteEnebleVisibility="@{podcast}"
+                    android:onClick="@{() -> podcastViewModel.changeFavoritePodcastStatus(podcast.podcastId, false)}"
+                    >
+                </ImageView>
 
 <!--                <TextView-->
 <!--                    urlBind="@{podcast}"-->

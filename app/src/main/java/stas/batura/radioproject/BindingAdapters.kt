@@ -3,6 +3,7 @@ package stas.batura.radioproject
 import android.util.Log
 import android.view.View
 import android.widget.CheckBox
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -139,3 +140,21 @@ fun TextView.bindPodcastHeaderNumbers(list: List<Podcast>?) {
     list?.let { list ->  if (!list.isEmpty()) text = "${list.first().podcastId}-${list.last().podcastId}"}
 }
 
+
+@BindingAdapter("favoriteEnebleVisibility")
+fun ImageView.favoriteEnebleVisibility(podcast: Podcast) {
+    if (podcast.isFavorite) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
+
+@BindingAdapter("favoriteDisableVisibility")
+fun ImageView.favoriteDisableVisibility(podcast: Podcast) {
+    if (!podcast.isFavorite) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.GONE
+    }
+}
