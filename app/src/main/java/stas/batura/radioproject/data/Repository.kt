@@ -414,6 +414,12 @@ class Repository @Inject constructor() : IRepository {
                 t.toBuilder().setIsNotFirstOpen(boolean).build()
             }
     }
+
+    override fun setFavoriteStatus(podcastId: Int, status: Boolean) {
+        repScope.launch {
+            radioDao.setPodFavoriteStatus(podcastId, status)
+        }
+    }
 }
 
 data class PodcastLoadInfo(

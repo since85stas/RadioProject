@@ -44,6 +44,7 @@ interface IRepository {
 
     suspend fun updateRedrawField(podcastId: Int)
 
+    fun setFavoriteStatus(podcastId: Int, status: Boolean)
 
 }
 

@@ -42,6 +42,7 @@
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:src="@drawable/bat_logo_gr_smal"
                     android:layout_marginLeft="16dp"
+
                     />
 
                 <TextView
@@ -106,6 +107,7 @@
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:layout_margin="12dp"
                     favoriteDisableVisibility="@{podcast}"
+                    android:onClick="@{() -> podcastViewModel.changeFavoritePodcastStatus(podcast.podcastId, true)}"
                     >
                 </ImageView>
 
@@ -117,6 +119,7 @@
                     app:layout_constraintTop_toBottomOf="@id/titleText"
                     android:layout_margin="12dp"
                     favoriteEnebleVisibility="@{podcast}"
+                    android:onClick="@{() -> podcastViewModel.changeFavoritePodcastStatus(podcast.podcastId, false)}"
                     >
                 </ImageView>
 

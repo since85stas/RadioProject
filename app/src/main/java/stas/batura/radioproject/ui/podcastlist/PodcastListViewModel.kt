@@ -103,4 +103,13 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
             repository.changeLastPnumberByValue(num)
         }
     }
+
+    /**
+     * отмечаем помещать ли подкаст в избранное
+     * @param podcastId номер подкаста
+     * @param status если True то в избранном иначе нет
+     */
+    fun changeFavoritePodcastStatus(podcastId: Int, status: Boolean) {
+        repository.setFavoriteStatus(podcastId, status)
+    }
 }
