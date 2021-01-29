@@ -21,6 +21,9 @@ interface RadioDao {
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC")
     fun getAllPodcastsList(): Flow<List<Podcast>>
 
+    @Query("SELECT * FROM podcast_table WHERE isFavorite = 1 ORDER BY podcastId DESC")
+    fun getFavoritesPodcastsList(): Flow<List<Podcast>>
+
     @Query("SELECT * FROM podcast_table ORDER BY podcastId DESC LIMIT :num")
     fun getLastNPodcastsList(num: Int): Flow<List<Podcast>>
 
@@ -50,6 +53,9 @@ interface RadioDao {
 
     @Query ("UPDATE podcast_table SET isActive = 0 WHERE podcastId = :podcastId")
     suspend fun setPodIsNOTActive (podcastId: Int)
+
+    @Query ("UPDATE podcast_table SET isFavorite = :status WHERE podcastId = :podcastId")
+    suspend fun setPodFavoriteStatus (podcastId: Int, status: Boolean)
 
     @Query ("UPDATE podcast_table SET isActive = 0")
     suspend fun setAllPodIsNOTActive()
