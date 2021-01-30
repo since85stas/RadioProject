@@ -317,6 +317,13 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
+     * список за год
+     */
+    override fun favTypeList(): Flow<List<Podcast>> {
+        return radioDao.getFavoritesPodcastsList()
+    }
+
+    /**
      * задаем длительность подкаста в милисекндах
      * @param podcastId номер подкаста
      * @param duration длительность в мс

@@ -32,6 +32,8 @@ interface IRepository {
 
     fun yearTypeList(): Flow<List<Podcast>>
 
+    fun favTypeList(): Flow<List<Podcast>>
+
     fun updateTrackDuration(podcastId: Int, duration: Long)
 
     fun updateTrackIdDetailed(podcastId: Int, isDetailed: Boolean)
@@ -52,7 +54,9 @@ enum class ListViewType(type: Int) {
 
     NUMBER(0),
     YEAR(1),
-    MONTH(2);
+    MONTH(2),
+    FAVORITE(3)
+    ;
 
     companion object {
         private val VALUES = values()

@@ -9,6 +9,12 @@
             android:title="home" />
 
         <item
+            android:id="@+id/nav_fav"
+            android:title="fav"
+            android:icon="@drawable/ic_star_black_24dp"
+            />
+
+        <item
             android:orderInCategory="1"
             android:id="@+id/nav_5per_page"
             android:icon="@drawable/ic_star_black_24dp"

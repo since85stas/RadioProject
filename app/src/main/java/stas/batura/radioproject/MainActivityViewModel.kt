@@ -176,20 +176,28 @@ class MainActivityViewModel @ViewModelInject constructor(
     }
 
     /**
-     * устанавливаем, что выводится список по номерам, и задаем кол-во на странице
+     * устанавливаем тип вывода списка
+     * @param type тип вывода
+     */
+    fun setPrefsListType(type: ListViewType) {
+        repository.setPrefListType(type)
+    }
+
+    /**
+     * устанавливаем кол-во на странице
      * @param num: число подкастов выводимых на экран
      */
     fun updatePrefPodcastNum(num: Int) {
-        repository.setPrefListType(ListViewType.NUMBER)
+//        repository.setPrefListType(ListViewType.NUMBER)
         repository.setNumPodcsts(num)
     }
 
     /**
-     * устанавливаем, что выводится список по годам, и Год
+     * устанавливаем и Год
      * @param year: год за который выводим список
      */
     fun getPodcasttsInYear(year: Year) {
-        repository.setPrefListType(ListViewType.YEAR)
+//        repository.setPrefListType(ListViewType.YEAR)
         repository.setPrefSelectedYear(year)
     }
 
