@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.control_fragment_new.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.utils.CircleTransform
@@ -169,33 +170,43 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> {
                     true
                 }
+                R.id.nav_fav -> {
+                    mainActivityViewModel.setPrefsListType(ListViewType.FAVORITE)
+                    true
+                }
                 R.id.nav_10per_page -> {
                     mainActivityViewModel.updatePrefPodcastNum(10)
+                    mainActivityViewModel.setPrefsListType(ListViewType.NUMBER)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_20per_page -> {
                     mainActivityViewModel.updatePrefPodcastNum(20)
+                    mainActivityViewModel.setPrefsListType(ListViewType.NUMBER)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2021 -> {
                     mainActivityViewModel.getPodcasttsInYear(Year.Y2021)
+                    mainActivityViewModel.setPrefsListType(ListViewType.YEAR)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2020 -> {
                     mainActivityViewModel.getPodcasttsInYear(Year.Y2020)
+                    mainActivityViewModel.setPrefsListType(ListViewType.YEAR)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2019 -> {
                     mainActivityViewModel.getPodcasttsInYear(Year.Y2019)
+                    mainActivityViewModel.setPrefsListType(ListViewType.YEAR)
                     drawer_layout.closeDrawers()
                     true
                 }
                 R.id.nav_year_2018 -> {
                     mainActivityViewModel.getPodcasttsInYear(Year.Y2018)
+                    mainActivityViewModel.setPrefsListType(ListViewType.YEAR)
                     drawer_layout.closeDrawers()
                     true
                 }

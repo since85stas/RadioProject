@@ -36,8 +36,10 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
         flatMapLatest { loadInfo ->
             if (loadInfo.listType == ListViewType.YEAR) {
                 repository.yearTypeList()
-            } else {
+            } else if(loadInfo.listType == ListViewType.NUMBER){
                 repository.numberTypeList(loadInfo.lastNumb)
+            } else {
+                repository.favTypeList()
             }
         }.asLiveData()
 
