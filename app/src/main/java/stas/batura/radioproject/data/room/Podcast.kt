@@ -58,7 +58,9 @@ data class Podcast(
 
     var redraw: Int = 0,
 
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+
+    var savedStatus: Byte = 0
 
 //    var localImageUrl: String? = null
 ) {
@@ -144,6 +146,13 @@ class CategoryDataConverter {
         return gson.fromJson(value, type)
     }
 
+}
+
+enum class SavedStatus(status: Byte) {
+    NOT_SAVED(0),
+    SAVED(1),
+    LOADING(2),
+    ERROR(3)
 }
 
 //class BodyDataConverter {
