@@ -100,6 +100,7 @@
                     />
 
                 <ImageView
+                    android:id="@+id/favorButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_favorite_border_24"
@@ -123,6 +124,16 @@
                     >
                 </ImageView>
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_cloud_download_24"
+                    app:layout_constraintLeft_toRightOf="@id/favorButton"
+                    app:layout_constraintTop_toBottomOf="@id/titleText"
+                    android:layout_margin="12dp"
+
+                    >
+                </ImageView>
 <!--                <TextView-->
 <!--                    urlBind="@{podcast}"-->
 <!--                    android:layout_width="0dp"-->

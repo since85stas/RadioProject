@@ -15,6 +15,7 @@ import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.PodcastLoadInfo
 import stas.batura.radioproject.data.net.TimeLabel
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.data.room.SavedStatus
 import stas.batura.radioproject.ui.podcastlist.PodcastListViewModel
 import java.text.SimpleDateFormat
 
@@ -146,13 +147,22 @@ fun ImageView.favoriteEnebleVisibility(podcast: Podcast) {
     if (podcast.isFavorite) {
         visibility = View.VISIBLE
     } else {
-        visibility = View.GONE
+        visibility = View.INVISIBLE
     }
 }
 
 @BindingAdapter("favoriteDisableVisibility")
 fun ImageView.favoriteDisableVisibility(podcast: Podcast) {
     if (!podcast.isFavorite) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.INVISIBLE
+    }
+}
+
+@BindingAdapter("downloadedVisibility")
+fun ImageView.downloadedVisibility(podcast: Podcast) {
+    if (podcast.savedStatus == SavedStatus.NOT_SAVED) {
         visibility = View.VISIBLE
     } else {
         visibility = View.GONE
