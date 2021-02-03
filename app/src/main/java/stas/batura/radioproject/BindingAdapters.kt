@@ -165,6 +165,15 @@ fun ImageView.downloadedVisibility(podcast: Podcast) {
     if (podcast.savedStatus == SavedStatus.NOT_SAVED) {
         visibility = View.VISIBLE
     } else {
-        visibility = View.GONE
+        visibility = View.INVISIBLE
+    }
+}
+
+@BindingAdapter("deleteVisibility")
+fun ImageView.deleteVisibility(podcast: Podcast) {
+    if (podcast.savedStatus == SavedStatus.SAVED) {
+        visibility = View.VISIBLE
+    } else {
+        visibility = View.INVISIBLE
     }
 }
