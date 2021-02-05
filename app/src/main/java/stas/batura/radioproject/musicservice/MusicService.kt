@@ -48,6 +48,9 @@ class MusicService : LifecycleService() {
     @Inject
     lateinit var repositoryS: IRepository
 
+    @Inject
+    lateinit var dataSourceFactory: DataSource.Factory
+
     private val TAG = MusicService::class.java.simpleName
 
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
@@ -83,7 +86,7 @@ class MusicService : LifecycleService() {
 
     var exoPlayer: SimpleExoPlayer? = null
     private var extractorsFactory: ExtractorsFactory? = null
-    private var dataSourceFactory: DataSource.Factory? = null
+//    private var dataSourceFactory: DataSource.Factory? = null
 
 //    lateinit var musicRepository: MusicRepository
 
@@ -181,14 +184,14 @@ class MusicService : LifecycleService() {
         // добавляем слушатель
         exoPlayer!!.addListener(exoPlayerListener)
 
-        val httpDataSourceFactory: DataSource.Factory =
-            OkHttpDataSourceFactory(
-                OkHttpClient(),
-                Util.getUserAgent(
-                    this,
-                    getString(R.string.app_name)
-                )
-            )
+//        val httpDataSourceFactory: DataSource.Factory =
+//            OkHttpDataSourceFactory(
+//                OkHttpClient(),
+//                Util.getUserAgent(
+//                    this,
+//                    getString(R.string.app_name)
+//                )
+//            )
 
 //        val testUri =
 //            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
@@ -207,17 +210,17 @@ class MusicService : LifecycleService() {
 //        val factory =
 //            DataSource.Factory { fileDataSource }
 
-         cache =
-            SimpleCache(
-                File(this.cacheDir.absolutePath + "/exoplayer"),
-                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 100)
-            ) // 100 Mb max
-
-        dataSourceFactory = CacheDataSourceFactory(
-            cache,
-            httpDataSourceFactory,
-            CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-        )
+//         cache =
+//            SimpleCache(
+//                File(this.cacheDir.absolutePath + "/exoplayer"),
+//                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 100)
+//            ) // 100 Mb max
+//
+//        dataSourceFactory = CacheDataSourceFactory(
+//            cache,
+//            httpDataSourceFactory,
+//            CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
+//        )
 
 //        val audioSource: MediaSource = ExtractorMediaSource(
 //            fileDataSource!!.getUri(),
@@ -225,6 +228,8 @@ class MusicService : LifecycleService() {
 //        )
 
         extractorsFactory = DefaultExtractorsFactory()
+
+        Log.d(TAG, "onCreate: " + dataSourceFactory)
 
     }
 
