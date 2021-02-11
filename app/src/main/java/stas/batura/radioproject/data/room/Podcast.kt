@@ -6,6 +6,7 @@ import androidx.room.TypeConverter
 import com.google.android.exoplayer2.Timeline
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.DateTime
 import stas.batura.radioproject.data.dataUtils.TIME_WEEK
 import stas.batura.radioproject.data.dataUtils.getLinksFromHtml
@@ -58,7 +59,9 @@ data class Podcast(
 
     var redraw: Int = 0,
 
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+
+    var savedStatus: SavedStatus = SavedStatus.NOT_SAVED
 
 //    var localImageUrl: String? = null
 ) {
@@ -146,31 +149,40 @@ class CategoryDataConverter {
 
 }
 
-//class BodyDataConverter {
-//
-//    @TypeConverter()
-//    fun fromBodyLangList(value: List<String>?): String? {
-//        if (value != null) {
-//            val gson = Gson()
-//            val type = object : TypeToken<List<String>>() {}.type
-//            return gson.toJson(value, type)
-//        } else {
-//            return null
-//        }
-//    }
-//
-//    @TypeConverter
-//    fun toBodyLangList(value: String?): List<String>? {
-//        if (value != null) {
-//            val gson = Gson()
-//            val type = object : TypeToken<List<String>>() {}.type
-//            return gson.fromJson(value, type)
-//        } else {
-//            return null
-//        }
-//    }
-//
-//}
+enum class SavedStatus(status: Byte) {
+    NOT_SAVED(0),
+    SAVED(1),
+    LOADING(2),
+    ERROR(3);
+
+    companion object {
+        private val VALUES = SavedStatus.values()
+
+        fun getByValue(value: Byte) = VALUES.firstOrNull { it.ordinal.toByte() == value }
+    }
+}
+
+class SavedStatusConverter {
+
+    @TypeConverter()
+    fun fromStatusToByte(status: SavedStatus?): Byte? {
+        if (status != null) {
+            return status.ordinal.toByte()
+        } else {
+            return null
+        }
+    }
+
+    @TypeConverter
+    fun fromByteToStatus(status: Byte?): SavedStatus? {
+        if (status != null) {
+            return SavedStatus.getByValue(status)
+        } else {
+            return null
+        }
+    }
+
+}
 
 
 

@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.data.room.SavedStatus
 import java.net.URL
 
 @Dao
@@ -77,4 +78,7 @@ interface RadioDao {
 
     @Query("UPDATE podcast_table SET redraw = redraw +1 WHERE podcastId =:podcastId")
     suspend fun updateRedrawField(podcastId: Int)
+
+    @Query("UPDATE podcast_table SET savedStatus= :savedStatus WHERE podcastId =:podcastId")
+    suspend fun updatePodcastSavedStatus(podcastId: Int ,savedStatus: SavedStatus)
 }

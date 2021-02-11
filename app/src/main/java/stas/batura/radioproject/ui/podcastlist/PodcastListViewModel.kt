@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.data.room.SavedStatus
 
 @ExperimentalCoroutinesApi
 class PodcastListViewModel @ViewModelInject constructor(val repository: IRepository): ViewModel() {
@@ -113,5 +114,29 @@ class PodcastListViewModel @ViewModelInject constructor(val repository: IReposit
      */
     fun changeFavoritePodcastStatus(podcastId: Int, status: Boolean) {
         repository.setFavoriteStatus(podcastId, status)
+    }
+
+    /**
+     * отмечаем что подкаст сохранен
+     * @param podcastId номер подкаста
+     */
+    fun changePodcastToSavedStatus(podcastId: Int) {
+        repository.updatePodcastSavedStatus(podcastId, SavedStatus.SAVED)
+    }
+
+    /**
+     * отмечаем что подкаст сохранен
+     * @param podcastId номер подкаста
+     */
+    fun changePodcastToNotSavedStatus(podcastId: Int) {
+        repository.updatePodcastSavedStatus(podcastId, SavedStatus.NOT_SAVED)
+    }
+
+    /**
+     * отмечаем что подкаст сохранен
+     * @param podcastId номер подкаста
+     */
+    fun changePodcastToLoadStatus(podcastId: Int) {
+        repository.updatePodcastSavedStatus(podcastId, SavedStatus.LOADING)
     }
 }

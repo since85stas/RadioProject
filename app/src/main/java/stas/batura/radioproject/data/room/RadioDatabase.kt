@@ -31,9 +31,10 @@ import ru.batura.stat.batchat.repository.room.RadioDao
  * This pattern is pretty much the same for any database,
  * so you can reuse it.
  */
-@Database(entities =[Podcast::class], version = 20, exportSchema = false)
+@Database(entities =[Podcast::class], version = 21, exportSchema = false)
 @TypeConverters(CategoryDataConverter::class,
-    TimeLabelsDataConverter::class
+    TimeLabelsDataConverter::class,
+    SavedStatusConverter::class
    )
 abstract class RadioDatabase : RoomDatabase() {
 

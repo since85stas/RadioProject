@@ -3,6 +3,7 @@ package stas.batura.radioproject.data
 import kotlinx.coroutines.flow.Flow
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.data.room.SavedStatus
 
 interface IRepository {
 
@@ -48,6 +49,7 @@ interface IRepository {
 
     fun setFavoriteStatus(podcastId: Int, status: Boolean)
 
+    fun updatePodcastSavedStatus(podcastId: Int,savedStatus: SavedStatus)
 }
 
 enum class ListViewType(type: Int) {

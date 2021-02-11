@@ -9,6 +9,7 @@ import stas.batura.radioproject.UserPreferences
 import stas.batura.radioproject.data.dataUtils.Year
 import stas.batura.radioproject.data.net.IRetrofit
 import stas.batura.radioproject.data.room.Podcast
+import stas.batura.radioproject.data.room.SavedStatus
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -392,6 +393,12 @@ class Repository @Inject constructor() : IRepository {
             PodcastLoadInfo(num, time)
     }
 
+    /**
+     * сохраняем и переходим на след диаппозон показываемых подкастов
+     * @param num - метка если равна
+     *             1: то переходим на диапозон выше
+     *             -1: то переходим на диапозон ниже
+     */
     override suspend fun changeLastPnumberByValue(num: Int) {
         val lastId = getPrefLastPnumb().first()
         val maxId = getPrefMaxPnumb().first()
@@ -408,7 +415,7 @@ class Repository @Inject constructor() : IRepository {
     }
 
     /**
-     * получаем выбранный для отображения год
+     * проверяем первый ли это запуск
      */
     fun isFirstOpen(): Flow<Boolean> {
         return protoData.data.map {
@@ -416,17 +423,38 @@ class Repository @Inject constructor() : IRepository {
         }
     }
 
+    /**
+     * устанавливаем после первого открытия программы
+     * @param boolean если True - значит уже запустили
+     */
     suspend fun setFistOpen(boolean: Boolean) {
             protoData.updateData { t: UserPreferences ->
                 t.toBuilder().setIsNotFirstOpen(boolean).build()
             }
     }
 
+    /**
+     * отмечаем подкаст в спимок избранных или из него
+     * @param podcastId номер подкаста
+     * @param status в избранное или нет
+     */
     override fun setFavoriteStatus(podcastId: Int, status: Boolean) {
         repScope.launch {
             radioDao.setPodFavoriteStatus(podcastId, status)
         }
     }
+
+    /**
+     * отмечаем сохранен подкаст или нет
+     * @param podcastId номер подкаста
+     * @param status статус сохранения подкаста
+     */
+    override fun updatePodcastSavedStatus(podcastId: Int, savedStatus: SavedStatus) {
+        repScope.launch {
+            radioDao.updatePodcastSavedStatus(podcastId, savedStatus)
+        }
+    }
+
 }
 
 data class PodcastLoadInfo(
