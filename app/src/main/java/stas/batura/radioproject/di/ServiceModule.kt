@@ -4,6 +4,8 @@ import android.content.Context
 import android.provider.Settings.Global.getString
 import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
@@ -72,4 +74,8 @@ class MusicServiceUtils
         return MediaSessionCompat(context,"Music Service")
     }
 
+    @Provides
+    fun providesExtractorsFactory() : ExtractorsFactory {
+        return DefaultExtractorsFactory()
+    }
 }
