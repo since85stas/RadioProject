@@ -2,6 +2,7 @@ package stas.batura.radioproject.di
 
 import android.content.Context
 import android.provider.Settings.Global.getString
+import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
@@ -22,6 +23,7 @@ import stas.batura.radioproject.R
 import stas.batura.radioproject.data.IRepository
 import stas.batura.radioproject.data.Repository
 import java.io.File
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ServiceComponent::class)
@@ -62,6 +64,12 @@ class MusicServiceUtils
         )
 
         return dataSourceFactory
+    }
+
+    @Provides
+    fun providesMediaSession(@ApplicationContext context: Context): MediaSessionCompat {
+
+        return MediaSessionCompat(context,"Music Service")
     }
 
 }

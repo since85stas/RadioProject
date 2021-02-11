@@ -51,6 +51,9 @@ class MusicService : LifecycleService() {
     @Inject
     lateinit var dataSourceFactory: DataSource.Factory
 
+    @Inject
+    lateinit var mediaSession: MediaSessionCompat
+
     private val TAG = MusicService::class.java.simpleName
 
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
@@ -77,7 +80,7 @@ class MusicService : LifecycleService() {
                     or PlaybackStateCompat.ACTION_PLAY_PAUSE
         )
 
-    private var mediaSession: MediaSessionCompat? = null
+//    private var mediaSession: MediaSessionCompat? = null
 
     private var audioManager: AudioManager? = null
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -142,7 +145,7 @@ class MusicService : LifecycleService() {
         }
 
         // создаем и настраиваем медиа сессию
-        mediaSession = MediaSessionCompat(this,"Music Service")
+//        mediaSession = MediaSessionCompat(this,"Music Service")
         mediaSession!!.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
         mediaSession!!.setCallback(mediaSessionCallback)
 
@@ -466,7 +469,6 @@ class MusicService : LifecycleService() {
             Log.d(TAG, "onPlayerStateChanged: $playbackState")
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
 //                mediaSessionCallback.onSkipToNext()
-                //TODO: сделать обработку конца проигрывания
             }           else  if (playbackState == ExoPlayer.STATE_READY ) {
                 val realDurationMillis = exoPlayer!!.duration
 
