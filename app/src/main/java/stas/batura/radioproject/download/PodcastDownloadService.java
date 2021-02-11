@@ -16,9 +16,14 @@ import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import stas.batura.radioproject.R;
 
 public class PodcastDownloadService {
+
+    @Inject
+    DownloadManager downloadManager;
 
 //    private static final int JOB_ID = 1;
 //    private static final int FOREGROUND_NOTIFICATION_ID = 1;
