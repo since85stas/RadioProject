@@ -35,14 +35,14 @@
             </intent-filter>
         </service>
 
-        <service android:name="."
-            android:exported="false">
-            <!-- This is needed for Scheduler -->
-            <intent-filter>
-                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </service>
+<!--        <service android:name="."-->
+<!--            android:exported="false">-->
+<!--            &lt;!&ndash; This is needed for Scheduler &ndash;&gt;-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.android.exoplayer.downloadService.action.RESTART"/>-->
+<!--                <category android:name="android.intent.category.DEFAULT"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
         <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>

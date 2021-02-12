@@ -48,6 +48,15 @@ class MusicService : LifecycleService() {
     @Inject
     lateinit var repositoryS: IRepository
 
+    @Inject
+    lateinit var dataSourceFactory: DataSource.Factory
+
+    @Inject
+    lateinit var mediaSession: MediaSessionCompat
+
+    @Inject
+    lateinit var extractorsFactory: ExtractorsFactory
+
     private val TAG = MusicService::class.java.simpleName
 
     private val NOTIF_CHANNEL_NAME = "audio.stas.chanel"
@@ -74,7 +83,7 @@ class MusicService : LifecycleService() {
                     or PlaybackStateCompat.ACTION_PLAY_PAUSE
         )
 
-    private var mediaSession: MediaSessionCompat? = null
+//    private var mediaSession: MediaSessionCompat? = null
 
     private var audioManager: AudioManager? = null
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -82,8 +91,8 @@ class MusicService : LifecycleService() {
     private var isAudioFocusRequested = false
 
     var exoPlayer: SimpleExoPlayer? = null
-    private var extractorsFactory: ExtractorsFactory? = null
-    private var dataSourceFactory: DataSource.Factory? = null
+//    private var extractorsFactory: ExtractorsFactory? = null
+//    private var dataSourceFactory: DataSource.Factory? = null
 
 //    lateinit var musicRepository: MusicRepository
 
@@ -101,9 +110,6 @@ class MusicService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-
-//        musicRepository = MusicRepository(InjectorUtils.provideRep(application))
-//        musicRepository = InjectorUtils.provideMusicRep(application)
 
         println("Music service created")
 
@@ -139,14 +145,13 @@ class MusicService : LifecycleService() {
         }
 
         // создаем и настраиваем медиа сессию
-        mediaSession = MediaSessionCompat(this,"Music Service")
-        mediaSession!!.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
-        mediaSession!!.setCallback(mediaSessionCallback)
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+        mediaSession.setCallback(mediaSessionCallback)
 
         val activityIntent = Intent(applicationContext, MainActivity :: class.java)
 
         // настраиваем активити
-        mediaSession!!.setSessionActivity(
+        mediaSession.setSessionActivity(
             PendingIntent.getActivity(
                 applicationContext,
                 0,
@@ -181,50 +186,9 @@ class MusicService : LifecycleService() {
         // добавляем слушатель
         exoPlayer!!.addListener(exoPlayerListener)
 
-        val httpDataSourceFactory: DataSource.Factory =
-            OkHttpDataSourceFactory(
-                OkHttpClient(),
-                Util.getUserAgent(
-                    this,
-                    getString(R.string.app_name)
-                )
-            )
+//        extractorsFactory =
 
-//        val testUri =
-//            Uri.fromFile(File(Environment.getExternalStorageDirectory().absolutePath +
-//                    "/Music/Moonspell/Studio and Compilation/1995-Wolfheart (Original 1CD Release)/02 Love Crimes.mp3"))
-//
-//        val dataSpec = DataSpec(testUri)
-//        fileDataSource =
-//            FileDataSource()
-//        try {
-//            fileDataSource!!.open(dataSpec)
-//        } catch (e: FileDataSourceException) {
-//            e.printStackTrace()
-//        }
-//
-//
-//        val factory =
-//            DataSource.Factory { fileDataSource }
-
-         cache =
-            SimpleCache(
-                File(this.cacheDir.absolutePath + "/exoplayer"),
-                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 100)
-            ) // 100 Mb max
-
-        dataSourceFactory = CacheDataSourceFactory(
-            cache,
-            httpDataSourceFactory,
-            CacheDataSource.FLAG_BLOCK_ON_CACHE or CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-        )
-
-//        val audioSource: MediaSource = ExtractorMediaSource(
-//            fileDataSource!!.getUri(),
-//            factory, DefaultExtractorsFactory(), null, null
-//        )
-
-        extractorsFactory = DefaultExtractorsFactory()
+        Log.d(TAG, "onCreate: " + dataSourceFactory)
 
     }
 
@@ -461,7 +425,6 @@ class MusicService : LifecycleService() {
             Log.d(TAG, "onPlayerStateChanged: $playbackState")
             if (playWhenReady && playbackState == ExoPlayer.STATE_ENDED) {
 //                mediaSessionCallback.onSkipToNext()
-                //TODO: сделать обработку конца проигрывания
             }           else  if (playbackState == ExoPlayer.STATE_READY ) {
                 val realDurationMillis = exoPlayer!!.duration
 
