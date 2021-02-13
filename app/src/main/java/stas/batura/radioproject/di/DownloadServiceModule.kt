@@ -1,8 +1,10 @@
 package stas.batura.radioproject.di
 
 import android.content.Context
+import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
 import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.ui.DownloadNotificationHelper
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.Cache
@@ -13,9 +15,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import stas.batura.radioproject.download.PodcastDownloadService.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import java.io.File
 import java.util.concurrent.Executor
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 private const val DOWNLOAD_CONTENT_DIRECTORY = "downloads"
@@ -28,10 +32,16 @@ class DownloadServiceModule() {
     lateinit var dataSourceFactory: DataSource.Factory
 
     @Provides
+    @Singleton
+    fun provideDatabseProvider(@ApplicationContext context: Context): ExoDatabaseProvider {
+        return ExoDatabaseProvider(context)
+    }
+
+    @Provides
     fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager {
 
         // Note: This should be a singleton in your app.
-        val databaseProvider = ExoDatabaseProvider(context)
+        val databaseProvider = provideDatabseProvider(context)
 
         // A download cache should not evict media, so should use a NoopCacheEvictor.
         val downloadCache = getDownloadCache(context, databaseProvider)
@@ -69,10 +79,17 @@ class DownloadServiceModule() {
         return downloadCache
     }
 
+    @Provides
+    fun providetDownloadNotificationHelper(@ApplicationContext context: Context): DownloadNotificationHelper {
+        return DownloadNotificationHelper(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
+    }
+
     @Synchronized
     private fun getDownloadDirectory(context: Context): File? {
 
         return context.filesDir
     }
+
+
 
 }
