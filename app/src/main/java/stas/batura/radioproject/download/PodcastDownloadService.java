@@ -2,6 +2,7 @@ package stas.batura.radioproject.download;
 
 import android.app.Notification;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,8 @@ import stas.batura.radioproject.R;
 
 public class PodcastDownloadService extends DownloadService {
 
+    private static final String TAG = "PodcastDownloadService";
+
     @Inject
     DownloadManager downloadManager;
 
@@ -38,7 +41,13 @@ public class PodcastDownloadService extends DownloadService {
                 DEFAULT_FOREGROUND_NOTIFICATION_UPDATE_INTERVAL,
                 DOWNLOAD_NOTIFICATION_CHANNEL_ID,
                 R.string.exo_download_notification_channel_name
-             );
+        );
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "onCreate: ");
     }
 
     @Override
@@ -62,6 +71,7 @@ public class PodcastDownloadService extends DownloadService {
     protected Notification getForegroundNotification(@NonNull List<Download> downloads) {
         return notificationHelper
                 .buildProgressNotification(
+                        this,
                         R.drawable.ic_notifications_black_24dp,
                         /* message= */ null,
                         "Downl",
@@ -74,7 +84,7 @@ public class PodcastDownloadService extends DownloadService {
      * <p>This helper will outlive the lifespan of a single instance of {@link PodcastDownloadService}.
      * It is static to avoid leaking the first {@link PodcastDownloadService} instance.
      */
-    private static final class TerminalStateNotificationHelper implements DownloadManager.Listener {
+    private static final class TerminalStateNotificationHelper implements DownloadManager.Listener, stas.batura.radioproject.download.TerminalStateNotificationHelper {
 
         private final Context context;
         private final DownloadNotificationHelper notificationHelper;
@@ -89,18 +99,19 @@ public class PodcastDownloadService extends DownloadService {
         }
 
         @Override
-        public void onDownloadChanged(
-                DownloadManager downloadManager, Download download) {
+        public void onDownloadChanged(DownloadManager downloadManager, Download download, @Nullable Exception finalException) {
             Notification notification;
             if (download.state == Download.STATE_COMPLETED) {
                 notification =
                         notificationHelper.buildDownloadCompletedNotification(
+                                context,
                                 R.drawable.ic_pause_black_24dp,
                                 /* contentIntent= */ null,
                                 Util.fromUtf8Bytes(download.request.data));
             } else if (download.state == Download.STATE_FAILED) {
                 notification =
                         notificationHelper.buildDownloadFailedNotification(
+                                context,
                                 R.drawable.ic_baseline_cloud_download_24,
                                 /* contentIntent= */ null,
                                 Util.fromUtf8Bytes(download.request.data));
@@ -110,4 +121,29 @@ public class PodcastDownloadService extends DownloadService {
             NotificationUtil.setNotification(context, nextNotificationId++, notification);
         }
     }
+
+    //        @Override
+//        public void onDownloadChanged(
+//                DownloadManager downloadManager, Download download) {
+//            Notification notification;
+//            if (download.state == Download.STATE_COMPLETED) {
+//                notification =
+//                        notificationHelper.buildDownloadCompletedNotification(
+//                                context,
+//                                R.drawable.ic_pause_black_24dp,
+//                                /* contentIntent= */ null,
+//                                Util.fromUtf8Bytes(download.request.data));
+//            } else if (download.state == Download.STATE_FAILED) {
+//                notification =
+//                        notificationHelper.buildDownloadFailedNotification(
+//                                context,
+//                                R.drawable.ic_baseline_cloud_download_24,
+//                                /* contentIntent= */ null,
+//                                Util.fromUtf8Bytes(download.request.data));
+//            } else {
+//                return;
+//            }
+//            NotificationUtil.setNotification(context, nextNotificationId++, notification);
+//        }
+
 }

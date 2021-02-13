@@ -38,13 +38,19 @@ class DownloadServiceModule() {
     }
 
     @Provides
+    @Singleton
+    fun provideExoCache(@ApplicationContext context: Context): Cache? {
+        return getDownloadCache(context, provideDatabseProvider(context))
+    }
+
+    @Provides
     fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager {
 
         // Note: This should be a singleton in your app.
         val databaseProvider = provideDatabseProvider(context)
 
         // A download cache should not evict media, so should use a NoopCacheEvictor.
-        val downloadCache = getDownloadCache(context, databaseProvider)
+        val downloadCache = provideExoCache(context)
 
 
         // Choose an executor for downloading data. Using Runnable::run will cause each download task to
@@ -58,7 +64,7 @@ class DownloadServiceModule() {
         val downloadManager = DownloadManager(
             context,
             databaseProvider,
-            downloadCache,
+            downloadCache!!,
             dataSourceFactory,
         )
         return downloadManager
