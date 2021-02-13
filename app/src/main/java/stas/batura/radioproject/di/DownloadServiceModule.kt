@@ -28,9 +28,6 @@ private const val DOWNLOAD_CONTENT_DIRECTORY = "downloads"
 @InstallIn(ApplicationComponent::class)
 class DownloadServiceModule() {
 
-    @Inject
-    lateinit var dataSourceFactory: DataSource.Factory
-
     @Provides
     @Singleton
     fun provideDatabseProvider(@ApplicationContext context: Context): ExoDatabaseProvider {
@@ -39,40 +36,10 @@ class DownloadServiceModule() {
 
     @Provides
     @Singleton
-    fun provideExoCache(@ApplicationContext context: Context): Cache? {
-        return getDownloadCache(context, provideDatabseProvider(context))
-    }
-
-    @Provides
-    fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager {
-
-        // Note: This should be a singleton in your app.
-        val databaseProvider = provideDatabseProvider(context)
-
-        // A download cache should not evict media, so should use a NoopCacheEvictor.
-        val downloadCache = provideExoCache(context)
-
-
-        // Choose an executor for downloading data. Using Runnable::run will cause each download task to
-        // download data on its own thread. Passing an executor that uses multiple threads will speed up
-        // download tasks that can be split into smaller parts for parallel execution. Applications that
-        // already have an executor for background downloads may wish to reuse their existing executor.
-        val downloadExecutor = Executor { obj: Runnable -> obj.run() }
-
-
-        // Create the download manager.
-        val downloadManager = DownloadManager(
-            context,
-            databaseProvider,
-            downloadCache!!,
-            dataSourceFactory,
-        )
-        return downloadManager
-    }
-
-
     @Synchronized
-    private fun getDownloadCache(context: Context, provider: ExoDatabaseProvider): Cache? {
+    fun provideExoCache(
+        @ApplicationContext context: Context,
+        provider: ExoDatabaseProvider): Cache {
         val downloadContentDirectory: File = File(
             getDownloadDirectory(context),
             DOWNLOAD_CONTENT_DIRECTORY
@@ -86,13 +53,59 @@ class DownloadServiceModule() {
     }
 
     @Provides
+    fun provideDownloadManager(
+        @ApplicationContext context: Context,
+        dataSourceFactory: DataSource.Factory,
+        downloadCache: Cache,
+        databaseProvider: ExoDatabaseProvider
+        ): DownloadManager {
+
+        // Note: This should be a singleton in your app.
+//        val databaseProvider = provideDatabseProvider(context)
+
+        // A download cache should not evict media, so should use a NoopCacheEvictor.
+//        val downloadCache = provideExoCache(context)
+
+
+        // Choose an executor for downloading data. Using Runnable::run will cause each download task to
+        // download data on its own thread. Passing an executor that uses multiple threads will speed up
+        // download tasks that can be split into smaller parts for parallel execution. Applications that
+        // already have an executor for background downloads may wish to reuse their existing executor.
+        val downloadExecutor = Executor { obj: Runnable -> obj.run() }
+
+
+        // Create the download manager.
+        val downloadManager = DownloadManager(
+            context,
+            databaseProvider,
+            downloadCache,
+            dataSourceFactory,
+        )
+        return downloadManager
+    }
+
+
+//    @Synchronized
+//    private fun getDownloadCache(context: Context, provider: ExoDatabaseProvider): Cache {
+//        val downloadContentDirectory: File = File(
+//            getDownloadDirectory(context),
+//            DOWNLOAD_CONTENT_DIRECTORY
+//        )
+//        val downloadCache = SimpleCache(
+//            downloadContentDirectory,
+//            NoOpCacheEvictor(),
+//            provider
+//        )
+//        return downloadCache
+//    }
+
+    @Provides
     fun providetDownloadNotificationHelper(@ApplicationContext context: Context): DownloadNotificationHelper {
         return DownloadNotificationHelper(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
     }
 
     @Synchronized
     private fun getDownloadDirectory(context: Context): File? {
-
         return context.filesDir
     }
 
