@@ -3,6 +3,7 @@ package stas.batura.radioproject
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
@@ -126,18 +127,22 @@ class MainActivity : AppCompatActivity() {
         try {
             DownloadService.start(this, PodcastDownloadService::class.java)
             Log.i(TAG, "onCreate: starting download serv")
+            testDownload()
         } catch (e: IllegalStateException) {
             DownloadService.startForeground(this, PodcastDownloadService::class.java)
             Log.i(TAG, "onCreate: $e")
         }
 
-
     }
 
 
     private fun testDownload() {
-//        val downloadRequest: DownloadRequest = DownloadRequest.Builder("test1", "uri").build()
-//        )
+        val downloadRequest: DownloadRequest = DownloadRequest.Builder("test3", Uri.parse("http://cdn.radio-t.com/rt_podcast669.mp3")).build()
+        DownloadService.sendAddDownload(
+            this,
+            PodcastDownloadService::class.java,
+                    downloadRequest,
+            /* foreground= */ false)
     }
 
 

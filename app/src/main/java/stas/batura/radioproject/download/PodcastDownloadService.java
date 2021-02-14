@@ -19,8 +19,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import stas.batura.radioproject.R;
 
+@AndroidEntryPoint
 public class PodcastDownloadService extends DownloadService {
 
     private static final String TAG = "PodcastDownloadService";
@@ -102,6 +104,7 @@ public class PodcastDownloadService extends DownloadService {
         public void onDownloadChanged(DownloadManager downloadManager, Download download, @Nullable Exception finalException) {
             Notification notification;
             if (download.state == Download.STATE_COMPLETED) {
+                Log.d(TAG, "onDownloadChanged: state" + Download.STATE_COMPLETED);
                 notification =
                         notificationHelper.buildDownloadCompletedNotification(
                                 context,
@@ -109,13 +112,24 @@ public class PodcastDownloadService extends DownloadService {
                                 /* contentIntent= */ null,
                                 Util.fromUtf8Bytes(download.request.data));
             } else if (download.state == Download.STATE_FAILED) {
+                Log.d(TAG, "onDownloadChanged: state" + Download.STATE_FAILED);
                 notification =
                         notificationHelper.buildDownloadFailedNotification(
                                 context,
                                 R.drawable.ic_baseline_cloud_download_24,
                                 /* contentIntent= */ null,
                                 Util.fromUtf8Bytes(download.request.data));
-            } else {
+            } else if (download.state == Download.STATE_DOWNLOADING) {
+                Log.d(TAG, "onDownloadChanged: state" + Download.STATE_DOWNLOADING);
+                return;
+            } else if (download.state == Download.STATE_STOPPED) {
+                Log.d(TAG, "onDownloadChanged: state" + Download.STATE_STOPPED);
+                return;
+            } else if (download.state == Download.STOP_REASON_NONE) {
+                Log.d(TAG, "onDownloadChanged: state" + Download.STOP_REASON_NONE);
+                return;
+            }
+            else {
                 return;
             }
             NotificationUtil.setNotification(context, nextNotificationId++, notification);

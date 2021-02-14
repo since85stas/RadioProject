@@ -38,7 +38,8 @@ class MusicServiceUtils
 {
 
     @Provides
-    fun provideDatabaseFactory (@ApplicationContext context: Context, newCache: Cache): DataSource.Factory {
+    fun provideDatabaseFactory (@ApplicationContext context: Context,
+                                newCache: Cache): DataSource.Factory {
 
         val httpDataSourceFactory: DataSource.Factory =
             OkHttpDataSourceFactory(
@@ -48,13 +49,6 @@ class MusicServiceUtils
                     context.getString(R.string.app_name)
                 )
             )
-//
-//
-//        val cache =
-//            SimpleCache(
-//                File(context.cacheDir.absolutePath + "/exoplayer"),
-//                LeastRecentlyUsedCacheEvictor(1024 * 1024 * 100)
-//            ) // 100 Mb max
 
         val dataSourceFactory = CacheDataSourceFactory(
             newCache,
@@ -67,7 +61,6 @@ class MusicServiceUtils
 
     @Provides
     fun providesMediaSession(@ApplicationContext context: Context): MediaSessionCompat {
-
         return MediaSessionCompat(context,"Music Service")
     }
 
