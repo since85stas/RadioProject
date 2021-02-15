@@ -3,15 +3,13 @@ package stas.batura.radioproject
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +20,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.offline.DownloadHelper
+import com.google.android.exoplayer2.offline.DownloadRequest
+import com.google.android.exoplayer2.offline.DownloadService
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,6 +30,7 @@ import kotlinx.android.synthetic.main.control_fragment_new.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
+import stas.batura.radioproject.download.PodcastDownloadService
 import stas.batura.radioproject.musicservice.MusicService
 import stas.batura.radioproject.utils.CircleTransform
 
@@ -56,8 +58,11 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_podcastlist), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_podcastlist
+            ), drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -71,14 +76,14 @@ class MainActivity : AppCompatActivity() {
 //        bindings.mainViewModel = mainActivityViewModel
 
         // слушаем когда запускать сервис
-        mainActivityViewModel.createServiceListner.observe(this) {it ->
+        mainActivityViewModel.createServiceListner.observe(this) { it ->
             if (it) {
                 mainActivityViewModel.initMusicService()
             }
         }
 
         // слушаем когда сервис успешно коннектится
-        mainActivityViewModel.serviceConnection.observe(this) {it ->
+        mainActivityViewModel.serviceConnection.observe(this) { it ->
             if (it != null) {
                 Log.d(TAG, "onCreate: " + it.toString())
                 bindCurrentService(it)
@@ -92,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 //                    Log.d(TAG, "onCreate: play spinner visible")
                     mainActivityViewModel.playAnimVisible()
                     mainActivityViewModel.redrawItemById()
-                } else if (it.state == PlaybackStateCompat.STATE_PAUSED ) {
+                } else if (it.state == PlaybackStateCompat.STATE_PAUSED) {
 //                    Log.d(TAG, "onCreate: play spinner not visible")
                     mainActivityViewModel.playAnimNotVisible()
                     mainActivityViewModel.redrawItemById()
@@ -113,10 +118,32 @@ class MainActivity : AppCompatActivity() {
 
         // описываем nav drawer
         createSectionsInMenu()
+
+
+        // Start the download service if it should be running but it's not currently.
+        // Starting the service in the foreground causes notification flicker if there is no scheduled
+        // action. Starting it in the background throws an exception if the app is in the background too
+        // (e.g. if device screen is locked).
+        try {
+            DownloadService.start(this, PodcastDownloadService::class.java)
+            Log.i(TAG, "onCreate: starting download serv")
+            testDownload()
+        } catch (e: IllegalStateException) {
+            DownloadService.startForeground(this, PodcastDownloadService::class.java)
+            Log.i(TAG, "onCreate: $e")
+        }
+
     }
 
 
-
+    private fun testDownload() {
+        val downloadRequest: DownloadRequest = DownloadRequest.Builder("test3", Uri.parse("http://cdn.radio-t.com/rt_podcast669.mp3")).build()
+        DownloadService.sendAddDownload(
+            this,
+            PodcastDownloadService::class.java,
+                    downloadRequest,
+            /* foreground= */ false)
+    }
 
 
     /***
@@ -157,7 +184,8 @@ class MainActivity : AppCompatActivity() {
         bindService(
             Intent(applicationContext!!, MusicService::class.java),
             serviceConnection,
-            Context.BIND_AUTO_CREATE)
+            Context.BIND_AUTO_CREATE
+        )
     }
 
     /**
@@ -165,7 +193,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun createSectionsInMenu() {
 //        // устанавливаем слушатель на нажатие клавиш
-        nav_view.setNavigationItemSelectedListener( (NavigationView.OnNavigationItemSelectedListener {
+        nav_view.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_home -> {
                     true
@@ -212,7 +240,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-        }) )
+        }))
 
     }
 

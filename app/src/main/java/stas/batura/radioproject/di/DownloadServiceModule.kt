@@ -1,8 +1,10 @@
 package stas.batura.radioproject.di
 
 import android.content.Context
+import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
 import com.google.android.exoplayer2.offline.DownloadManager
+import com.google.android.exoplayer2.ui.DownloadNotificationHelper
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.Cache
@@ -13,9 +15,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import stas.batura.radioproject.download.PodcastDownloadService.DOWNLOAD_NOTIFICATION_CHANNEL_ID
 import java.io.File
 import java.util.concurrent.Executor
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 private const val DOWNLOAD_CONTENT_DIRECTORY = "downloads"
@@ -24,17 +28,43 @@ private const val DOWNLOAD_CONTENT_DIRECTORY = "downloads"
 @InstallIn(ApplicationComponent::class)
 class DownloadServiceModule() {
 
-    @Inject
-    lateinit var dataSourceFactory: DataSource.Factory
+    @Provides
+    @Singleton
+    fun provideDatabseProvider(@ApplicationContext context: Context): ExoDatabaseProvider {
+        return ExoDatabaseProvider(context)
+    }
 
     @Provides
-    fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager {
+    @Singleton
+    @Synchronized
+    fun provideExoCache(
+        @ApplicationContext context: Context,
+        provider: ExoDatabaseProvider): Cache {
+        val downloadContentDirectory: File = File(
+            getDownloadDirectory(context),
+            DOWNLOAD_CONTENT_DIRECTORY
+        )
+        val downloadCache = SimpleCache(
+            downloadContentDirectory,
+            NoOpCacheEvictor(),
+            provider
+        )
+        return downloadCache
+    }
+
+    @Provides
+    fun provideDownloadManager(
+        @ApplicationContext context: Context,
+        dataSourceFactory: DataSource.Factory,
+        downloadCache: Cache,
+        databaseProvider: ExoDatabaseProvider
+        ): DownloadManager {
 
         // Note: This should be a singleton in your app.
-        val databaseProvider = ExoDatabaseProvider(context)
+//        val databaseProvider = provideDatabseProvider(context)
 
         // A download cache should not evict media, so should use a NoopCacheEvictor.
-        val downloadCache = getDownloadCache(context, databaseProvider)
+//        val downloadCache = provideExoCache(context)
 
 
         // Choose an executor for downloading data. Using Runnable::run will cause each download task to
@@ -55,24 +85,30 @@ class DownloadServiceModule() {
     }
 
 
-    @Synchronized
-    private fun getDownloadCache(context: Context, provider: ExoDatabaseProvider): Cache? {
-        val downloadContentDirectory: File = File(
-            getDownloadDirectory(context),
-            DOWNLOAD_CONTENT_DIRECTORY
-        )
-        val downloadCache = SimpleCache(
-            downloadContentDirectory,
-            NoOpCacheEvictor(),
-            provider
-        )
-        return downloadCache
+//    @Synchronized
+//    private fun getDownloadCache(context: Context, provider: ExoDatabaseProvider): Cache {
+//        val downloadContentDirectory: File = File(
+//            getDownloadDirectory(context),
+//            DOWNLOAD_CONTENT_DIRECTORY
+//        )
+//        val downloadCache = SimpleCache(
+//            downloadContentDirectory,
+//            NoOpCacheEvictor(),
+//            provider
+//        )
+//        return downloadCache
+//    }
+
+    @Provides
+    fun providetDownloadNotificationHelper(@ApplicationContext context: Context): DownloadNotificationHelper {
+        return DownloadNotificationHelper(context, DOWNLOAD_NOTIFICATION_CHANNEL_ID)
     }
 
     @Synchronized
     private fun getDownloadDirectory(context: Context): File? {
-
         return context.filesDir
     }
+
+
 
 }
