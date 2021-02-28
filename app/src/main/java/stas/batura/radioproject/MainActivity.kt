@@ -20,13 +20,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.offline.DownloadHelper
 import com.google.android.exoplayer2.offline.DownloadRequest
 import com.google.android.exoplayer2.offline.DownloadService
+import com.google.android.exoplayer2.util.Util
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.control_fragment_new.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import stas.batura.radioproject.data.ListViewType
 import stas.batura.radioproject.data.dataUtils.Year
@@ -137,12 +138,22 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun testDownload() {
-        val downloadRequest: DownloadRequest = DownloadRequest.Builder("test3", Uri.parse("http://cdn.radio-t.com/rt_podcast669.mp3")).build()
+//        val downloadRequest: DownloadRequest = DownloadRequest.Builder(
+//            "test3",
+//            Uri.parse("http://cdn.radio-t.com/rt_podcast669.mp3")
+//        ).build()
+        val mediaItem = MediaItem.fromUri(Uri.parse("http://cdn.radio-t.com/rt_podcast669.mp3"))
+        val helper = DownloadHelper.forMediaItem(
+            applicationContext,
+            mediaItem)
+
+        val request = helper.getDownloadRequest(Util.getUtf8Bytes(mediaItem.mediaId))
         DownloadService.sendAddDownload(
             this,
             PodcastDownloadService::class.java,
-                    downloadRequest,
-            /* foreground= */ false)
+            request,
+            /* foreground= */ false
+        )
     }
 
 
