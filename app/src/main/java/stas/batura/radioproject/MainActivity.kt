@@ -125,14 +125,14 @@ class MainActivity : AppCompatActivity() {
         // Starting the service in the foreground causes notification flicker if there is no scheduled
         // action. Starting it in the background throws an exception if the app is in the background too
         // (e.g. if device screen is locked).
-        try {
-            DownloadService.start(this, PodcastDownloadService::class.java)
-            Log.i(TAG, "onCreate: starting download serv")
-            testDownload()
-        } catch (e: IllegalStateException) {
-            DownloadService.startForeground(this, PodcastDownloadService::class.java)
-            Log.i(TAG, "onCreate: $e")
-        }
+//        try {
+//            DownloadService.start(this, PodcastDownloadService::class.java)
+//            Log.i(TAG, "onCreate: starting download serv")
+//            testDownload()
+//        } catch (e: IllegalStateException) {
+//            DownloadService.startForeground(this, PodcastDownloadService::class.java)
+//            Log.i(TAG, "onCreate: $e")
+//        }
 
     }
 
