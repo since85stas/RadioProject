@@ -3,6 +3,7 @@ package stas.batura.radioproject.di
 import android.content.Context
 import com.google.android.exoplayer2.database.DatabaseProvider
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.offline.DownloadHelper
 import com.google.android.exoplayer2.offline.DownloadManager
 import com.google.android.exoplayer2.ui.DownloadNotificationHelper
 import com.google.android.exoplayer2.upstream.DataSource
@@ -80,9 +81,17 @@ class DownloadServiceModule() {
             databaseProvider,
             downloadCache,
             dataSourceFactory,
+            downloadExecutor
         )
         return downloadManager
     }
+
+//    @Provides
+//    fun provideDownloadHelper(@ApplicationContext context: Context,
+//                              dataSourceFactory: DataSource.Factory
+//    ) {
+//        val helper =
+//    }
 
 
 //    @Synchronized

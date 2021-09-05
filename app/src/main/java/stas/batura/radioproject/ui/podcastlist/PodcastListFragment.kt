@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.ConcatAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_podcast_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +54,13 @@ class PodcastListFragment : Fragment() {
 
     @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // адаптер для заголовка
+//        val headerAdapter = HeaderAdapter()
+
+        // адаптер для списка
         adapter = PodcastsAdapter(mainActivityViewModel = mainviewModel, listModel = podcastListViewModel)
+
+//        val concatAdapter = ConcatAdapter(headerAdapter, adapter)
         podcast_recycler.adapter = adapter
 
         podcastListViewModel.newPodcastList.observe(viewLifecycleOwner) {podcasts ->
