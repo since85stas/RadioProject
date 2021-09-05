@@ -140,6 +140,10 @@ dependencies {
     // Proto DataStore
     implementation  "androidx.datastore:datastore-core:1.0.0-alpha01"
     implementation  "com.google.protobuf:protobuf-javalite:3.10.0"
+
+    //downloader
+    implementation "androidx.tonyodev.fetch2:xfetch2:3.1.6"
+    implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:3.1.6"
 }
 
 protobuf {
