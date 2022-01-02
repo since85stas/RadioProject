@@ -19,6 +19,7 @@ fun getMillisTime(time: String): Long {
 }
 
 enum class Year(val yearS: Long, val yearE: Long) {
+    Y2022(getYearStart(2022), getYearEnd(2022)),
     Y2021(getYearStart(2021), getYearEnd(2021)),
     Y2020(getYearStart(2020), getYearEnd(2020)),
     Y2019(getYearStart(2019), getYearEnd(2019)),
