@@ -446,7 +446,10 @@ class MusicService : LifecycleService() {
     private val audioFocusChangeListener : OnAudioFocusChangeListener =
         OnAudioFocusChangeListener { focusChange : Int ->
             when (focusChange ) {
-                AudioManager.AUDIOFOCUS_GAIN -> mediaSessionCallback.onPlay() // Не очень красиво
+                // Не очень красиво
+                AudioManager.AUDIOFOCUS_GAIN -> {
+//                    mediaSessionCallback.onPlay()
+                }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> mediaSessionCallback.onPause()
                 else -> mediaSessionCallback.onPause()
             }
@@ -577,6 +580,12 @@ class MusicService : LifecycleService() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        val realDurationMillis = exoPlayer!!.duration
+
+        // updating duration in DB
+        repositoryS.updateTrackDuration(podcast!!.podcastId, realDurationMillis)
+
         mediaSession!!.release()
         exoPlayer!!.release()
         cache.release()
